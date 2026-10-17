@@ -1,5 +1,16 @@
 # Python: `TypedDict` vs Pydantic
 
+## Contents
+
+- [1. `TypedDict` — define a dictionary's structure](#1-typeddict--define-a-dictionarys-structure)
+- [2. `TypedDict` — important options](#2-typeddict--important-options)
+  - [`total=False` vs `NotRequired`](#totalfalse-vs-notrequired)
+- [Pydantic library](#pydantic-library)
+  - [Common `Field()` options](#common-field-options)
+- [Abstract Class and Abstract Method in Python](#abstract-class-and-abstract-method-in-python)
+  - [1. Simple example](#1-simple-example)
+  - [2. What happens if we don't implement the abstract method?](#2-what-happens-if-we-dont-implement-the-abstract-method)
+
 Both `TypedDict` and `Pydantic` help you define the expected structure of data in Python, but they serve different purposes.
 
 - `TypedDict` defines the expected dictionary structure for static type checking.

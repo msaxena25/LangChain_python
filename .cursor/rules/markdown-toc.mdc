@@ -1,0 +1,29 @@
+---
+description: Ask before adding or updating a Markdown table of contents in Tutorials
+globs: Tutorials/**/*.md
+alwaysApply: false
+---
+
+# Tutorial Markdown contents
+
+When a Markdown file under `Tutorials/` is created, or its headings change, ask before touching the contents list. Do not add or edit it until the user chooses.
+
+Ask with these choices:
+
+1. Add a contents list
+2. Update the existing contents list
+3. Leave it unchanged
+
+If they choose add or update:
+
+- Put `## Contents` under the opening title.
+- Link only real headings. Skip `#` comments inside code fences.
+- Indent each link under its parent heading.
+- Leave files outside `Tutorials/` unchanged.
+
+```markdown
+## Contents
+
+- [Install Python](#install-python)
+  - [Current Version - 3.15.0](#current-version---3150)
+```

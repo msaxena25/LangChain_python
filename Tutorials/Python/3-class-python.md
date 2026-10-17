@@ -1,5 +1,42 @@
 # Python control flow statements
 
+## Contents
+
+- [1. `if`, `elif`, and `else`](#1-if-elif-and-else)
+- [2. `for` loop](#2-for-loop)
+  - [Using `range()`](#using-range)
+  - [Using `enumerate()`](#using-enumerate)
+- [3. `while` loop](#3-while-loop)
+- [4. `break`, `continue`, and `pass`](#4-break-continue-and-pass)
+  - [A. `break` — exit the loop](#a-break--exit-the-loop)
+  - [B. `continue` — skip the current iteration](#b-continue--skip-the-current-iteration)
+  - [C. `pass` — do nothing](#c-pass--do-nothing)
+- [5. `match-case` — Python's switch-like statement](#5-match-case--pythons-switch-like-statement)
+- [6. Other useful control flow concepts](#6-other-useful-control-flow-concepts)
+  - [A. `in` — check membership](#a-in--check-membership)
+  - [B. `and`, `or`, and `not` — combine conditions](#b-and-or-and-not--combine-conditions)
+  - [C. `for-else` and `while-else`](#c-for-else-and-while-else)
+- [Input and Output (`input()`, `print()`)](#input-and-output-input-print)
+  - [Quick revision](#quick-revision)
+- [f-string and str.format()](#f-string-and-strformat)
+- [Python Lambda Functions](#python-lambda-functions)
+  - [1. What is a lambda function?](#1-what-is-a-lambda-function)
+  - [2. Syntax](#2-syntax)
+  - [3. Examples](#3-examples)
+  - [4. Lambda vs. normal function](#4-lambda-vs-normal-function)
+  - [5. Why do we use lambda in LangChain?](#5-why-do-we-use-lambda-in-langchain)
+- [Python map and filter function](#python-map-and-filter-function)
+  - [1. Understanding `map()`](#1-understanding-map)
+  - [2. Understanding `filter()`](#2-understanding-filter)
+  - [4. Combining `filter()` and `map()`](#4-combining-filter-and-map)
+- [dictionary unpacking (**) with Python's string formatting.](#dictionary-unpacking--with-pythons-string-formatting)
+- [`and`, `or`, and `not`](#and-or-and-not)
+  - [1. `and` operator](#1-and-operator)
+  - [2. `or` operator](#2-or-operator)
+  - [3. `not` operator](#3-not-operator)
+  - [4. Practical example](#4-practical-example)
+  - [5. Important difference: `and` vs `&`](#5-important-difference-and-vs-)
+
 # 1. `if`, `elif`, and `else`
 
 Used to execute different code based on conditions.
@@ -622,4 +659,61 @@ is equivalent to:
 
 `template.format(name="Mohit", age=34)`
 
+---
+# `and`, `or`, and `not`
+
+In Python, `and`, `or`, and `not` are logical operators used to combine or reverse conditions.
+
+## 1. `and` operator
+
+Returns `True` only when both conditions are True.
+
+```py
+age = 25
+has_id = True
+
+print(age >= 18 and has_id)  # True
+print(age >= 18 and False)   # False
+```
+
+## 2. `or` operator
+
+Returns `True` when at least one condition is True.
+
+```py
+age = 16
+has_permission = True
+
+print(age >= 18 or has_permission)  # True
+print(age >= 18 or False)           # False
+```
+
+## 3. `not` operator
+
+Reverses the Boolean value: `True` becomes `False`, and `False` becomes `True`.
+
+```py
+is_logged_in = True
+
+print(not is_logged_in)  # False
+print(not False)         # True
+```
+
+## 4. Practical example
+
+```py
+age = 25
+is_student = False
+
+if age >= 18 and not is_student:
+    print("Eligible")
+
+if age < 18 or is_student:
+    print("Special conditions apply")
+```
+
+## 5. Important difference: `and` vs `&`
+
+- `and`, `or`, `not` are logical operators.
+- `&`, `|`, `~` are bitwise operators and can behave differently, especially with integers and Boolean arrays.
 ---

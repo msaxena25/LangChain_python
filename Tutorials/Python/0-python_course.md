@@ -1,5 +1,21 @@
 # Python Core Concepts — Learning Checklist
 
+## Contents
+
+1. [Python Fundamentals](#1-python-fundamentals)
+2. [Conditional Statements & Loops](#2-conditional-statements--loops)
+3. [Data Structures](#3-data-structures)
+4. [Strings](#4-strings)
+5. [Functions](#5-functions)
+6. [Modules, Packages & Environments](#6-modules-packages--environments)
+7. [Exception Handling](#7-exception-handling)
+8. [File Handling & Data Processing](#8-file-handling--data-processing)
+9. [Object-Oriented Programming (OOP)](#9-object-oriented-programming-oop)
+10. [Iterators, Generators & Functional Concepts](#10-iterators-generators--functional-concepts)
+11. [Advanced Python Essentials](#11-advanced-python-essentials)
+12. [Testing & Code Quality](#12-testing--code-quality)
+13. [Python for APIs & AI Development](#13-python-for-apis--ai-development)
+
 ## 1. Python Fundamentals
 
 - Variables and naming conventions

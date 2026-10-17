@@ -1,29 +1,7 @@
 # Lets Break idea of runnables and problems which were earlier.
 
-# lets create a simple LLM Class
-# this class have predict method that generate llm answer.
-
+from typing import Any
 import random
-
-class MyCustomLLm():
-    def __init__(self):
-        print('My custom class called')
-    
-    def predict(self, prompt):
-        return self.__getAnswer()
-    
-    def __getAnswer(self):
-        answers_list = [
-            'Delhi is capital of India',
-            'Lucknow is capital of Uttar Pradesh',
-            'Narendra Modi is prime minister of India.'
-            'Bangloure is big IT tech city of India.'
-        ]
-        return {'content': random.choice(answers_list)}
-    
-myCustomLLmObj =  MyCustomLLm()
-result1 = myCustomLLmObj.predict("Tell me about India.")
-print(result1)
 
 # Lets Create Custom Prompt template same as langchain prompttemplate
 class MyPromptTemplate():
@@ -39,11 +17,37 @@ prompt1 = MyPromptTemplate(template="Hello India, I live in {city}.", input_vari
 result2 = prompt1.format({'city':'Lucknow'})
 print(result2)
 
+
+# lets create a simple LLM Class
+# this class have predict method that generate llm answer.
+
+
+class MyCustomLLm():
+    def __init__(self):
+        print('My custom class called')
+    
+    def predict(self, prompt: MyPromptTemplate):
+        return self.__getAnswer()
+    
+    def __getAnswer(self):
+        answers_list = [
+            'Delhi is capital of India',
+            'Lucknow is capital of Uttar Pradesh',
+            'Narendra Modi is prime minister of India.',
+            'Bangloure is big IT tech city of India.'
+        ]
+        return {'content': random.choice(answers_list)}
+    
+myCustomLLmObj =  MyCustomLLm()
+result1 = myCustomLLmObj.predict("Tell me about India.")
+print(result1)
+
+
 # Now lets pass this prompt to our custom LLM
 result3 = myCustomLLmObj.predict(prompt1)
 print(result3)
 
-# Lets Create now Chain class with above LLM or Model and Prompt template
+# Lets Create Chain class with above LLM or Model and Prompt template
 # This Class will take MyPromptTemplate and MyCustomLLm as an arguments
 
 class MyCustomLLMChain():
@@ -92,7 +96,7 @@ from abc import ABC, abstractmethod
 
 class Runnable(ABC):
     @abstractmethod
-    def invoke(input_data: list[str]):
+    def invoke(input_data: dict[str, Any]):
         pass
     
 
@@ -123,7 +127,7 @@ class MyCustomLLm(Runnable):
         answers_list = [
             'Delhi is capital of India',
             'Lucknow is capital of Uttar Pradesh',
-            'Narendra Modi is prime minister of India.'
+            'Narendra Modi is prime minister of India.',
             'Bangloure is big IT tech city of India.'
         ]
         return {'content': random.choice(answers_list)}
@@ -150,18 +154,18 @@ class MyPromptTemplate(Runnable):
 # This will take all runnables in its parameter which we need to execute in a list
 
 class RunnableConnector(Runnable):
-    def __init__(self, runnable_list):
+    def __init__(self, runnable_list: list[Runnable]):
         print('Runnable class created')
         self.runnable_list = runnable_list
     
-    def invoke(self, input_data):
+    def invoke(self, input_data: dict[str, Any]):
         # Now loop on runnable_list and call invoke method of each
         # Second important thing - Input of next runnable will be output of previous runnable, so we are updating input_data in each iteration.
         for runnable in self.runnable_list:
             input_data = runnable.invoke(input_data)
         
         return input_data     
-    
+
 llmObj1 = MyCustomLLm()
 prompt_template1 = MyPromptTemplate(
             template="Hello India, I live in {city} and my name is {name}.",
@@ -170,4 +174,53 @@ prompt_template1 = MyPromptTemplate(
 runnable_chain = RunnableConnector([prompt_template1, llmObj1])
 
 result5 = runnable_chain.invoke({'city': 'Mumbai', 'name': 'Masava'})
+
 print('Runnable chain output ', result5)
+# Runnable chain output  {'content': 'Delhi is capital of India'}
+
+'''
+Now Lets Create our custom parser component
+Its Job -  it take input, parse its properties and return output in plain text format.
+
+That Parser class will also inherit Runnable abstract class.
+'''
+
+class MyParser(Runnable):
+    def __init(self):
+        pass
+    def invoke(self, input_data):
+        return input_data.get('response') or input_data.get('content')
+
+parser =  MyParser()
+
+runnable_chain_2 = RunnableConnector([prompt_template1, llmObj1, parser])
+
+result6 = runnable_chain_2.invoke({'city': 'Mumbai', 'name': 'Masava'})
+
+print('Parsed outout with parser ', result6)
+
+# _____________________________________
+
+# Now combine mulitple chains with this RunnableConnector class
+
+prompt_template2 = MyPromptTemplate(
+    template="Hello, Write a poem about {topic}.",
+    input_variables=["topic"]
+    )
+prompt_template3 = MyPromptTemplate(
+    template="Now, based on above poem {content}.",
+    input_variables=["content"]
+    )
+
+llmObj2 = MyCustomLLm()
+
+runnable_chain_3 = RunnableConnector([prompt_template2, llmObj2])
+
+runnable_chain_4 = RunnableConnector([prompt_template3, llmObj2])
+
+# Now combine these two chains
+
+final_chain = RunnableConnector([runnable_chain_3, runnable_chain_4, parser])
+
+result7 = final_chain.invoke({'topic': 'Love'})
+print('Combined chain output ', result7)

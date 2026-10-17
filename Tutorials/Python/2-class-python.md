@@ -1,5 +1,59 @@
 # Functions
 
+## Contents
+
+- [1. Create and call a simple function](#1-create-and-call-a-simple-function)
+- [2. Function with parameters](#2-function-with-parameters)
+- [3. Function that returns a value](#3-function-that-returns-a-value)
+- [4. Function with a default parameter](#4-function-with-a-default-parameter)
+- [1. Method Overloading](#1-method-overloading)
+  - [But How can we achieve similar behavior in Python](#but-how-can-we-achieve-similar-behavior-in-python)
+  - [2. Method Overriding](#2-method-overriding)
+    - [Example](#example)
+    - [Compare Python vs Java](#compare-python-vs-java)
+- [this, in Python we have 'self'](#this-in-python-we-have-self)
+- [How to define variables in Python](#how-to-define-variables-in-python)
+  - [2. How scope works in Python](#2-how-scope-works-in-python)
+    - [A. Local scope](#a-local-scope)
+  - [B. Global scope](#b-global-scope)
+  - [C. Enclosing scope (nested functions)](#c-enclosing-scope-nested-functions)
+  - [3. Important difference: JavaScript `let` vs Python](#3-important-difference-javascript-let-vs-python)
+  - [4. What about constants?](#4-what-about-constants)
+  - [Quick summary](#quick-summary)
+- [Class](#class)
+  - [1. How to create a class and an object](#1-how-to-create-a-class-and-an-object)
+    - [Why is there no `new` keyword?](#why-is-there-no-new-keyword)
+  - [2. Public, protected, and private variables](#2-public-protected-and-private-variables)
+  - [3. How to create private methods](#3-how-to-create-private-methods)
+  - [4. Java vs Python: quick comparison](#4-java-vs-python-quick-comparison)
+  - [5. One additional concept: class variables vs instance variables](#5-one-additional-concept-class-variables-vs-instance-variables)
+- [Object || {}](#object--)
+  - [2. Three ways to create objects in Python](#2-three-ways-to-create-objects-in-python)
+  - [3. What about `Object`?](#3-what-about-object)
+- [Data Types](#data-types)
+  - [1. Basic data types in Python](#1-basic-data-types-in-python)
+  - [2. Collection data types](#2-collection-data-types)
+  - [4. Check a variable's data type](#4-check-a-variables-data-type)
+  - [5. Python vs JavaScript data types](#5-python-vs-javascript-data-types)
+  - [6. Convert between data types](#6-convert-between-data-types)
+- [Python Strings — Notes](#python-strings--notes)
+  - [1. Creating Strings](#1-creating-strings)
+  - [2. Indexing and Slicing](#2-indexing-and-slicing)
+  - [3. String Operators](#3-string-operators)
+  - [4. Important String Methods](#4-important-string-methods)
+  - [5. String Formatting](#5-string-formatting)
+  - [6. Multiline Strings and Prompts](#6-multiline-strings-and-prompts)
+  - [7. Useful String Modules](#7-useful-string-modules)
+  - [8. JSON Strings](#8-json-strings)
+  - [9. Common Mistakes](#9-common-mistakes)
+- [Python List, Tuple & Dictionary — Quick Notes](#python-list-tuple--dictionary--quick-notes)
+  - [1. List (`\[\]`)](#1-list-)
+  - [2. Tuple (`()`)](#2-tuple-)
+  - [3. Dictionary (`{key: value}`)](#3-dictionary-key-value)
+  - [4. Comparison](#4-comparison)
+  - [5. Common operations](#5-common-operations)
+  - [6. Nested collections](#6-nested-collections)
+
 In Python, you define a function using the `def` keyword and call it using its name followed by parentheses `()`.
 
 ## 1. Create and call a simple function
@@ -195,7 +249,7 @@ One important distinction: In `class Child(Parent):`, `Parent` is a base class, 
 
 So remember: Python inheritance = class definition + parent class in parentheses.
 
-# this
+# this, in Python we have 'self' 
 
 Python does have this-related concepts, In Python, we use self to refer to the current object.
 
@@ -929,10 +983,11 @@ Single-item tuple: `item = ("apple",)` — the comma is required.
 
 Stores **key-value pairs**. Mutable; keys must be unique and hashable.
 
-```
+```py
 student = {"name": "Mohit", "age": 34}
 
 print(student["name"])       # Mohit
+print(student["grade"])       # Key Error, so to prevent this use get method
 print(student.get("grade"))  # None
 
 student["age"] = 35          # Update
@@ -947,7 +1002,7 @@ Methods: `get()`, `keys()`, `values()`, `items()`, `update()`, `pop()`.
 
 Loop through a dictionary:
 
-```
+```py
 for key, value in student.items():
     print(key, value)
 ```
@@ -963,7 +1018,7 @@ for key, value in student.items():
 
 ## 5. Common operations
 
-```
+```py
 numbers = [10, 20, 30]
 
 print(len(numbers))    # 3
@@ -978,7 +1033,7 @@ print(list(items))     # [10, 20, 30]
 
 ## 6. Nested collections
 
-```
+```py
 students = [
     {"name": "Mohit", "score": 90},
     {"name": "Amit", "score": 85}

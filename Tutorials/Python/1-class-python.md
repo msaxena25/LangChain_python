@@ -1,5 +1,23 @@
 # Python - 
 
+## Contents
+
+- [Install Python](#install-python)
+  - [Current Version - 3.15.0](#current-version---3150)
+  - [After installation, follow these steps in your project terminal.](#after-installation-follow-these-steps-in-your-project-terminal)
+- [Install packages from `requirements.txt`](#install-packages-from-requirementstxt)
+- [Deactivate the environment](#deactivate-the-environment)
+  - [To Upgrade & check pip package -](#to-upgrade--check-pip-package--)
+- [In LangChain, OpenAI, Google Gemini, and Anthropic use separate integration packages.](#in-langchain-openai-google-gemini-and-anthropic-use-separate-integration-packages)
+  - [Example usage](#example-usage)
+- [Install HuggingFace](#install-huggingface)
+  - [Verify installation](#verify-installation)
+  - [Example import](#example-import)
+- [Maching learning Utilities Packages _ will learn later](#maching-learning-utilities-packages-_-will-learn-later)
+- [Diff between `OpenAI` and `ChatOpenAI`](#diff-between-openai-and-chatopenai)
+  - [1. `OpenAI` vs `ChatOpenAI`](#1-openai-vs-chatopenai)
+  - [Parent Classes of both](#parent-classes-of-both)
+
 ## Install Python
 
 You can download from Microsoft Store if available for You OR You can directly install from Python Official website (https://www.python.org/downloads/).
