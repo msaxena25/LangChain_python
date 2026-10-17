@@ -1,4 +1,7 @@
 # from langchain_openai import ChatOpenAI # this is not free available
+
+# Create Chatbot with Google Gemini
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from dotenv import load_dotenv
