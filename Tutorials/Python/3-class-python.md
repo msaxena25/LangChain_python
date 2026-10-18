@@ -36,6 +36,15 @@
   - [3. `not` operator](#3-not-operator)
   - [4. Practical example](#4-practical-example)
   - [5. Important difference: `and` vs `&`](#5-important-difference-and-vs-)
+- [Define types for a variable](#define-types-for-a-variable)
+  - [1. How to define a type for a variable](#1-how-to-define-a-type-for-a-variable)
+  - [2. How to define types for collections](#2-how-to-define-types-for-collections)
+  - [A. List — `list[type]`](#a-list--listtype)
+  - [B. Dictionary — `dict[key_type, value_type]`](#b-dictionary--dictkey_type-value_type)
+  - [C. Tuple — `tuple[type, ...]`](#c-tuple--tupletype-)
+  - [D. Set — `set[type]`](#d-set--settype)
+  - [E. Other important type hints](#e-other-important-type-hints)
+  - [4. How to define types for functions](#4-how-to-define-types-for-functions)
 
 # 1. `if`, `elif`, and `else`
 
@@ -717,3 +726,110 @@ if age < 18 or is_student:
 - `and`, `or`, `not` are logical operators.
 - `&`, `|`, `~` are bitwise operators and can behave differently, especially with integers and Boolean arrays.
 ---
+
+# Define types for a variable
+
+## 1. How to define a type for a variable
+
+Python allows you to write type hints using `variable: type = value`.
+
+## 2. How to define types for collections
+
+Collections hold multiple values. The most common ones are lists, dictionaries, tuples, and sets.
+
+## A. List — `list[type]`
+
+- `list[str | int]` → each item can be a string or an integer.
+- `list[str]` → list of strings.
+
+```py
+prices: list[float] = [10.5, 20.0]
+
+mixed: list[str | int] = ["Mohit", 34, "Delhi"]
+```
+
+## B. Dictionary — `dict[key_type, value_type]`
+
+A dictionary stores key-value pairs.
+
+```py
+from typing import Any # Any type comes in typing package
+
+user: dict[str, str] = {
+    "name": "Mohit",
+    "city": "Delhi"
+}
+
+data: dict[str, Any] = {
+    "name": "Mohit",
+    "age": 34,
+    "skills": ["Python", "React"],
+    "is_developer": True
+}
+```
+
+## C. Tuple — `tuple[type, ...]`
+
+A tuple is ordered and generally used for a fixed collection of values.
+
+```py
+user: tuple[str, int] = ("Mohit", 34)
+```
+
+The first item is expected to be a string, and the second an integer.
+
+For a tuple containing any number of integers:
+
+```py
+numbers: tuple[int, ...] = (10, 20, 30, 40)
+```
+## D. Set — `set[type]`
+
+A set stores unique values.
+
+```py
+ids: set[int] = {101, 102, 103}
+
+skills: set[str] = {"Python", "React", "Angular"}
+```
+
+Duplicate values are automatically removed.
+
+## E. Other important type hints
+
+`Any` — any type
+`str | int` — multiple possible types
+`str | None` — a value may be missing
+`Literal` — only specific values allowed
+
+```py
+user_id: str | int = 101
+user_id = "USER101"
+city: str | None = Nonecity = "Delhi"
+
+from typing import Literal
+sentiment: Literal["positive", "negative", "neutral"] = "positive"
+```
+
+## 4. How to define types for functions
+
+You can specify both input and return types.
+
+```py
+def add(a: int, b: int) -> int:
+    return a + b
+
+result: int = add(10, 20)
+
+# For a function returning a dictionary:
+def get_user() -> dict[str, str]:
+    return {"name": "Mohit", "city": "Delhi"}
+```
+
+Here:
+
+- `a: int` → first parameter should be an integer.
+- `b: int` → second parameter should be an integer.
+- `-> int` → the function is expected to return an integer.
+
+----
