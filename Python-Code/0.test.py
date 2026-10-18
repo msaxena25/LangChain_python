@@ -29,3 +29,34 @@ def formatString1(topic, level):
     return str3.format(topic=topic, level=level)
 
 print(formatString1('React', "Expert"))
+
+#--------------------------------
+
+class Product:
+    def __init__(self, price):
+        self._price = price # _variable just tells that this attribute is only for internal purpose.
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        if value < 0:
+            raise ValueError("Price cannot be negative")
+        elif value < 100:
+            print('Warning: Minimum deposit is allowed 500.')
+        else: 
+          self._price = value
+
+product = Product(500) # initial amount
+print(product.price)  # 500
+
+product.price = 700   # Validation runs
+print(product.price)  #  700
+
+product.price = 80  # Validation runs
+# Warning: Minimum deposit is allowed 500.
+
+product.price = -100  # ValueError: Price cannot be negative
+

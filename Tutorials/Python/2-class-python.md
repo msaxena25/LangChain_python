@@ -1,5 +1,3 @@
-# Functions
-
 ## Contents
 
 - [1. Create and call a simple function](#1-create-and-call-a-simple-function)
@@ -8,9 +6,7 @@
 - [4. Function with a default parameter](#4-function-with-a-default-parameter)
 - [1. Method Overloading](#1-method-overloading)
   - [But How can we achieve similar behavior in Python](#but-how-can-we-achieve-similar-behavior-in-python)
-  - [2. Method Overriding](#2-method-overriding)
-    - [Example](#example)
-    - [Compare Python vs Java](#compare-python-vs-java)
+- [2. Method Overriding](#2-method-overriding)
 - [this, in Python we have 'self'](#this-in-python-we-have-self)
 - [How to define variables in Python](#how-to-define-variables-in-python)
   - [2. How scope works in Python](#2-how-scope-works-in-python)
@@ -163,7 +159,7 @@ print(add(2, 3, 4))     # 9
 
 Python also supports `@overload` from the `typing` module for describing different type signatures to static type checkers, but it does not create multiple runtime implementations.
 
-## 2. Method Overriding
+# 2. Method Overriding
 
 Method overriding means a child class provides its own implementation of a method inherited from its parent class.
 
@@ -207,47 +203,6 @@ Calling `Dog().sound()` prints both messages.
  
  ----
 
- # Inheritance
-
-There is no separate `extends` keyword like Java. You specify the parent class name inside parentheses `()` when defining the child class.
-
-### Example
-
-Python:
-
-```
-class Parent:
-    def show(self):
-        print("I am the parent class")
-
-class Child(Parent):  # Inheritance
-    def display(self):
-        print("I am the child class")
-
-obj = Child()
-obj.show()     # Inherited method
-obj.display()  # Child's own method
-```
-
-Output:
-
-```
-I am the parent class
-I am the child class
-```
-
-### Compare Python vs Java
-
-| Concept                    | Python                 | Java                                   |
-| -------------------------- | ---------------------- | -------------------------------------- |
-| Inheritance syntax         | `class Child(Parent):` | `class Child extends Parent`           |
-| Keyword                    | No `extends` keyword   | Uses `extends`                         |
-| Call parent constructor    | `super().__init__()`   | `super()`                              |
-| Multiple class inheritance | Supported              | Only one direct superclass for classes |
-
-One important distinction: In `class Child(Parent):`, `Parent` is a base class, not an argument passed to a function. The parentheses specify inheritance.
-
-So remember: Python inheritance = class definition + parent class in parentheses.
 
 # this, in Python we have 'self' 
 

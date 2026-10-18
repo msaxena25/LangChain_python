@@ -1,5 +1,3 @@
-# Python: `TypedDict` vs Pydantic
-
 ## Contents
 
 - [1. `TypedDict` — define a dictionary's structure](#1-typeddict--define-a-dictionarys-structure)
@@ -7,9 +5,6 @@
   - [`total=False` vs `NotRequired`](#totalfalse-vs-notrequired)
 - [Pydantic library](#pydantic-library)
   - [Common `Field()` options](#common-field-options)
-- [Abstract Class and Abstract Method in Python](#abstract-class-and-abstract-method-in-python)
-  - [1. Simple example](#1-simple-example)
-  - [2. What happens if we don't implement the abstract method?](#2-what-happens-if-we-dont-implement-the-abstract-method)
 
 Both `TypedDict` and `Pydantic` help you define the expected structure of data in Python, but they serve different purposes.
 
@@ -167,54 +162,4 @@ print(product.model_dump())
 # {'name': 'Laptop', 'price': 75000.0,
 #  'quantity': 1, 'sku': 'LAP123'}
 ```
-----
-
-# Abstract Class and Abstract Method in Python
-
-An abstract class is a blueprint for other classes. It defines methods that child classes are required to implement.
-
-An abstract method is a method declared in the parent class without a complete implementation that child classes must provide.
-
-In Python, we typically use the `ABC` class and `@abstractmethod` decorator from the built-in `abc` module.
-
-## 1. Simple example
-
-Suppose you're building an application that supports different payment methods: credit cards, UPI, and PayPal.
-
-Each payment method should provide a `pay()` method. An abstract class enforces that requirement.
-
-```py
-
-from abc import ABC, abstractmethod
-
-class Payment(ABC):
-
-    @abstractmethod
-    def pay(self, amount):
-        pass
-
-
-class UpiPayment(Payment):
-    def pay(self, amount):
-        return f"Paid ₹{amount} using UPI"
-
-
-class CardPayment(Payment):
-    def pay(self, amount):
-        return f"Paid ₹{amount} using Card"
-
-# Now suppose we have payment list like below
-payments = [UpiPayment(), CardPayment()]
-
-# so because of abstract pattern, we can call pay method for each above list item.
-for payment in payments:
-    print(payment.pay(500))
-```
-
-## 2. What happens if we don't implement the abstract method?
-
-Python raises a error while creating object  - 
-
-You cannot instantiate an abstract class while it has unimplemented abstract methods.
-
 ----

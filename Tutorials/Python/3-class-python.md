@@ -39,12 +39,38 @@
 - [Define types for a variable](#define-types-for-a-variable)
   - [1. How to define a type for a variable](#1-how-to-define-a-type-for-a-variable)
   - [2. How to define types for collections](#2-how-to-define-types-for-collections)
-  - [A. List — `list[type]`](#a-list--listtype)
-  - [B. Dictionary — `dict[key_type, value_type]`](#b-dictionary--dictkey_type-value_type)
-  - [C. Tuple — `tuple[type, ...]`](#c-tuple--tupletype-)
-  - [D. Set — `set[type]`](#d-set--settype)
+  - [A. List — `list\[type\]`](#a-list--listtype)
+  - [B. Dictionary — `dict\[key_type, value_type\]`](#b-dictionary--dictkey_type-value_type)
+  - [C. Tuple — `tuple\[type, ...\]`](#c-tuple--tupletype-)
+  - [D. Set — `set\[type\]`](#d-set--settype)
   - [E. Other important type hints](#e-other-important-type-hints)
   - [4. How to define types for functions](#4-how-to-define-types-for-functions)
+- [Inheritance](#inheritance)
+  - [Code Example](#code-example)
+  - [Compare Python vs Java](#compare-python-vs-java)
+- [Abstract Class and Abstract Method in Python](#abstract-class-and-abstract-method-in-python)
+  - [1. Simple example](#1-simple-example)
+  - [2. What happens if we don't implement the abstract method?](#2-what-happens-if-we-dont-implement-the-abstract-method)
+- [Encapsulation](#encapsulation)
+  - [Without encapsulation](#without-encapsulation)
+  - [With encapsulation](#with-encapsulation)
+- [@property & @property.setter decorator](#property--propertysetter-decorator)
+  - [The bigger real-world benefit: Changing implementation without breaking callers](#the-bigger-real-world-benefit-changing-implementation-without-breaking-callers)
+- [`@property.deleter`](#propertydeleter)
+  - [1. Without a property deleter](#1-without-a-property-deleter)
+  - [2. With `@price.deleter`](#2-with-pricedeleter)
+- [`@staticmethod` decorator](#staticmethod-decorator)
+  - [Lets deep more - What Python do automatically when you call a method?](#lets-deep-more---what-python-do-automatically-when-you-call-a-method)
+    - [1. Regular method without `self`](#1-regular-method-without-self)
+    - [2. With `@staticmethod`](#2-with-staticmethod)
+- [`@dataclass`](#dataclass)
+  - [1. Without `@dataclass`](#1-without-dataclass)
+  - [2. With `@dataclass`](#2-with-dataclass)
+- [Understand `__repr__() & `__eq__()`](#understand-__repr__--__eq__)
+  - [1. `__repr__()` — Useful object representation](#1-__repr__--useful-object-representation)
+    - [Without `__repr__()`:](#without-__repr__)
+    - [With `__repr__()`:](#with-__repr__)
+  - [2. `__eq__()` — Compare objects by their data](#2-__eq__--compare-objects-by-their-data)
 
 # 1. `if`, `elif`, and `else`
 
@@ -833,3 +859,452 @@ Here:
 - `-> int` → the function is expected to return an integer.
 
 ----
+
+# Inheritance
+
+There is no separate `extends` keyword like Java. You specify the parent class name inside parentheses `()` when defining the child class.
+
+## Code Example
+
+Python:
+
+```py
+class Parent:
+    def show(self):
+        print("I am the parent class")
+
+class Child(Parent):  # Inheritance
+    def display(self):
+        print("I am the child class")
+
+obj = Child()
+obj.show()     # Inherited method
+obj.display()  # Child's own method
+```
+
+Output:
+
+```py
+I am the parent class
+I am the child class
+```
+
+## Compare Python vs Java
+
+| Concept                    | Python                 | Java                                   |
+| -------------------------- | ---------------------- | -------------------------------------- |
+| Inheritance syntax         | `class Child(Parent):` | `class Child extends Parent`           |
+| Keyword                    | No `extends` keyword   | Uses `extends`                         |
+| Call parent constructor    | `super().__init__()`   | `super()`                              |
+| Multiple class inheritance | Supported              | Only one direct superclass for classes |
+
+One important distinction: In `class Child(Parent):`, `Parent` is a base class, not an argument passed to a function. The parentheses specify inheritance.
+
+So remember: Python inheritance = class definition + parent class in parentheses.
+
+# Abstract Class and Abstract Method in Python
+
+An abstract class is a blueprint for other classes. It defines methods that child classes are required to implement.
+
+An abstract method is a method declared in the parent class without a complete implementation that child classes must provide.
+
+In Python, we typically use the `ABC` class and `@abstractmethod` decorator from the built-in `abc` module.
+
+## 1. Simple example
+
+Suppose you're building an application that supports different payment methods: credit cards, UPI, and PayPal.
+
+Each payment method should provide a `pay()` method. An abstract class enforces that requirement.
+
+```py
+
+from abc import ABC, abstractmethod
+
+class Payment(ABC):
+
+    @abstractmethod
+    def pay(self, amount):
+        pass
+
+
+class UpiPayment(Payment):
+    def pay(self, amount):
+        return f"Paid ₹{amount} using UPI"
+
+
+class CardPayment(Payment):
+    def pay(self, amount):
+        return f"Paid ₹{amount} using Card"
+
+# Now suppose we have payment list like below
+payments = [UpiPayment(), CardPayment()]
+
+# so because of abstract pattern, we can call pay method for each above list item.
+for payment in payments:
+    print(payment.pay(500))
+```
+
+## 2. What happens if we don't implement the abstract method?
+
+Python raises a error while creating object  - 
+
+You cannot instantiate an abstract class while it has unimplemented abstract methods.
+
+----
+
+# Encapsulation
+
+Encapsulation means protecting an object's data by controlling how it can be changed.
+
+Imagine a bank account with a balance of ₹1,000. You should deposit or withdraw money through proper methods rather than changing the balance to any value directly.
+
+## Without encapsulation
+
+```py
+class BankAccount:
+    def __init__(self, balance):
+        self.balance = balance
+
+
+account = BankAccount(1000)
+account.balance = -5000
+print(account.balance) 
+ # -5000
+```
+
+Problem: Anyone can change the balance without validation.
+
+## With encapsulation
+
+```py
+
+class BankAccount:
+    def __init__(self, balance):
+        self.__balance = balance
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+
+    def get_balance(self):
+        return self.__balance
+
+
+account = BankAccount(1000) # 1000 initial amount
+account.deposit(500) # now deposit 500 more
+print(account.get_balance())  # 1500
+
+# print(account.__balance) 
+# AttributeError: 'BankAccount' object has no attribute '__balance'  
+
+account.deposit(-100) # try with invalid value, (nothing will happen)
+print(account.get_balance())  # 1500
+```
+
+self.__balance	- Name mangling — Python changes the attribute name to reduce accidental access or clashes
+
+**Easy way to remember: Data + controlled access = Encapsulation.**
+
+---
+
+# @property & @property.setter decorator
+
+`@property` does let you access a method like an attribute. Second it helps to convert instance attribute to a property.
+
+`@property.setter` allow us to validate a property without changing existing interface or code structure.
+
+`@property` controls how you read or update an existing object's attribute.
+
+Note - `@property.setter` requires a property to be defined first. It uses the `property` object's name to attach the setter.
+
+## The bigger real-world benefit: Changing implementation without breaking callers
+
+Imagine you initially expose a simple attribute:
+
+```py
+class Product:
+    def __init__(self, price):
+        self.price = price
+
+product = Product(500)
+print(product.price)
+```
+Later, you need to add validation whenever the price is changed. You could convert price into a property while keeping the same public interface, product.price:
+
+```py
+class Product:
+    def __init__(self, price):
+        self._price = price # _variable just tells that this attribute is only for internal purpose.
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        if value < 0:
+            raise ValueError("Price cannot be negative")
+        elif value < 100:
+            print('Warning: Minimum deposit is allowed 500.')
+        else: 
+          self._price = value
+
+product = Product(500) # initial amount
+print(product.price)  # 500
+
+product.price = 700   # Validation runs
+print(product.price)  #  700
+
+product.price = 80  # Validation runs
+# Warning: Minimum deposit is allowed 500.
+
+product.price = -100  # Raises ValueError
+
+```
+
+Existing code that reads or writes `product.price` doesn't need to change. The property adds behavior behind the same interface.
+
+One important detail: in Python, _price is still accessible directly. The validation is guaranteed when assigning through price, not when assigning directly to _price.
+
+----
+
+# `@property.deleter` 
+
+**Purpose:** It lets you control what happens when someone deletes a property using `del`.
+
+Imagine a `Product` class where you have a `price` property. You want to control whether the price can be deleted and what cleanup should happen if it is.
+
+## 1. Without a property deleter
+
+```py
+class Product:
+    def __init__(self, price):
+        self.price = price
+
+product = Product(500)
+
+del product.price  # Deletes the attribute
+```
+
+Here, Python deletes the `price` attribute directly. There's no custom cleanup or validation logic.
+
+## 2. With `@price.deleter`
+
+```py
+class Product:
+    def __init__(self, price):
+        self._price = price
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.deleter
+    def price(self):
+        raise AttributeError("Product price cannot be deleted")
+
+product = Product(500)
+
+del product.price  # Raises AttributeError
+```
+
+-----
+
+# `@staticmethod` decorator
+
+**Problem it solves:** You have a function related to a class, but it doesn't need to access either the object's data (`self`) or the class's data (`cls`).
+
+Imagine an e-commerce application where you need to validate a product code.
+
+```py
+class Product:
+    @staticmethod
+    def is_valid_code(code):
+        return code.startswith("PROD-")
+
+print(Product.is_valid_code("PROD-123"))  # True
+print(Product.is_valid_code("ABC-123"))   # False
+```
+
+Here, `is_valid_code()` doesn't need a product object or any class-specific data. It only needs the supplied `code`.
+
+Without `@staticmethod`, you could define this as a regular function outside the class. The decorator is useful when you want to logically group this utility with `Product`.
+
+You can also call it through an instance:
+
+```py
+product = Product()
+print(product.is_valid_code("PROD-123"))
+```
+
+## Lets deep more - What Python do automatically when you call a method?
+
+Let's compare three approaches.
+
+### 1. Regular method without `self`
+
+```py
+class Product:
+    def validate_code(code):
+        return code.startswith("PROD-")
+
+# This works when called through the class. But try calling it through an instance:
+Product.validate_code("PROD-123")  # Works
+
+# through instance
+product = Product()
+product.validate_code("PROD-123") #TypeError
+
+# This raises a TypeError because Python automatically passes product as the first argument. The method receives two arguments, but accepts only one.
+```
+
+### 2. With `@staticmethod`
+
+```py
+class Product:
+    @staticmethod
+    def validate_code(code):
+        return code.startswith("PROD-")
+
+# acess by bdirect class
+print(Product.validate_code("PROD-123"))  # True
+
+# access through instance
+product = Product()
+print(product.validate_code("PROD-123"))  # True
+```
+
+So with `@staticmethod` Python does not automatically pass the instance as an argument. The method works when called through either the class or an instance.
+ 
+----
+
+# `@dataclass`
+
+**Purpose:** It saves you from writing repetitive code when a class is mainly used to store data.
+
+Python automatically generates common methods for you, including:
+
+- `__init__()` — initializes the object.
+- `__repr__()` — provides a useful string representation.
+- `__eq__()` — compares objects by their fields.
+
+Imagine you're creating a `Product` class with a name, price, and quantity.
+
+## 1. Without `@dataclass`
+
+You typically write an `__init__` method to assign all the values.
+
+```py
+class Product:
+    def __init__(self, name, price, quantity):
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
+product = Product("Laptop", 50000, 2)
+
+print(product.name)
+```
+
+## 2. With `@dataclass`
+
+```py
+from dataclasses import dataclass
+
+@dataclass
+class Product:
+    name: str
+    price: float
+    quantity: int
+
+product = Product("Laptop", 50000, 2)
+
+print(product.name)  # Laptop
+print(product)       # Product(name='Laptop', price=50000, quantity=2)
+```
+
+# Understand `__repr__() & `__eq__()`
+
+## 1. `__repr__()` — Useful object representation
+
+**Problem:** By default, printing an object doesn't show its actual data in a readable way.
+
+### Without `__repr__()`:
+
+```py
+class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+product = Product("Laptop", 50000)
+
+print(product)
+
+# Output (similar to): 
+#<__main__.Product object at 0x...>
+
+# This tells you the object exists, but not its data.
+```
+
+### With `__repr__()`:
+
+```py
+class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def __repr__(self):
+        return f"Product(name={self.name!r}, price={self.price})"
+
+product = Product("Laptop", 50000)
+
+print(product)
+# Product(name='Laptop', price=50000)
+```
+
+Real-world use: Easier debugging and inspecting objects in logs or an interactive Python session.
+
+## 2. `__eq__()` — Compare objects by their data
+
+**Problem:** By default, two separate instances of a regular class usually compare as unequal, even when their fields contain identical values.
+
+Without `__eq__()`:
+
+```py
+class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+p1 = Product("Laptop", 50000)
+p2 = Product("Laptop", 50000)
+
+print(p1 == p2)  # False
+```
+
+Why? The default comparison checks object identity rather than comparing these fields.
+
+With `__eq__()`:
+
+```py
+class Product:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def __eq__(self, other):
+        return self.name == other.name and self.price == other.price
+
+p1 = Product("Laptop", 50000)
+p2 = Product("Laptop", 50000)
+p3 = Product("Mobile", 20000)
+
+print(p1 == p2)  # True
+print(p1 == p3)  # False
+```
+
+Real-world use: Comparing data objects, such as checking whether two API response models or configuration objects contain equivalent values.
+
+---
