@@ -395,23 +395,6 @@ print("Sum:", a + b)
 # Output: Sum: 30
 
 ```
-
-### Quick revision
-
-| Function / method | Purpose                                                |
-| ----------------- | ------------------------------------------------------ |
-| `print()`         | Display output                                         |
-| `input()`         | Accept user input as a string                          |
-| `int()`           | Convert to an integer                                  |
-| `float()`         | Convert to a decimal number                            |
-| `str()`           | Convert to a string                                    |
-| `.split()`        | Split a string into parts                              |
-| `sep`             | Set the separator between printed values               |
-| `end`             | Set what gets printed at the end; default is a newline |
-| `f"..."`          | Insert variables or expressions into a string          |
-
-Important: `input()` returns a string, so convert it before performing numeric calculations. For example, `int(input())` for whole numbers and `float(input())` for decimal numbers. Invalid numeric input raises a `ValueError`.
-
 ----
 
 # f-string and str.format() 

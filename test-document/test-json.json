@@ -1,0 +1,6 @@
+{
+    "name": "Mohit",
+    "age": 34,
+    "skills": ["Python", "React", "LangChain"],
+    "is_learning": true
+}
