@@ -56,9 +56,7 @@ RAG also doesn't require retraining the LLM whenever your documents change. You 
 
 ## 3. How does RAG fit into LangChain?
 
-This is the most important connection to what you've already learned.
-
-RAG is an application pattern, not a single LangChain class or method. LangChain provides the building blocks you can combine to implement it.
+RAG is an **application pattern, not a single LangChain class or method. LangChain provides the building blocks** you can combine to implement it.
 
 Here is how the concepts you've studied fit together:
 
@@ -78,17 +76,11 @@ Knowledge base is ready
 
 ### Phase 2: Answer a user's question
 
-1\. Retriever
+1\. Retriever: Find relevant document chunks for the question.
 
-Find relevant document chunks for the question.
+2\. Prompt Template: Combine the retrieved context with the question.
 
-2\. Prompt Template
-
-Combine the retrieved context with the question.
-
-3\. Chat Model + Output Parser
-
-Generate and format the answer.
+3\. Chat Model + Output Parser: Generate and format the answer.
 
 ## 4. One important distinction: Indexing vs. RAG
 
@@ -112,9 +104,9 @@ I'd recommend this sequence, with practical Python examples:
 6. Build a complete RAG pipeline — connect retrieval, prompt, model, and parser using LCEL.
 
 ---
-# 1. What is a Document Loader in LangChain?
+# What is a Document Loader in LangChain?
 
-A Document Loader is a component that reads data from a source and converts it into LangChain `Document` objects so that the data can be processed in a consistent way.
+A `Document Loader` is a `component` that reads data from a source and converts it into LangChain `Document` objects so that the data can be processed in a consistent way.
 
 Sources can include text files, PDFs, websites, CSV files, Word documents, databases, and more.
 
@@ -163,7 +155,7 @@ print(doc.metadata)
 
 Purpose: Read a plain-text file and convert its content into a LangChain `Document`.
 
-Install the package: All loaders comes under this below package.
+**Install the package:** All loaders comes under this below package.
 
 ```py
 pip install -U langchain-community
@@ -172,7 +164,7 @@ pip install -U langchain-community
 ```py
 from langchain_community.document_loaders import TextLoader
 
-loader = TextLoader("company_policy.txt", encoding="utf-8")
+loader = TextLoader("company_policy.txt", encoding="utf-8") #encoding is optional
 
 docs = loader.load()
 
@@ -180,7 +172,7 @@ print(docs[0].page_content)
 print(docs[0].metadata)
 ```
 
-**Important:** load() returns a list of Document objects, even if the loader returns just one document.
+**Important:** **load() returns a list of Document objects, even if the loader returns just one document**.
 
 The text loader typically puts the file's full text into one document. You can split it into smaller chunks later.
 
@@ -208,7 +200,7 @@ By default, `PyPDFLoader` generally creates one document per PDF page. The metad
 
 `PDFPlumberLoader`: table-related content. pdf have tables , rows and columns 
 
-`UnstructuredPDFLoader`: pdf that contains scanned images, extrcat more structure patterns and understand element-based document extraction
+`UnstructuredPDFLoader`: pdf that contains scanned images, extract more structure patterns and understand element-based document extraction
 
 `PyMuPDFLoader`: table extraction, image extraction, and layout-aware text extraction.
 
@@ -264,7 +256,7 @@ from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 
 loader = DirectoryLoader(
     "company_docs/", # can define path directly as first argument
-    glob="**/*.pdf",
+    glob="**/*.pdf", # matches PDF files in the directory and its subdirectories.
     loader_cls=PyPDFLoader
 )
 
@@ -411,6 +403,16 @@ Each row represents one product, and the first row contains the column names.
 
 ## 3. Load the CSV file
 
+**Important:** CSVLoader reads each CSV row and converts it into a formatted text string. It doesn't simply copy the original comma-separated row.
+
+How does this happen?
+
+1. CSVLoader reads the CSV file using CSV-reading logic.
+2. It identifies the column headers: id, name, description, and price.
+3. It reads the first data row and matches each value with its column name.
+4. It formats each column-value pair as `column: value` on a `separate line`.
+5. It stores that formatted text in Document.page_content
+
 ```py
 from langchain_community.document_loaders import CSVLoader
 
@@ -470,14 +472,500 @@ print(docs[0].page_content)
 print(docs[0].metadata)
 ```
 
-**Important:** CSVLoader reads each CSV row and converts it into a formatted text string. It doesn't simply copy the original comma-separated row.
-
-How does this happen?
-
-1. CSVLoader reads the CSV file using CSV-reading logic.
-2. It identifies the column headers: id, name, description, and price.
-3. It reads the first data row and matches each value with its column name.
-4. It formats each column-value pair as `column: value` on a `separate line`.
-5. It stores that formatted text in Document.page_content
-
 ---------
+
+# Text Splitters
+
+Since you've learned Document Loaders, the next step in the RAG pipeline is Text Splitters.
+
+## What is a Text Splitter?
+
+A text splitter divides a large document into smaller pieces called chunks.
+
+Document Loader - Loads the PDF into Document objects
+
+Text Splitter - Divides document content into chunks
+
+## Why do we need it?
+
+- LLMs have limits on how much text they can process in one request.
+- Smaller chunks help retrieval find information relevant to a question.
+- Chunks can be embedded and stored in a vector store individually.
+- Smaller, relevant context can reduce unnecessary information in the prompt.
+
+One important point: a text splitter usually splits the `page_content` of a `Document` and preserves its metadata in the resulting chunks.
+
+# RecursiveCharacterTextSplitter
+
+The most commonly used splitter is `RecursiveCharacterTextSplitter`.
+
+| Parameter         | Meaning                                                |
+| ----------------- | ------------------------------------------------------ |
+| `chunk_size`      | Maximum target size of each chunk                      |
+| `chunk_overlap`   | Number of characters repeated between adjacent chunks  |
+| `length_function` | Function used to measure chunk size; defaults to `len` |
+| `separators`      | Boundaries used to decide where to split text          |
+
+
+**Its default separator order is:**
+
+`\n\n` 1\. Paragraphs - Try splitting at blank lines.
+
+`\n` 2\. Lines - If still too large, try newlines.
+
+`" "` 3\. Words - If still too large, try spaces.
+
+`""` 4\. Characters - As a last resort, split between characters.
+
+Let's understand these with Python.
+
+## First practical example
+
+Install the current text-splitter package if you don't have it:
+
+```
+pip install -U langchain-text-splitters
+
+# -U in a pip command means upgrade.
+# It tells pip to install the package and upgrade it to the latest compatible version if an older version is already installed.
+```
+
+Create a simple example:
+
+```py
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+text = """
+Python is a programming language.
+It is widely used for AI and machine learning.
+LangChain helps developers build applications with LLMs.
+Text splitting is an important step in RAG.
+"""
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=60,
+    chunk_overlap=10 # tries to retain 10 characters from the preceding chunk where applicable.
+)
+
+chunks = splitter.split_text(text)
+
+for index, chunk in enumerate(chunks, start=1):
+    print(index, chunk)
+```
+
+Here, `split_text()` takes a string and returns a list of strings.
+
+- `chunk_size=60`: aims to keep each chunk within 60 characters.
+- `chunk_overlap=10`: tries to retain 10 characters from the preceding chunk where applicable.
+
+The exact chunks depend on the text and the splitter's boundary logic.
+
+## 4. What is chunk overlap, and why do we need it?
+
+Imagine a sentence gets split at a boundary:
+
+Without overlap
+
+```
+['The employee can request a refund within 30', 'days of purchasing the product.']
+```
+
+With overlap
+
+```
+['The employee can request a refund within 30 days', 'within 30 days of purchasing the product.]
+```
+
+Overlap helps preserve context between chunks. The example above is illustrative; actual overlap is based on character counts and split boundaries.
+
+## 5. Split LangChain Documents
+
+In real RAG applications, you'll often split the `Document` objects returned by your loaders, rather than manually splitting strings.
+
+```py
+from langchain_community.document_loaders import TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+loader = TextLoader("company_policy.txt", encoding="utf-8")
+documents = loader.load()
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,
+    chunk_overlap=50
+)
+
+chunks = splitter.split_documents(documents)
+
+print("Original documents:", len(documents))
+print("Total chunks:", len(chunks))
+
+print(chunks[0].page_content)
+print(chunks[0].metadata)
+```
+
+`split_text(text)` → accepts a string and returns strings.
+
+`split_documents(documents)` → accepts Document objects and returns smaller Document objects, preserving their metadata.
+
+--------
+
+# `CharacterTextSplitter` 
+
+`CharacterTextSplitter` splits text using one specific separator that you choose.
+
+For example, you can tell it to split text wherever it finds:
+
+- `"\n\n"` — a blank line, usually separating paragraphs.
+- `"\n"` — a newline.
+- `" "` — a space.
+- `","` — a comma.
+
+Its default separator is `"\n\n"`. You can also configure `chunk_size` and `chunk_overlap`.
+
+The key difference is that it doesn't automatically try other separators when the chunks are too large.
+
+## Code example: `CharacterTextSplitter`
+
+```py
+from langchain_text_splitters import CharacterTextSplitter
+
+text = '''
+Python is a programming language.
+
+It is widely used for AI and machine learning.
+
+LangChain helps developers build applications with LLMs.
+'''
+
+splitter = CharacterTextSplitter(
+    separator="\n\n",
+    chunk_size=60,
+    chunk_overlap=0
+)
+
+chunks = splitter.split_text(text)
+
+for i, chunk in enumerate(chunks, start=1):
+    print(f"Chunk {i}:")
+    print(chunk)
+    print("---")
+```
+
+How it works:
+
+1. It looks for `"\n\n"` in the text.
+2. It splits the text at those boundaries.
+3. It combines the resulting pieces into chunks, `trying` to respect `chunk_size`.
+4. If one piece between separators is too large, it can still produce a chunk larger than `chunk_size`.
+
+That last point is important: `chunk_size=60` is not a guarantee that every chunk will be at most 60 characters.
+
+-------
+
+# Difference `RecursiveCharacterTextSplitter` & `CharacterTextSplitter`
+
+The main difference is what happens when a piece of text is larger than `chunk_size`.
+
+## 1. `CharacterTextSplitter` — one separator
+
+Suppose you configure it with `separator="\n\n"`.
+
+It only uses blank lines as splitting boundaries. If a paragraph is too large, it doesn't automatically try splitting it at spaces or individual words.
+
+Input text — one long paragraph
+
+## 2. `RecursiveCharacterTextSplitter` — multiple separators
+
+It starts with larger, natural boundaries. If a piece is still too large, it tries smaller boundaries.
+
+Its default separator order is:
+
+`\n\n` 1\. Paragraphs - Try splitting at blank lines.
+
+`\n` 2\. Lines - If still too large, try newlines.
+
+`" "` 3\. Words - If still too large, try spaces.
+
+`""` 4\. Characters - As a last resort, split between characters.
+
+For the same input and same chunk_size, it can split at spaces to create smaller chunks.
+
+
+## Remember this
+
+| `CharacterTextSplitter`                   | `RecursiveCharacterTextSplitter`                                |
+| ----------------------------------------- | --------------------------------------------------------------- |
+| Uses one configured separator             | Tries multiple separators in sequence                           |
+| Doesn't fall back to smaller separators   | Falls back to smaller separators                                |
+| Can return oversized chunks               | Usually respects the target size when suitable boundaries exist |
+| Useful when you need a specific delimiter | Useful for general-purpose RAG                                  |
+
+Important: `chunk_size` is a target limit, not an absolute guarantee for either splitter. For the recursive splitter, an unusually long word or string with no available separator can still exceed the target.
+ 
+
+-------
+
+# Recursive Text Splitter for different document types
+
+In RAG, you may load different kinds of files: 
+
+**Python code, JavaScript/TypeScript, Markdown (`.md`), HTML, PDFs**, and plain text. Although `RecursiveCharacterTextSplitter` can split all of them, the best splitting strategy depends on the document's structure.
+
+## Code examples
+
+For code, use `RecursiveCharacterTextSplitter.from_language()` to load a language-specific separator configuration.
+
+```py
+python_splitter = RecursiveCharacterTextSplitter.from_language(
+    Language.PYTHON, 
+    chunk_size=500, 
+    chunk_overlap=50
+)
+# TypeScript
+ts_splitter = RecursiveCharacterTextSplitter.from_language(
+    Language.TS, chunk_size=500, chunk_overlap=50
+)
+
+# Markdown
+md_splitter = RecursiveCharacterTextSplitter.from_language(
+    Language.MARKDOWN, chunk_size=500, chunk_overlap=50
+)
+
+#rest code is same.
+```
+
+What's different here?
+
+The Python-specific separator list prioritizes `boundaries` such as class and function definitions before falling back to generic boundaries.
+
+-----
+
+# MarkdownTextSplitter
+
+Although we can split mark down document with RecursiveCharacterTextSplitter.from_language(Language.MARKDOWN), But still we have seperate splitter for that.
+
+Markdown contains headings, paragraphs, lists, and code blocks. This uses `Markdown-specific separators` with recursive splitting.
+
+```py
+from langchain_text_splitters import MarkdownTextSplitter
+
+splitter = MarkdownTextSplitter(
+    chunk_size=200,
+    chunk_overlap=20,
+)
+```
+--------
+
+# LangChain: Semantic-Based Text Splitter
+
+Till now we have seen splits on the basis of length, special splitter point like space, line break, words and chars.
+
+The main idea is simple: instead of splitting text after a fixed number of characters, split it `when the meaning or topic changes`.
+
+A character-based splitter might divide the document according to length, even in the middle of a topic. **A semantic splitter tries to keep related content together** and identify where the topic changes.
+
+## The five steps behind semantic splitting
+
+**1 Divide the document into small units:** The splitter first separates the document into sentences or other small text units.
+
+**2 Generate embeddings**: Each text unit is converted into an embedding — a numerical representation of its meaning.
+
+**3 Compare neighboring text units:** The splitter compares the meaning of nearby sentences using their embeddings. It looks for places where the meaning changes substantially, rather than simply measuring how many characters separate them.
+
+**4 Determine the semantic-change threshold:** This is where parameters such as `standard_deviation` and `percentile` come into play. They help determine how large a change in meaning must be before the splitter treats it as a potential boundary.
+
+**5 Create the final chunks:** The splitter joins neighboring text units until it reaches a detected semantic boundary. The resulting chunks aim to preserve related ideas together, making them more useful for downstream retrieval in a RAG application.
+
+------
+
+## First Understand mathmetical term `Standard deviation`
+
+Standard deviation is a mathematical measure that tells us how much the values in a dataset are `spread out from their average (mean)`.
+
+- Low standard deviation: Values are close to the average.
+- High standard deviation: Values are spread far from the average.
+
+Suppose we have two datasets:
+
+```
+- Dataset A: 8, 9, 10, 11, 12
+- Dataset B: 2, 6, 10, 14, 18
+```
+
+**Step 1: Calculate the mean**
+
+```
+(8 + 9 + 10 + 11 + 12) / 5 = 10
+
+(2 + 6 + 10 + 14 + 18) / 5 = 10
+```
+
+**Step 2: Calculate the difference from the mean and square it**
+
+For dataset A:
+
+```py
+# We square the differences so that negative and positive differences don't cancel each other out.
+
+Value	Difference from mean	Squared difference
+8	        8 − 10 = −2	            4
+9	        9 − 10 = −1	            1
+10	        10 − 10 = 0	            0
+11	        11 − 10 = 1	            1
+12	        12 − 10 = 2         	4
+Total		                        10
+```
+
+**Step 3: Calculate the variance**
+
+`Variance` tells us `how spread out the values are around the mean`. 
+
+Variance is the average of the squared differences from the mean.
+
+```py
+(4 + 1 + 0 + 1 + 4) / 5 = 2
+
+# Variance = 2: Average squared distance from the mean.
+```
+**Step 4: Standard deviation**
+
+Standard deviation is simply the `square root of variance`.
+
+```py
+sd = sqrt_root(2) = 1.41 # this for dataset A
+
+Same like above steps standard deviation of dataset B = 5.66
+```
+
+**The key takeaway:** Dataset B has a higher standard deviation because its values are more spread out from the mean.
+
+----------
+
+# Semantic Splitter — Step-by-Step Example
+
+Lets first create a document with different - different topics - 
+
+First 2 paragraphs are related to Pyhton, 3rd para = cricket and 4th and 5th paras related to enviournment.
+
+```
+Python is a programming language used to build applications, automate tasks, and process data.
+Python supports lists, dictionaries, functions, and classes.
+Cricket is a bat-and-ball sport played between two teams.
+The environment includes forests, rivers, oceans, air, and living organisms.
+Planting trees, reducing plastic waste, and conserving water help protect natural resources.
+```
+
+**Step 1: Compare adjacent paragraphs**
+
+Imagine that an embedding model converts each paragraph into a numerical vector. We compare neighboring paragraphs and assign these hypothetical semantic-distance scores:
+
+```
+Comparison	    Topic transition	    Distance
+P1 → P2	        Python → Python	        0.10
+P2 → P3	        Python → Cricket	    0.80
+P3 → P4	        Cricket → Env       	0.75
+P4 → P5	        Env → Env	            0.15
+```
+
+**Step 2: Calculate the mean**
+
+```py
+Mean = 0.45 # add all distance and devide by 4
+```
+
+**Step 4: Calculate variance**
+
+```py
+Variance = 0.425 / 4 = 0.10625
+
+# For each distance, we calulate distance from means then calculate square of that difference.
+# Then total of each differece = 0.425.
+# Thent take mean of that total difference = 0.10625
+```
+**Step 5: Calculate standard deviation**
+
+```py
+sd = square_root(variance) = square_root(0.10625) = 0.3260
+```
+
+**Step 6: Calculate the threshold**
+
+We need a rule to decide which distances are large enough to indicate a potential topic change.
+
+The `threshold` is that cutoff value:
+
+- Distance above the threshold → split.
+- Distance at or below the threshold → don't split.
+
+```py
+Threshold = Mean + Standard deviation
+
+T = 0.45 + 0.3260 = 0.7760 
+```
+**Step 7: Compare each distance with this threshold value**
+
+```
+Distance	    Comparison	    Decision
+0.10	        0.10 < 0.7760	Don't split
+0.80	        0.80 > 0.7760	Split
+0.75	        0.75 < 0.7760	Don't split
+0.15	        0.15 < 0.7760	Don't split
+```
+
+## Python code 
+
+```py
+from langchain_experimental.text_splitter import SemanticChunker
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+model = GoogleGenerativeAIEmbeddings(model='gemini-embedding-001', google_api_key=GOOGLE_API_KEY)
+
+vector = model.embed_query(content)
+print('embedding')
+print(vector)
+print("Total embedding vectors:", len(vector)) #Total embedding vectors: 3072
+
+splitter = SemanticChunker(embeddings=model, breakpoint_threshold_type="standard_deviation", breakpoint_threshold_amount=1)
+
+chunks = splitter.create_documents([content])
+
+print('total chunks length', len(chunks)) #2
+
+for i, chunk in enumerate(chunks, start=1):
+    print(f"\nChunk {i}:")
+    print(chunk.page_content)
+
+# Below chunks with breakpoint_threshold_amount=1
+
+Chunk 1:
+Python is a programming language used to build applications, automate tasks, and process data. Python supports lists, dictionaries, functions, and classes. Cricket is a bat-and-ball sport played between two teams.
+
+Chunk 2:
+The environment includes forests, rivers, oceans, air, and living organisms. Planting trees, reducing plastic waste, and conserving water help protect natural resources. 
+
+# Below chunks with breakpoint_threshold_amount=0.5
+
+Chunk 1:
+
+Python is a programming language used to build applications, automate tasks, and process data. Python supports lists, dictionaries, functions, and classes. Cricket is a bat-and-ball sport played between two teams.
+
+Chunk 2:
+The environment includes forests, rivers, oceans, air, and living organisms.
+
+Chunk 3:
+Planting trees, reducing plastic waste, and conserving water help protect natural resources. 
+```
+
+## breakpoint_threshold_amount
+
+Lower value = more splits. 
+
+Higher value = fewer splits, generally.
+
+Important: More splits doesn't necessarily mean more precise. A lower value may separate topics better, but it can also split related content unnecessarily.
+
+## Conclusion
+
+**Final takeaway:** SemanticChunker is useful for meaning-based chunking, but it does not guarantee perfectly separated topics. Always inspect the results and choose a chunking strategy appropriate for your RAG application.
+
+-----
