@@ -969,3 +969,29 @@ Important: More splits doesn't necessarily mean more precise. A lower value may 
 **Final takeaway:** SemanticChunker is useful for meaning-based chunking, but it does not guarantee perfectly separated topics. Always inspect the results and choose a chunking strategy appropriate for your RAG application.
 
 -----
+
+# Same Embedding model for both document & user query
+
+Yes, your understanding is correct. ✅
+
+For reliable similarity search in RAG, you should use the same embedding model for both your documents and the user's query.
+
+### Example
+
+| Document embeddings | User query embedding | Recommended? |
+| ------------------- | -------------------- | ------------ |
+| Gemini embeddings   | Gemini embeddings    | Yes          |
+| OpenAI embeddings   | OpenAI embeddings    | Yes          |
+| Gemini embeddings   | OpenAI embeddings    | Generally no |
+| Model A embeddings  | Model B embeddings   | Generally no |
+
+### Why?
+
+Suppose you store your document embeddings using Gemini. When a user asks, "What is my name?", you generate an embedding for that query using Gemini too.
+
+Both vectors are then in the same embedding space, so you can compare them using cosine similarity or another suitable distance metric.
+
+If you use a different model for the query, its vector may have different dimensions or represent meaning differently. Similarity scores may then be invalid or unreliable.
+
+----------
+

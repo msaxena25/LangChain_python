@@ -321,7 +321,7 @@ Here, Python executes your file named `hello.py`.
 
 ```
 python -m pip --version
-```
+``` 
 
 Here:
 
