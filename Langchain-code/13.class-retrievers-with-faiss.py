@@ -1,3 +1,5 @@
+
+
 # MultiQuery Retriever with FAISS Vector store
 
 from langchain_community.vectorstores import FAISS
@@ -25,6 +27,15 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 embeddings_model = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-001",   google_api_key=os.getenv("GOOGLE_API_KEY"))
 
+# now create llm model for multi query retriever
+llm_model = ChatGoogleGenerativeAI(
+    model="gemini-3.5-flash-lite",  
+    max_output_tokens=100, 
+    google_api_key=GOOGLE_API_KEY,
+    timeout=20,
+    max_retries=0
+    )
+"""
 documents: list[Document] = [
     Document(
         page_content="LangChain supports conversation history using message history and memory patterns."
@@ -57,15 +68,6 @@ base_retriever = vector_store.as_retriever(
     search_type="similarity",
     search_kwargs = {'k': 3}
 )
-
-# now create llm model for multi query retriever
-llm_model = ChatGoogleGenerativeAI(
-    model="gemini-3.5-flash-lite",  
-    max_output_tokens=100, 
-    google_api_key=GOOGLE_API_KEY,
-    timeout=20,
-    max_retries=0
-    )
 
 # create multi query retriever
 multi_query_retriever = MultiQueryRetriever.from_llm(
@@ -120,3 +122,72 @@ Then you pass that retriever into MultiQueryRetriever. Its workflow is:
 
 Your result of 4 documents simply means the searches collectively found 4 unique documents.
 '''
+
+"""
+
+# Context Compression retriever
+
+from langchain_classic.retrievers import ContextualCompressionRetriever
+from langchain_community.vectorstores import FAISS
+from langchain_classic.retrievers.document_compressors import LLMChainExtractor 
+
+documents = [
+    Document(
+        page_content=(
+        """The Grand Canyon is one of the most visited natural wonders in the world.
+        Photosynthesis is the process by which green plants convert sunlight into energy.
+        Millions of tourists travel to see it every year. The rocks date back millions of years."""
+        ), 
+        metadata={"source": "Doc1"}
+    ),
+    Document(
+        page_content=(
+            """In medieval Europe, castles were built primarily for defense.
+            The chlorophyll in plant cells captures sunlight during photosynthesis.
+            Knights wore armor made of metal. Siege weapons were often used to breach castle walls."""
+            ), 
+        metadata={"source": "Doc2"}
+        )
+]
+
+
+# create and add docs
+vector_store: FAISS = FAISS.from_documents(
+    documents=documents,
+    embedding=embeddings_model
+)
+
+# directory name to save faiss index and docs
+vector_store.save_local('faiss-vector-store')
+
+# create base retriever object
+base_retriever = vector_store.as_retriever(
+    search_type="similarity",
+    search_kwargs = {'k': 2}
+)
+
+# LLMChainExtractor
+compressor = LLMChainExtractor.from_llm(llm_model)
+
+# LLMChainExtractor asks the LLM to extract the relevant parts of each candidate document.
+
+# Note: LLMChainExtractor can be relatively expensive because it calls the LLM for compression. Also, the output may be empty if no relevant passage is found, and extraction quality depends on the model.
+
+compression_retriever = ContextualCompressionRetriever(
+    base_retriever=base_retriever,
+    base_compressor=compressor
+)
+
+query = "What is Photosynthesis"
+
+results = compression_retriever.invoke(query)
+
+for doc in results:
+    print(doc.page_content)
+
+'''
+Photosynthesis is the process by which green plants convert sunlight into energy.
+The chlorophyll in plant cells captures sunlight during photosynthesis.
+'''
+
+# Note - So It did not return complete paragraph from documents but only specific line from each document.

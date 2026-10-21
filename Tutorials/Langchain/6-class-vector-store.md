@@ -718,3 +718,85 @@ logging.basicConfig()
 logging.getLogger("langchain_classic.retrievers.multi_query").setLevel(logging.INFO)
 ```
 ------
+
+# Contextual Compression Retriever
+
+The Contextual Compression Retriever in LangChain is an advanced retriever that improves retrieval quality by compressing documents after retrieval - keeping only the relevant content based on the user's query.
+
+## Query:
+
+'What is photosynthesis?"
+
+Retrieved Document (by a traditional retriever):
+
+"The Grand Canyon is a famous natural site.
+Photosynthesis is how plants convert light into energy.
+Many tourists visit every yeat."
+
+**Problem:**
+
+. The retriever returns the entire paragraph
+. Only one sentence is actually relevant to the query
+. The rest is irrelevant noise that wastes context window and may confuse the LLM
+
+**What Contextual Compression Retriever does:**
+
+Returns only the relevant part, e.g.
+"Photosynthesis is how plants convert light into energy."
+
+## How It Works
+
+1. Base Retriever (e.g., FAISS, Chroma) retrieves N documents.
+2. A compressor (usually an LLM) is applied to each document.
+3. The compressor keeps only the parts relevant to the query.
+4. Irrelevant content is discarded.
+
+## When to use
+
+. Your documents are long and contain mixed information
+. You want to reduce context length for LLMs
+. You need to improve answer accuracy in RAG pipelines
+
+## Package required - 
+
+langchain-classic langchain-community
+
+## LLMChainExtractor
+
+`LLMChainExtractor` asks the LLM to extract the relevant parts of each candidate document.
+
+LLMChainExtractor can be relatively expensive because it calls the LLM for compression. Also, the output may be empty if no relevant passage is found, and extraction quality depends on the model.
+
+## Code
+
+```py
+from langchain_classic.retrievers import ContextualCompressionRetriever
+from langchain_community.vectorstores import FAISS
+from langchain_classic.retrievers.document_compressors import LLMChainExtractor
+
+# create base retriever object
+base_retriever = vector_store.as_retriever(
+    search_type="similarity",
+    search_kwargs = {'k': 2}
+)
+
+# LLMChainExtractor
+compressor = LLMChainExtractor.from_llm(llm_model)
+
+compression_retriever = ContextualCompressionRetriever(
+    base_retriever=base_retriever,
+    base_compressor=compressor
+)
+
+query = "What is Photosynthesis"
+
+results = compression_retriever.invoke(query)
+
+for doc in results:
+'''
+Photosynthesis is the process by which green plants convert sunlight into energy.
+The chlorophyll in plant cells captures sunlight during photosynthesis.
+'''
+
+# Note - So It did not return complete paragraph from documents but only specific line from each document.
+```
