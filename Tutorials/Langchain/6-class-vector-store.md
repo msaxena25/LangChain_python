@@ -65,11 +65,11 @@ IVF stands for Inverted File.
 
 ## 2. Other indexing algorithms and techniques
 
-\- Flat (Brute-Force) Search: Compares the query against every stored vector. It provides exact nearest-neighbor results but can be slow for large datasets.
+\- **Flat (Brute-Force) Search:** Compares the query against every stored vector. It provides exact nearest-neighbor results but can be slow for large datasets.
 
-\- HNSW (Hierarchical Navigable Small World): Builds a graph connecting nearby vectors and navigates that graph to find similar vectors quickly. It generally provides a good balance between speed and search accuracy.
+\- **HNSW (Hierarchical Navigable Small World):** Builds a graph connecting nearby vectors and navigates that graph to find similar vectors quickly. It generally provides a good balance between speed and search accuracy.
 
-\- PQ (Product Quantization): Compresses vectors into smaller representations to reduce memory usage. It can be combined with IVF or other search methods to make large-scale vector search more efficient.
+\- **PQ (Product Quantization):** Compresses vectors into smaller representations to reduce memory usage. It can be combined with IVF or other search methods to make large-scale vector search more efficient.
 
 ---------
 
@@ -90,12 +90,13 @@ o Examples - `FAISS`, `Chroma`, `Annoy`, `QdrantVectorStore`, `PineconeVectorSto
 o A full-fledged database system designed to store and query vectors.
 
 o Offers additional "database-like" features:
-· Distributed architecture for horizontal scaling
-. Durability and persistence (replication, backup/restore)
-· Metadata handling (schemas, filters)
-· Potential for ACID or near-ACID guarantees
-· Authentication/authorization and more advanced security
-· Example - `Milvus`, `Qdrant`, `Weaviate`, `Pinecone`
+
+    · Distributed architecture for horizontal scaling
+    . Durability and persistence (replication, backup/restore)
+    · Metadata handling (schemas, filters)
+    · Potential for ACID or near-ACID guarantees
+    · Authentication/authorization and more advanced security
+    · Example - `Milvus`, `Qdrant`, `Weaviate`, `Pinecone`
 
 **Important: Vector database is effectively a vector store with extra database feature.**
 
@@ -156,6 +157,21 @@ documents = [
 vector_store.add_documents(documents=documents)
 ```
 
+## Chroma.from_documents()
+
+`Chroma.from_documents() `is a class method that creates a Chroma vector store and adds the provided documents to it. You dont need to call add document method seperately.
+
+```py
+from langchain_chroma import Chroma
+
+vector_store = Chroma.from_documents(
+    documents=documents,
+    embedding=embeddings,
+    collection_name="learning_notes",
+    persist_directory="./chroma_db"
+)
+```
+
 ## Get documents
 
 ```py
@@ -177,7 +193,7 @@ documents = vector_store.get(include=["documents", "metadatas"])
 # k is the number of related documents to return
 documents = vector_store.similarity_search(query="What is Python?", k=2)
 
-# similarity_search with score - similarity_search_with_score
+# similarity_search with score
 documents = vector_store.similarity_search_with_score(query="What is Python?", k=1)
 
 # filter options - topic, source, id (associated metadata values)
@@ -226,3 +242,157 @@ if new_docs:
 else:
     print('All documents already exist in the vector store')
 ```
+
+-----------
+
+# Retriever
+
+Retriever is a component in LangChain that fetches relevant document from a data source in response to a user query.
+
+Most important part is all `retrievers in LangChain are Runnables`. Means they all have invoke method.
+
+## Types of Retriever
+
+Generally Retrievers are classified in two types.
+
+1. Data source based Retriever: Wikipedia retriever, Vector store retriever, Archieve retriever
+
+2. Search strategy based retriever: MMR, Multi query Retriever, Contextual compression
+
+## Wikipedia Retriever
+
+WikipediaRetriever is a retriever that fetches information from Wikipedia. LangChain's implementation uses a Wikipedia API wrapper to search Wikipedia and return the results as LangChain Document objects.
+
+### Steps:
+
+1. User ask for query or called invoke method with query.
+2. WikipediaRetriever passes the query to its `Wikipedia wrapper` that uses `wikipedia Python package` to communicate with wikipedia service.
+3. Wikipedia searches for relevant pages based on `Wikipedia's search and article-retrieval mechanisms`.
+4. The wrapper retrieves article content. It does not use any LLM to find pages.
+5. LangChain converts the results into Document objects.
+6. Your application receives the documents.
+
+**Package required:** langchain_community and Wikipedia
+
+```py
+from langchain_community.retrievers import WikipediaRetriever
+
+retriever = WikipediaRetriever(
+    lang="en",
+    top_k_results=3,
+    doc_content_chars_max=4000
+)
+
+# this is runnable thats why we have invoke method.
+docs = retriever.invoke("History of India")
+
+for i, doc in enumerate(docs, start=1):
+    print(f"\nDocument {i}")
+    print("Metadata:", doc.metadata)
+    print("Content:", doc.page_content[:500])
+```
+
+```py
+
+TOPIC: "LangChain framework for developing applications powered by large language models"
+
+Answer: Given on diff topic 'Prompt engineering' and 'Lists of open-source artificial intelligence software' but something relative.
+
+page_content Prompt engineering is the process of structuring natural language inputs (known as prompts) to produ
+title Prompt engineering
+--------------------------------
+page_content These lists include projects which release their software under open-source licenses and are related
+title Lists of open-source artificial intelligence software
+
+TOPIC: "History of India"
+
+Answer: exact answer is given in the page_content.
+
+page_content Anatomically modern humans are estimated to have first arrived on the Indian subcontinent between 73
+title History of India
+--------------------------------
+page_content The Indus Valley Civilisation, the early civilisation of India and Pakistan, developed an economy ba
+title Economic history of India
+--------------------------------
+```
+
+**the important point is that WikipediaRetriever searches Wikipedia for pages related to your query; it does not guarantee that the returned page will be an exact answer to your question.**
+
+------
+
+## Vector store Retriever
+
+A Vector Store Retriever in LangChain is the most common type of retriever that lets you search and fetch documents from a vector store based on semantic similarity using vector embeddings.
+
+## How It Works
+
+1. You store your documents in a vector store (like FAISS, Chroma, Weaviate)
+2. Each document is converted into a dense vector using an embedding model
+3. When the user enters a query:
+    . It's also turned into a vector
+    . The retriever compares the query vector with the stored vectors
+    . It retrieves the top-k most similar ones
+
+## Create retriever
+
+```py
+retriever = vector_store.as_retriever(
+    search_kwargs={"k": 3}
+)
+
+# as_retriever() converts your vector store into a retriever.
+# k: 3 means retrieve the 3 most relevant documents for a query.
+
+docs = retriever.invoke("What is Python?")
+
+for doc in docs:
+    print(doc.page_content)
+```
+
+## Use the built-in similarity search
+
+This will also give same result as retriever.
+
+```py
+results = vector_store.similarity_search(
+    "What is Python?",
+    k=2
+)
+
+for doc in results:
+    print(doc.page_content)
+```
+
+## Difference: similarity_search() vs Vector Store Retriever
+
+**similarity_search**
+
+- A vector store method
+- Call it directly
+- Search strategy:	Direct similarity search (only support this single strategy)
+- Batch queries:	Not through this method's standard interface
+- Integration with LangChain chains:	No
+
+**Vector Store Retriever**
+
+- A LangChain retriever component
+- Use vector_store.as_retriever()
+- Search strategy: Similarity, MMR, or score-threshold search
+- Batch queries: Supports batch() because this is runnable.
+- Integration with LangChain chains:	Yes because this is runnable.
+
+```py
+
+retriever = vector_store.as_retriever(
+    search_type="similarity_score_threshold", # can change search type
+    search_kwargs={
+        "k": 5,
+        "score_threshold": 0.7
+    }
+)
+
+#     search_type="mmr",
+#     search_type="similarity",
+```
+
+-------------------

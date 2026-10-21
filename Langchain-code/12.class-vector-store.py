@@ -23,6 +23,8 @@ LangChain now documents Chroma through the separate langchain-chroma package.
 from langchain.vectorstores import Chroma (this does not work now.)
 '''
 
+from langchain_core.vectorstores.base import VectorStoreRetriever
+import langchain_core.documents.base
 from typing import Any
 from langchain_chroma import Chroma
 
@@ -66,6 +68,8 @@ embedding_model = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-001",
     google_api_key=os.getenv("GOOGLE_API_KEY")
     )
+
+"""
 
 # lets create vector_store 
 
@@ -170,3 +174,157 @@ vector_store.update_documents(ids=["doc_1"], documents=[document])
 vector_store.delete(ids=["doc_1"])
 
 vector_store.delete(ids=["doc_1", "doc_2", "doc_3"])
+
+#--------------------------------------------------------------------
+
+
+
+# Retriever
+
+# Wikipedia Retriever
+
+# package required: langchain_community and Wikipedia
+
+print('Wikipedia Retriever..........')
+
+from langchain_community.retrievers import WikipediaRetriever
+
+retriever = WikipediaRetriever(top_k_results=2,doc_content_chars_max=500)
+
+# this is runnable thats why we have invoke method.
+result = retriever.invoke("History of India")
+
+for doc in result:
+    print('page_content', doc.page_content[:100])
+    print('title', doc.metadata['title'])
+    print('--------------------------------')
+
+'''
+TOPIC: "LangChain framework for developing applications powered by large language models"
+
+Answer: Given on diff topic 'Prompt engineering' and 'Lists of open-source artificial intelligence software' but something relative.
+
+page_content Prompt engineering is the process of structuring natural language inputs (known as prompts) to produ
+title Prompt engineering
+--------------------------------
+page_content These lists include projects which release their software under open-source licenses and are related
+title Lists of open-source artificial intelligence software
+
+TOPIC: History of India
+
+Answer: exact answer is given in the page_content.
+
+page_content Anatomically modern humans are estimated to have first arrived on the Indian subcontinent between 73
+title History of India
+--------------------------------
+page_content The Indus Valley Civilisation, the early civilisation of India and Pakistan, developed an economy ba
+title Economic history of India
+--------------------------------
+'''
+
+# the important point is that WikipediaRetriever searches Wikipedia for pages related to your query; it does not guarantee that the returned page will be an exact answer to your question.
+
+"""
+
+#-------------------------------------------------------------------------------
+
+# Vector Store Retriever
+
+print('Vector store retriever..........')
+
+books_documents: list[Document] = [
+    Document(page_content="Ramayan is a book written by Valmiki. This is the story of Ram and his wife Sita. This is a very famous book in India.", metadata={"topic": "Ramayan", "source": "notes_1"}, id="doc_5")
+    ]
+
+vector_store = Chroma.from_documents(
+    documents=books_documents,
+    collection_name="books",
+    persist_directory="./chromadb", # foldername where chromedb will store.
+    embedding=embedding_model
+)
+
+
+# to delete a collection
+# vector_store._client.delete_collection(name="books")
+
+# print all collections
+for collection in vector_store._client.list_collections():
+    print('collection name', collection.name)
+    print('collection count', collection.count())
+    print('--------------------------------')
+'''
+collection name learning_notes
+collection count 4
+--------------------------------
+collection name books
+collection count 1
+'''
+
+# to get a collection : with vector_store._client
+books_collection = vector_store._client.get_collection(name="books")    
+print("Document count:", books_collection.count()) # 1
+
+# to get a document : with vector_store
+docs = vector_store.get(ids=["doc_5"])
+print('docs', docs)
+
+retriever: VectorStoreRetriever = vector_store.as_retriever(
+    search_type="similarity",
+    search_kwargs={"k": 1}
+)
+result = retriever.invoke("Who wrote the book Ramayan?")
+print('result with similarity', result[0].page_content)
+# Ramayan is a book written by Valmiki. This is the story of Ram and his wife Sita. This is a very famous book in India.
+
+# retriever: VectorStoreRetriever = vector_store.as_retriever(
+#     search_type="mmr",
+#     search_kwargs={"k": 1}
+# )
+# result = retriever.invoke("Who wrote the book Ramayan?")
+# print('result with mmr', result[0].page_content)
+# Ramayan is a book written by Valmiki. This is the story of Ram and his wife Sita. This is a very famous book in India.
+
+
+# retriever: VectorStoreRetriever = vector_store.as_retriever(
+#     search_type="mmr",
+#     search_kwargs={"k": 1}
+# )
+# result = retriever.invoke("Who wrote the book Mahabharat?")
+# print('result with mmr', result[0].page_content)
+# Ramayan is a book written by Valmiki.
+
+'''
+I asked query "Who wrote the book Ramayan?" to the vector store retriever.
+
+Answer: Ramayan is a book written by Valmiki. This is the story of Ram and his wife Sita. This is a very famous book in India.
+
+I asked query "Who wrote the book Mahabharat?" to the vector store retriever.
+
+Answer: Ramayan is a book written by Valmiki.
+
+--------
+
+By default, a similarity-based retriever tries to return the most similar documents from the vector store. It does not automatically verify that a document contains the answer to your question.
+
+The key distinction: finding the closest document is not the same as finding a relevant document.
+
+'''
+
+# Solution with similarity score threshold
+
+
+retriever: VectorStoreRetriever = vector_store.as_retriever(
+    search_type="similarity_score_threshold",
+    search_kwargs={"k": 1, "score_threshold": 0.8}
+)
+result = retriever.invoke("Who wrote the book Mahabharat?")
+print('result with similarity score threshold', result[0].page_content)
+# Now get Error - No relevant docs were retrieved using the relevance score threshold 0.8
+
+'''
+Threshold	    Behavior
+0.3	            Less strict — more documents may pass
+0.5	            Moderately strict
+0.8	            Strict — only higher-scoring documents pass
+0.95	        Very strict — fewer documents may pass
+'''
