@@ -26,10 +26,17 @@
 21-10-2026
 Study time -
 6:30 am - 8:00 am
+11:15 am - 12:20 pm
+1:10 pm - 2:45 pm
+3:45 pm - 
 
-Othe time spend  -
+Other time spend  -
 8 - 9 = daily routine work myself and kuku.
 9 - 9:45 = pooja + kuku ready + kuku school drop
-9:45 - 10:15 = buying medicine and other food stuff.
+9:45 - 10:15 = outsude - buying medicine and other food stuff.
 10:15 - 10:50  = office work + some lappy cleanup.
- 
+10:50 - 11:15 = breakfast
+12:20 pm- 1:10 pm = plumber + masson + kuku pick
+2:45 pm - 3: 40 = lunch + kuku lunch
+
+

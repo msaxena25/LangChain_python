@@ -23,11 +23,8 @@ LangChain now documents Chroma through the separate langchain-chroma package.
 from langchain.vectorstores import Chroma (this does not work now.)
 '''
 
-from langchain_core.vectorstores.base import VectorStoreRetriever
-import langchain_core.documents.base
-from typing import Any
-from langchain_chroma import Chroma
 
+from langchain_chroma import Chroma
 
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_core.documents import Document
@@ -68,8 +65,6 @@ embedding_model = GoogleGenerativeAIEmbeddings(
     model="gemini-embedding-001",
     google_api_key=os.getenv("GOOGLE_API_KEY")
     )
-
-"""
 
 # lets create vector_store 
 
@@ -144,7 +139,7 @@ print('document_ids', document_ids)
 # document_ids ['doc_1', 'doc_2', 'doc_3', 'doc_4']
 
 # Now check if the embeddings already exist in the vector store
-embeddings_ids: dict[str, Any] = vector_store.get(ids=document_ids)["ids"]
+embeddings_ids = vector_store.get(ids=document_ids)["ids"]
 print('embeddings_ids', embeddings_ids)
 # embeddings_ids ['doc_1', 'doc_2', 'doc_3', 'doc_4']
 
@@ -224,7 +219,7 @@ title Economic history of India
 
 # the important point is that WikipediaRetriever searches Wikipedia for pages related to your query; it does not guarantee that the returned page will be an exact answer to your question.
 
-"""
+
 
 #-------------------------------------------------------------------------------
 
@@ -268,7 +263,7 @@ print("Document count:", books_collection.count()) # 1
 docs = vector_store.get(ids=["doc_5"])
 print('docs', docs)
 
-retriever: VectorStoreRetriever = vector_store.as_retriever(
+retriever = vector_store.as_retriever(
     search_type="similarity",
     search_kwargs={"k": 1}
 )
@@ -313,7 +308,7 @@ The key distinction: finding the closest document is not the same as finding a r
 # Solution with similarity score threshold
 
 
-retriever: VectorStoreRetriever = vector_store.as_retriever(
+retriever = vector_store.as_retriever(
     search_type="similarity_score_threshold",
     search_kwargs={"k": 1, "score_threshold": 0.8}
 )
@@ -328,3 +323,5 @@ Threshold	    Behavior
 0.8	            Strict — only higher-scoring documents pass
 0.95	        Very strict — fewer documents may pass
 '''
+
+ 

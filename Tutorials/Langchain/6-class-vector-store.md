@@ -381,18 +381,340 @@ for doc in results:
 - Batch queries: Supports batch() because this is runnable.
 - Integration with LangChain chains:	Yes because this is runnable.
 
+## Code example
+
+```py
+
+books_documents: list[Document] = [
+    Document(
+        page_content="Ramayan is a book written by Valmiki. This is the story of Ram and his wife Sita. This is a very famous book in India.", 
+        metadata={"topic": "Ramayan", "source": "notes_1"}, 
+        id="doc_5"
+        )
+    ]
+
+vector_store = Chroma.from_documents(
+    documents=books_documents,
+    collection_name="books",
+    persist_directory="./chromadb", # foldername where chromedb will store.
+    embedding=embedding_model
+)
+
+retriever: VectorStoreRetriever = vector_store.as_retriever(
+    search_type="similarity",
+    search_kwargs={"k": 1}
+)
+#     search_type="mmr",
+#     search_type="similarity_score_threshold",
+
+result = retriever.invoke("Who wrote the book Ramayan?")
+print('result', result[0].page_content)
+# Ramayan is a book written by Valmiki. This is the story of Ram and his wife Sita. This is a very famous book in India.
+
+result = retriever.invoke("Who wrote the book Mahabharat?")
+print('result', result[0].page_content)
+# Ramayan is a book written by Valmiki.
+
+1. I asked query on Mahabharat.
+2. It searches in document but not found exact anything on this query.
+3. Then it finds closest document and returns.
+```
+
+By default, a similarity-based retriever tries to return the most similar documents from the vector store. It does not automatically verify that a document contains the answer to your question.
+
+**The key distinction:** finding the closest document is not the same as finding a relevant document.
+
+## Solution with similarity score threshold
+
+```py
+
+retriever: VectorStoreRetriever = vector_store.as_retriever(
+    search_type="similarity_score_threshold",
+    search_kwargs={"k": 1, "score_threshold": 0.8}
+)
+result = retriever.invoke("Who wrote the book Mahabharat?")
+print('result with similarity score threshold', result[0].page_content)
+# Now get Error - No relevant docs were retrieved using the relevance score threshold 0.8
+
+```
+
+## score_threshold range 0 to 1
+```
+Threshold	    Behavior
+
+0.3	            Less strict — more documents may pass
+0.5	            Moderately strict
+0.8	            Strict — only higher-scoring documents pass
+0.95	        Very strict — fewer documents may pass
+```
+
+-------
+
+## LangChain: MMR Retriever
+
+MMR stands for `Maximum Marginal Relevance`. It is a retrieval strategy that tries to return documents that are both `relevant to your query and diverse from one another`.
+
+You already understand similarity-based retrieval and similarity score thresholds. Let's build on that knowledge.
+
+## 1. What problem does MMR solve?
+
+Imagine your vector store contains these five documents about LangChain:
+
+```
+Document 1 — LangChain is a framework for building LLM applications.
+Document 2 — LangChain simplifies developing applications powered by large language models.
+Document 3 — Developers use LangChain to integrate LLMs with external data and tools.
+Document 4 — Retrievers fetch relevant documents from a knowledge base.
+Document 5 — Langchain Memory helps applications retain conversation context.
+```
+
+Your query is:
+
+> Explain LangChain and its main capabilities.
+
+You ask the similarity-based retriever for three documents.
+
+It might return Documents 1, 2, and 3 because all three are highly similar to your query.
+
+**The problem?** They contain `overlapping` information. You could have retrieved more useful information about retrievers and memory instead.
+
+This is the problem MMR tries to solve: redundant results.
+
+## 2. How does MMR work?
+
+MMR considers two things when selecting documents:
+
+1. Relevance: How similar is the document to the user's query?
+2. Diversity: How different is the document from documents already selected?
+
+It tries to balance these two factors.
+
+It might return Documents 1, 4, and 5 folling above two relevance and diversity.
+
+## MMR Code
+
 ```py
 
 retriever = vector_store.as_retriever(
-    search_type="similarity_score_threshold", # can change search type
+    search_type="mmr",
     search_kwargs={
-        "k": 5,
-        "score_threshold": 0.7
+        "k": 3, # Number of final documents returned
+        "fetch_k": 10, # Number of candidate documents considered before MMR selection
+        "lambda_mult": 0.5 # 0.0, 0.5, 1.0 - Balances relevance and diversity
     }
 )
 
-#     search_type="mmr",
-#     search_type="similarity",
+result = retriever.invoke(
+    "Explain LangChain and its main capabilities"
+)
+
+for doc in result:
+    print(doc.page_content)
+    print("---")
 ```
 
--------------------
+------------    
+
+# FAISS Vector store
+
+The main difference b/w FAISS & Chroma is that `FAISS is primarily a vector-search library`, while `Chroma provides a database with named collections`.
+
+FAISS creates an `in-memory vector index` and associates it with the document store. You don't need a collection name because this index object itself represents your current set of vectors and documents.
+
+## Required package
+
+**langchain-community** - Provides the integration that lets you use FAISS through a familiar LangChain interface.
+
+**faiss-cpu** - The Python-installable package that provides FAISS functionality using your CPU.
+
+```
+pip install -U langchain-community
+pip install -U faiss-cpu
+```
+
+## Create store
+
+```py
+# Without save_local()
+# Default storage -  In memory
+vector_store = FAISS.from_documents(
+    documents=documents,
+    embedding=embeddings
+)
+
+# With save_local()
+vector_store = FAISS.from_documents(documents, embeddings)
+vector_store.save_local("my_faiss_index") #directory name
+```
+
+**Compare the two:**
+
+| Feature                   | FAISS                           | Chroma                                                  |
+| ------------------------- | ------------------------------- | ------------------------------------------------------- |
+| Collection name required? | No                              | When using named collections, yes                       |
+| Default storage           | In memory                       | Persistent or in memory, depending on configuration     |
+| Multiple collections      | Create separate indexes/objects | Create named collections                                |
+| Save data to disk         | Explicitly save the index       | Can persist automatically with persistent configuration |
+| Search                    | Vector similarity search        | Vector similarity search                                |
+
+## How does FAISS store your documents?
+
+1. The embedding model converts each document into a numerical vector.
+2. FAISS adds those vectors to its search index.
+3. LangChain maintains a mapping between index entries and the original Document objects, including their metadata.
+4. IF you skip directory name (means skip `save_local()`) - `index remains in memory (RAM)`. It is not automatically saved to a directory.
+    - You can search it while the Python process and object remain available.
+    - If the Python process ends and the object is lost, you cannot recover that index from disk unless you
+      saved  it separately.
+    - The document embeddings and index are recreated every time you rebuild the vector store this way.
+5. If you provide a directory name, `FAISS saves the index files inside the [directory_name]` relative to your current working directory.
+    - This saves the FAISS index and its associated document data to disk.
+    - Next time, instead of recreating the index from the documents, load the saved index.
+    - The original documents do not need to be embedded again when you load the saved index.
+6. Load saved index & retrieve document.
+
+
+## Store data permanently in directory
+
+You can save the FAISS vector store to a directory yourself:
+
+```py
+vector_store.save_local("my_faiss_index")
+
+# load
+loaded_vector_store = FAISS.load_local(
+    "my_faiss_index",
+    embeddings,
+    allow_dangerous_deserialization=True
+)
+```
+
+**Security note:** Only load a saved FAISS store using `allow_dangerous_deserialization=True` when you trust the files. The saved document store can use Python pickle deserialization, which can execute malicious code.
+
+## 4. How would you separate Notes and Books in FAISS?
+
+You could create two independent indexes:
+
+```py
+# pass notes documents - it will crete notes Index 
+notes_store = FAISS.from_documents(
+    documents=notes_documents,
+    embedding=embeddings
+)
+
+# pass books documents - it will create seperate books index
+books_store = FAISS.from_documents(
+    documents=books_documents,
+    embedding=embeddings
+)
+```
+
+Now `notes_store` searches Notes, and `books_store` searches Books.
+
+**Remember:** In Chroma, you can organize data into named collections within a database. In FAISS, you typically manage separate index objects and decide how and where to save them.
+
+---------
+
+# Multi query Retriever
+
+Sometimes a single query might not capture all the ways information is phrased in your documents.
+
+For example:
+
+**Query:** "How can I stay healthy?" (this is very broad query and could have multiple queries.)
+
+Could mean:
+
+. What should I eat?
+. How often should I exercise?
+. How can I manage stress?
+
+MultiQuery Retriever uses an `LLM to generate multiple alternative queries`, searches with those queries, and combines the retrieved documents.
+
+1. Takes your original query
+2. Uses an LLM (e.g., GPT-3.5) to generate multiple semantically different versions of that query
+3. Performs retrieval for each sub-query
+4. Combines and deduplicates the results
+
+
+## Package required -
+
+langchain_classic
+
+```py
+# older way before langchain-1.x
+from langchain.retrievers.multi_query import MultiQueryRetriever
+
+# below is new way to import MultiQuery Retriever
+from langchain_classic.retrievers import MultiQueryRetriever
+```
+
+## Code example
+
+```py
+
+# create and add docs
+vector_store: FAISS = FAISS.from_documents(
+    documents=documents,
+    embedding=embeddings_model
+)
+
+# directory name to save faiss index and docs
+vector_store.save_local('faiss-vector-store')
+
+# create base retriever object
+base_retriever = vector_store.as_retriever(
+    search_type="similarity",
+    search_kwargs = {'k': 3}
+)
+
+# now create llm model for multi query retriever
+llm_model = ChatGoogleGenerativeAI(
+    model="gemini-3.5-flash-lite",  
+    max_output_tokens=100, 
+    google_api_key=GOOGLE_API_KEY,
+    timeout=20,
+    max_retries=0
+    )
+
+# create multi query retriever
+multi_query_retriever = MultiQueryRetriever.from_llm(
+    retriever=base_retriever,
+    llm= llm_model
+)
+
+results = multi_query_retriever.invoke("How can I preserve previous chat messages in an LLM application?")
+
+print('Results len:', len(results))
+
+for doc in results:
+    print("Content:", doc.page_content)
+    print("---")
+```
+
+## Workflow to generate final result - 
+
+1. We have provided k = 3 in our base_retriever, This means each search retrieves up to 3 documents.
+2. Then you pass that retriever into MultiQueryRetriever. 
+3. The LLM generates multiple alternative queries.
+4. Each query is sent to base_retriever.
+5. Each search can return up to 3 documents.
+6. MultiQueryRetriever combines the results and removes duplicate documents.
+7. Then It prints finally unique documents and that could be greather then or less then 3 (defined k value).
+
+## How to get or print generated Queries 
+
+To see the queries generated by MultiQueryRetriever, We need to enable `logging`.
+
+MultiQueryRetriever API doesn't expose them as a separate return value. Logging is the simplest way to inspect them without modifying the retriever.
+
+MultiQueryRetriever — already contains logging statements that report the generated queries.
+
+```py
+
+import logging
+
+logging.basicConfig()
+logging.getLogger("langchain_classic.retrievers.multi_query").setLevel(logging.INFO)
+```
+------
