@@ -382,326 +382,213 @@ Langchain-code\14.class-youtube-chatbot-rag.py
 
 ----------
 
-# YouTube RAG chatbot — HLD and LLD
+# RAG Evalution - Most Important
 
-This is the same application as `Langchain-code/14.class-youtube-chatbot-rag.py`, written the way an interview expects: first the shape of the system (HLD), then the exact wiring with the watch-story video as the example (LLD).
+Now that you've built your first YouTube transcript-based RAG application, the next step is Evaluation. This is an important step toward building a reliable, industry-standard RAG application.
 
-Video: `https://www.youtube.com/watch?v=7aEAS5E5vjg`  
-Question used in the script: `What lession Father wanted to teach his Son?`
+## What is RAG evaluation?
 
-```
-INDEXING  (once per video, before any question)
-video id
-  -> YouTubeTranscriptApi.fetch
-  -> join snippet text into one string
-  -> RecursiveCharacterTextSplitter
-  -> GoogleGenerativeAIEmbeddings
-  -> FAISS
+RAG evaluation is the process of measuring how `correctly` and `reliably` your RAG application retrieves relevant information and generates answers.
 
-QUERY  (every question, one .invoke())
-question string
-  -> retriever (similarity, k = 6)
-  -> join chunk text into context
-  -> PromptTemplate(context + question)
-  -> ChatGoogleGenerativeAI
-  -> StrOutputParser
-  -> { question, answer }
-```
+For example, suppose you ask your YouTube chatbot:
 
-## HLD — high level design
+“What lesson did the father want to teach his son?”
 
-1. **Fix the job of the system.**  
-   The chatbot answers questions about one YouTube video, and the only allowed source is that video's transcript. The LLM is used to read and phrase an answer. It is not used as the source of facts about the video. That is why this is RAG and not a plain Gemini call, and why it is not fine-tuning: the knowledge changes with every video id, and we do not want to retrain weights to learn one story.
+**Evaluation helps you determine:**
 
-2. **Split the system into indexing and query.**  
-   Indexing prepares the video so it can be searched. Query answers one user question from that index. Indexing runs when the script starts. Query runs on `final_chain.invoke(...)`. In an interview, draw these as two pipelines that share the vector store. Rebuilding the index on every question would repeat the embedding API cost for the same transcript.
+- Did the retriever find the relevant transcript chunks?
+- Did the LLM give the correct answer based on those chunks?
+- Did the answer contain unsupported or fabricated information?
+- Was the answer clear and relevant?
 
-3. **Take the transcript as the knowledge source.**  
-   `YouTubeTranscriptApi.fetch(video_id)` returns caption snippets (`text`, `start`, `duration`). Captions are already text, so we do not download audio or run speech-to-text. `YoutubeLoader` from `langchain_community` can do this in one call and return LangChain `Document`s. We called the transcript API directly so we can see each snippet, catch `TranscriptsDisabled`, and decide how the text is joined before it becomes documents.
+## 2. RAG evaluation techniques
 
-4. **Make chunks the unit of search, not the whole transcript and not each caption line.**  
-   Caption lines are a few words (`"Oneday the man decided to teach his son"`). Embedding each line would lose the story. Putting the full transcript into every prompt would work for this short video, and it would also send irrelevant sentences, cost more tokens, and hit the context window on a long video. We join the snippets, then split them into overlapping chunks. Search returns a few chunks. The prompt sees only those chunks.
+Here are the major techniques and a short description of each.
 
-5. **Embed the chunks and store the vectors in FAISS.**  
-   `GoogleGenerativeAIEmbeddings` (`gemini-embedding-001`) turns each chunk into a vector. FAISS keeps those vectors in memory and answers "which chunks are closest to this question?". FAISS fits this design because the corpus is one short transcript, it runs locally, and it needs no separate database server. A hosted store (Chroma server, pgvector, Pinecone) is the follow-up when many videos must survive process restarts or be shared across API workers. The chat model and the embedding model both use `GOOGLE_API_KEY`, so the script has one provider.
+| Technique                                | Short description                                                                                                     |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 1. Retrieval Evaluation                  | Measures whether the retriever finds the correct and relevant document chunks.                                        |
+| 2. Answer / Generation Evaluation        | Measures the correctness, relevance, and quality of the generated answer.                                             |
+| 3. Faithfulness Evaluation               | Checks whether the answer is supported by the retrieved context rather than invented.                                 |
+| 4. Context Precision                     | Measures whether the retrieved chunks are relevant, particularly whether relevant results rank above irrelevant ones. |
+| 5. Context Recall                        | Measures whether the retrieved context contains the information needed to answer the question.                        |
+| 6. Answer Relevancy                      | Measures how directly the answer addresses the user's question.                                                       |
+| 7. Correctness Evaluation                | Compares the generated answer with a reference or ground-truth answer.                                                |
+| 8. Hallucination Detection               | Identifies claims that are unsupported by the provided evidence or contradict it.                                     |
+| 9. Latency Evaluation                    | Measures the time required for retrieval and answer generation.                                                       |
+| 10. Cost Evaluation                      | Measures token usage, embedding costs, LLM costs, and overall cost per query.                                         |
+| 11. Robustness Evaluation                | Tests performance on ambiguous, misspelled, unexpected, or unanswerable questions.                                    |
+| 12. Safety and Access-Control Evaluation | Checks for unsafe outputs and whether users can access only the information they're authorized to see.                |
 
-6. **Retrieve a small neighborhood of chunks per question.**  
-   The retriever is FAISS similarity search with `k = 6`. The question vector is compared with chunk vectors, and the six nearest chunks become the context. We use plain similarity because a short story's answer is often spread across neighboring sentences, and those neighbors are useful. MMR is the alternative when a long video repeats the same point and you want diverse chunks. A score threshold is the alternative when you would rather return nothing than a weakly related chunk.
+These techniques overlap somewhat. For example, faithfulness and hallucination detection are closely related, but they're useful to consider separately when designing tests.
 
-7. **Augment a grounded prompt, then generate.**  
-   Retrieval finds text. Augmentation places that text and the user question into a `PromptTemplate`. Generation is `ChatGoogleGenerativeAI` (`gemini-3.5-flash-lite`). The template tells the model to answer from the context only, and to say `I couldn't find the answer in this video's transcript.` when the context does not contain the answer. That sentence is the hallucination control. `max_output_tokens=500`, `timeout=20`, and `max_retries=2` keep one answer short and bounded.
+## 3. Libraries and frameworks
 
-8. **Hide the query path behind one chain.**  
-   The prompt needs two inputs, `context` and `question`. The retriever accepts only the question and returns `list[Document]`. `RunnableParallel` is the piece that solves that mismatch: one branch keeps the question (`RunnablePassthrough`), the other branch retrieves and joins document text. `prompt | llm | parser` then runs as a normal sequence. The caller writes `final_chain.invoke(question)` and does not call retrieve, format, prompt, and generate by hand.
+**Ragas**
 
-9. **Return the question with the answer.**  
-   An outer `RunnableParallel` runs the RAG chain and also forwards the original question. The result is `{"question": "...", "answer": "..."}`. The inner chain still does the real work. The outer chain only shapes the response so a caller can see which question produced the answer.
+Focus: RAG-specific metrics
 
-10. **Treat retrieval quality as part of the design.**  
-    With `chunk_size=200`, `chunk_overlap=50`, and `k=5`, the retrieved context contained the setup (father, watch, market) and missed the moral. The model followed the prompt and said the deeper lesson was not in the context. With `chunk_size=500`, `chunk_overlap=80`, and `k=6`, the context included the old shopkeeper's lines about time, and the answer became the real lesson. Same LLM, same prompt. The index and the retriever decided whether the answer was possible.
+Provides metrics such as faithfulness, answer relevancy, context precision, context recall, and answer correctness.
 
-## LLD — low level design
+**DeepEval**
 
-Same video, same question, in code order. Models are created once, above the chain, so a question does not construct a new client.
+Focus: automated LLM testing
 
-### 1. Load the key and create the two models
+Supports RAG evaluation, hallucination checks, answer relevance, and repeatable test cases.
 
-`load_dotenv()` reads `GOOGLE_API_KEY`.
+**LangSmith**
 
-```python
-embedding_model = GoogleGenerativeAIEmbeddings(
-    model="gemini-embedding-001",
-    google_api_key=GOOGLE_API_KEY,
-)
+Focus: tracing, datasets, and experiments
 
-llm_model = ChatGoogleGenerativeAI(
-    model="gemini-3.5-flash-lite",
-    google_api_key=GOOGLE_API_KEY,
-    max_output_tokens=500,
-    max_retries=2,
-    timeout=20,
-)
-```
+Helps trace LangChain executions, compare versions, run evaluations, and monitor application behavior.
 
-Example: both objects exist before `VIDEO_ID` is fetched. Indexing uses only `embedding_model`. Query uses `embedding_model` again inside FAISS (to embed the question) and `llm_model` to write the answer.
+## 4. Why is evaluation important?
 
-Why these models: one Google key for vectors and for chat. `gemini-embedding-001` is the embedding model. `gemini-3.5-flash-lite` is a small, fast chat model, which is enough when the facts are already in the prompt. A larger chat model would not recover a moral that retrieval never fetched.
+Without evaluation, your application may appear to work because a few example questions produce good answers, while failing on real user questions.
 
-### 2. Fetch the transcript by video id
+**Evaluation helps you:**
 
-```python
-VIDEO_ID = "7aEAS5E5vjg"
-youtube_api_obj = YouTubeTranscriptApi()
-video_transcipt = youtube_api_obj.fetch(VIDEO_ID)
-```
+- Measure quality: establish a baseline before making changes.
+- Compare approaches: determine whether different chunk sizes, retrievers, embedding models, or prompts improve results.
+- Reduce hallucinations: test whether answers are grounded in the transcript.
+- Prevent regressions: verify that code or model changes haven't degraded performance.
+- Monitor production: identify quality, latency, and cost problems over time.
 
-Example snippet:
+## 5. Is evaluation required for an industry-standard RAG application?
 
-```text
-FetchedTranscriptSnippet(
-    text="Oneday the man decided to teach his son",
-    start=14.08,
-    duration=6.16,
-)
-```
+Yes, a systematic evaluation process is strongly recommended for production-grade RAG. There is no single mandatory evaluation library or universal set of metrics, but shipping a system without testing its retrieval quality, answer quality, failure cases, and operational performance is risky.
 
-`TranscriptsDisabled` is the failure path: no captions, stop. There is no vector store and no LLM call.
+----------
 
-`YoutubeLoader(video_id=..., language=["en"]).load()` is the shorter LangChain path. It returns `Document`s immediately. We skipped it here because the raw snippets make the next join step visible, and the exception is explicit. The loader is the right choice when you only want documents and do not need `start` / `duration`.
+# RAG improvement: Indexing improvement some techniques
 
-### 3. Join snippet text into one string
+1\. **Document cleaning and preprocessing**
 
-```python
-transcript_full_string = " ".join(
-    snippet.text for snippet in video_transcipt.snippets
-)
-```
+Remove unnecessary HTML, duplicated text, navigation content, transcription artifacts, and irrelevant boilerplate before creating chunks.
 
-Example:
+Why it matters: noisy input produces noisy embeddings and poorer retrieval.
 
-```text
-Once upon a time there lived a man in a small village. He was very worried about his son. ... So use your time wisely.
-```
+2\. **Advanced chunking strategies**
 
-Input is many tiny snippets. Output is one string. `start` and `duration` are dropped at this join. The chatbot can answer "what lesson" and cannot answer "at what timestamp" unless we keep that metadata on each `Document`. That is a deliberate scope cut for this script.
+Go beyond fixed-size splitting. Consider semantic chunking, structure-aware chunking, sentence-based splitting, or document-specific strategies.
 
-### 4. Split the string into overlapping documents
+Why it matters: chunks should preserve meaningful information without mixing unrelated topics.
 
-```python
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
-    chunk_overlap=80,
-)
-documents = text_splitter.create_documents([transcript_full_string])
-```
+3\. **Optimize chunk size and overlap**
 
-Example shape of one chunk:
+Experiment with chunk size and overlap using an evaluation dataset instead of selecting arbitrary values.
 
-```text
-Document(
-    page_content="Oneday the man decided to teach his son a lesson. ... Ask everyone you meet how much they think it is worth.",
-    metadata={},
-)
-```
+Why it matters: small chunks can lose context; large chunks can dilute relevance and consume more tokens.
 
-`create_documents([one_string])` returns `list[Document]`. `chunk_size=500` is about 500 characters, not 500 tokens. `chunk_overlap=80` copies the tail of one chunk into the head of the next, so a sentence that sits on the cut still appears in a chunk.
+4\. **Metadata enrichment**
 
-`RecursiveCharacterTextSplitter` tries larger separators first (paragraph, line, space) and only then cuts characters. A spoken transcript joined with spaces has almost no paragraphs, so the splitter mostly breaks on spaces and stays off the middle of a word. `CharacterTextSplitter` uses one separator only. A token splitter tracks the model limit more closely and is harder to read while tuning. Character size was enough to see the quality change in step 10 of the HLD.
+Attach metadata such as source, document ID, video ID, title, topic, timestamps, creation date, and access permissions.
 
-The first draft of the requirement used `chunk_size=1000` and `chunk_overlap=200`. The script uses `500` and `80` because that setting, with `k=6`, is the one that returned the moral.
+Why it matters: enables filtering, source attribution, traceability, and access control.
 
-### 5. Embed the documents and build FAISS
+5\. **Deduplication and content validation**
 
-```python
-vector_store = FAISS.from_documents(
-    documents=documents,
-    embedding=embedding_model,
-)
-```
+Detect duplicate documents or chunks, empty content, corrupted records, and invalid metadata before indexing.
 
-Example:  document text goes to `gemini-embedding-001`, the vector is stored next to that text, and FAISS can search it. `from_documents` both embeds and builds the index. There is no `save_local` in this script, so the index lives until the process ends. Running the file again refetches the transcript and pays for embeddings again. `FAISS.save_local` / `FAISS.load_local` is the persistence step when the same video is queried many times.
+Why it matters: prevents redundant retrieval results and reduces wasted storage and embedding costs.
 
-### 6. Turn the vector store into a retriever
+6\. **Index configuration and optimization**
 
-```python
-retriever = vector_store.as_retriever(
-    search_type="similarity",
-    search_kwargs={"k": 6},
-)
-```
+Choose appropriate vector distance metrics, vector dimensions, and indexing structures. For large datasets, evaluate approximate nearest-neighbor indexes such as HNSW or IVF where supported.
 
-Example call, before the chain exists:
+Why it matters: balances retrieval accuracy, query latency, memory use, and scalability.
 
-```python
-retriever.invoke("What lession Father wanted to teach his Son?")
-# -> 6 Document objects, the nearest chunk texts
-```
+7\. **Vector store**
 
-Input is a string. Output is `list[Document]`, not a prompt and not an answer. `k=6` is wide enough for this story to include both the father's instruction and the shopkeeper's explanation. `search_type="similarity"` is nearest-neighbor search over the FAISS vectors.
+Currently we have used FAISS that is basic vector store. For industry standard we can with Pincone a cloud based vector store as well.
 
-### 7. Write the prompt that performs augmentation
+---------
 
-```python
-prompt_template = PromptTemplate(
-    template='''You are a YouTube video assistant.
-    Provide answer based on given context only.
-    If the answer is not available in the context, say:
-    "I couldn't find the answer in this video's transcript."
+# RAG Retrieval Improvements
 
-    Context: {context}
-    User Question: {question}
-    ''',
-    input_variables=["context", "question"],
-)
-```
+## 1. Pre-retrieval Techniques
 
-Example after formatting:
+1\. Query Rewriting: Rewrite vague, ambiguous, or misspelled questions into clearer search queries to improve retrieval quality.
 
-```text
-Context: ... you cannot put a price on time. You can give millions of rupees, but you cannot buy back even one second of your life. ...
-User Question: What lession Father wanted to teach his Son?
-```
+2\. Query Expansion / Multi-Query Retrieval: Generate multiple alternative queries for the same question to retrieve relevant information expressed in different ways.
 
-`PromptTemplate` is a single string with two placeholders. That matches this app: no chat history, no system/human message list. `ChatPromptTemplate` is the next step when you add a separate system message or prior turns. The fallback sentence is what made the small-chunk run honest: the model reported that the moral was missing instead of inventing it.
+3\. Query Contextualization: Use conversation history to convert follow-up questions into standalone queries that can be understood without previous messages.
 
-### 8. Flatten retrieved documents into the context string
+## 2. During-retrieval Techniques
 
-```python
-format_retrieved_docs = lambda retrieved_docs: " ".join(
-    doc.page_content for doc in retrieved_docs
-)
-```
+1\. Similarity Search Tuning: Optimize the number of retrieved chunks (`k`) and search configuration to balance relevance and context coverage.
 
-Example:
+2\. Similarity Score Threshold: Retrieve only documents whose relevance scores meet a specified threshold, avoiding weak matches.
 
-```text
-input:  [Document(...watch...), Document(...old man...), ...]
-output: ".... took out the watch ... you cannot put a price on time. ..."
-```
+3\. MMR (Maximal Marginal Relevance): Retrieve relevant documents while reducing redundancy among the selected chunks.
 
-The retriever returns objects. The prompt placeholder `{context}` needs a string. The lambda is left as a normal function. LCEL wraps a callable in `RunnableLambda` when it is used with `|`. An explicit `RunnableLambda` is the same thing, written out.
+4\. Hybrid Search: Combine semantic vector search with keyword-based search, such as BM25, to capture both meaning and exact keyword matches.
 
-Joining with a space removes chunk boundaries. Generation still works. If the product must cite a chunk or a timestamp, the formatter should keep separators and the metadata we dropped in step 3.
+5\. Ensemble Retrieval or Domain Aware routing: Combine results from multiple retrievers using techniques such as Reciprocal Rank Fusion (RRF) to improve retrieval coverage.
 
-### 9. Build the parallel step that feeds the prompt
+## 3. Post-retrieval Techniques
 
-```python
-context_chain = RunnableParallel({
-    "question": RunnablePassthrough(),
-    "context": retriever | format_retrieved_docs,
-})
-```
+1\. Reranking: Use a reranking model, often a cross-encoder, to rescore retrieved documents against the query and reorder them by relevance.
 
-Example input:
+2\. Contextual Compression: Remove irrelevant portions of retrieved documents or extract only the information relevant to the user's question.
 
-```text
-"What lession Father wanted to teach his Son?"
-```
+3\. Deduplication: Remove duplicate or substantially overlapping chunks from the retrieved results.
 
-Example output:
+---------
 
-```python
-{
-    "question": "What lession Father wanted to teach his Son?",
-    "context": "<the six chunks joined into one string>",
-}
-```
+# RAG Improvement: Augmentation Phase
 
-This is the LLD detail interviews push on. `RunnableParallel` gives the same input to every branch.
+Augmentation is the second stage of RAG. After retrieval, we take the relevant documents and combine them with the user's question to prepare the context that will be sent to the LLM.
 
-- `RunnablePassthrough()` copies that string into `question`.
-- `retriever | format_retrieved_docs` embeds the same string, fetches 6 documents, and joins their `page_content` into `context`.
+In your YouTube RAG application, your current flow is:
 
-A plain `retriever | prompt_template` cannot do this. The retriever's output replaces the input, so the prompt would receive `list[Document]` and would lose the original question. The parallel step is how both values arrive together, which is what `input_variables=['context', 'question']` requires.
+`Question → Retriever → Retrieved documents → Format context → Prompt template → LLM`
 
-The chain's contract is a string. `final_chain.invoke("...")` matches that. Passing `{"question": "..."}` would forward the dict into the retriever and into `{question}`.
+We can improve the augmentation phase through the following techniques.
 
-### 10. Connect augmentation and generation
+## 1. Augmentation improvement techniques
 
-```python
-parser = StrOutputParser()
-chain = context_chain | prompt_template | llm_model | parser
-```
+1\. Context Formatting: Format retrieved chunks clearly, separating documents with newlines and including source information where useful.
 
-Example data at each pipe:
+2\. Context Duplication & Compression: Remove repeated and Reduce unnecessary text while preserving information needed to answer the question, saving tokens and reducing noise.
 
-| Step | Value |
-| --- | --- |
-| `context_chain` | `{"question": "...", "context": "..."}` |
-| `prompt_template` | one formatted prompt string |
-| `llm_model` | `AIMessage(content="Based on the provided context, ...")` |
-| `parser` | that content as a plain `str` |
+3\. Prompt Instruction Optimization: Clearly instruct the LLM to answer using the provided context, avoid unsupported claims, and say when the context does not contain the answer.
 
-`StrOutputParser` is there because the rest of the app wants a string. The chat model returns a message object.
+4\. Conversation History Integration: For conversational RAG, include only the relevant previous messages alongside the retrieved context, avoiding unnecessary history.
 
-`chain` is the RAG pipeline. Older `RetrievalQA` hid this wiring inside one class. LCEL keeps retrieve, format, prompt, model, and parse as separate runnables, so each one can be swapped or printed. That is why the script uses this chain.
+5\. Context Token Budget Management: Estimate prompt token usage and limit the context so the combined instructions, question, retrieved content, and expected answer fit within the model's context window.
 
-### 11. Add an outer parallel for the response shape
+6. Answer grounding: means ensuring that the LLM's answer is based on the provided context or reliable source documents, rather than unsupported assumptions or its own potentially incorrect knowledge.
+---------
 
-```python
-final_chain = RunnableParallel({
-    "question": RunnablePassthrough(),
-    "answer": chain,
-})
-```
+# RAG Improvements: Generation Phase
 
-`RunnableParallel` again passes the original string to both branches. `question` is the raw string. `answer` is the full inner chain: retrieve, prompt, Gemini, parse.
+1\. Hallucination Reduction: Instruct the model to acknowledge missing information rather than inventing an answer. This reduces risk but does not eliminate hallucinations.
 
-### 12. Run the whole query with one invoke
+2\. Structured Output: Use formats such as JSON with defined fields or schemas to produce predictable, machine-readable responses.
 
-```python
-result = final_chain.invoke(
-    "What lession Father wanted to teach his Son?"
-)
-```
+3\. Temperature Tuning: Adjust temperature to control output variability. Lower values often suit factual RAG answers, although they do not guarantee correctness
 
-Example result with `chunk_size=500`, `chunk_overlap=80`, `k=6`:
+4\. Citation Generation: Ask the LLM to include source IDs, document references, or timestamps supporting its answer, then validate those citations.
 
-```python
-{
-    "question": "What lession Father wanted to teach his Son?",
-    "answer": "Based on the provided context, the father wanted to teach his son about the real value of time, helping him understand that \"you cannot put a price on time,\" that you cannot buy back even one second of your life, and that he must use his time wisely instead of being lazy and careless.",
-}
-```
+5\. Streaming Responses: Stream the generated answer to the user as tokens arrive, improving perceived responsiveness.
 
-Example result with the weaker index (`chunk_size=200`, `chunk_overlap=50`, `k=5`): the answer described the watch and the market, then said the context never states the moral. The grounding rule was doing its job. The retriever had not supplied the shopkeeper's lines.
+6\. Guardrails: are rules and validation mechanisms that control an AI application's inputs and outputs to make it safer, more reliable, and compliant with business requirements.
 
-End-to-end query path for that successful call:
+----------
 
-1. Outer parallel receives the question string.
-2. Inner `context_chain` keeps the string and also retrieves 6 chunks.
-3. Those chunks include the shopkeeper: time has no price, a second cannot be bought back, use time wisely.
-4. The prompt is filled with that context and the question.
-5. `gemini-3.5-flash-lite` writes the answer from that context.
-6. The parser returns a string, and the outer parallel packages `{question, answer}`.
+# RAG system design approaches or architectural patterns
 
-## If the interview asks what you would add next
+They address different requirements:
 
-These are not in the script. They are the usual follow-ups, in the order they matter.
+| RAG approach     | Main purpose                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------ |
+| Multimodal RAG   | Retrieve and use multiple data types, such as text, images, audio, and video.                    |
+| Agentic RAG      | Use an AI agent to decide how to search, which tools to use, and whether to retrieve again.      |
+| Memory-based RAG | Retrieve relevant information from past conversations, user preferences, or stored interactions. |
 
-1. **Persist the index.** `save_local` / `load_local` so a second question does not re-embed the transcript.
-2. **Keep metadata.** Store `video_id`, `start`, and `duration` on each `Document` before the join discards them, then return a timestamp with the answer.
-3. **Many videos.** One FAISS index, `video_id` in metadata, and a metadata filter on the retriever so a question searches only the selected video.
-4. **Multi-turn chat.** `ChatPromptTemplate` plus history. The retriever should still see a standalone question, so a rewrite step turns "what did he mean?" into "what lesson did the father want to teach his son?".
-5. **Stronger retrieval.** MMR or a reranker when the video is long. A score threshold when "I couldn't find the answer" is better than a weak chunk.
+Important distinction: These approaches are not mutually exclusive. You can combine all three in one application.
 
+For example, a personalized video assistant could retrieve video transcripts and frames (multimodal), remember previous conversations (memory-based), and decide dynamically when to search again (agentic).
+
+-----------

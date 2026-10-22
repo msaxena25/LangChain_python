@@ -58,8 +58,8 @@
 Study time - 
 10:00 AM - 12:40 PM
 1:00 to 1:30
-3:30 pm - 5:30 pm
-
+4:00 pm - 5:30 pm
+6:30 PM to 7:30 PM
 
 
 Other - 
@@ -68,5 +68,6 @@ Other -
 9 - 10:00 = pooja + kuku ready + kuku school drop
 12:40 to 1 PM  - kuku pickup
 1:30 - 2:45 = went to office 
-2:45 - 3:30 = lunch + kuku lunch
-
+2:45 - 4:00 = lunch + kuku lunch + nap
+5:30 to 6 PM - masava doctor and discussion
+6 to 6:30 resume update and replies.
