@@ -523,7 +523,7 @@ Let's understand these with Python.
 
 Install the current text-splitter package if you don't have it:
 
-```
+```py
 pip install -U langchain-text-splitters
 
 # -U in a pip command means upgrade.
@@ -606,6 +606,41 @@ print(chunks[0].metadata)
 `split_text(text)` → accepts a string and returns strings.
 
 `split_documents(documents)` → accepts Document objects and returns smaller Document objects, preserving their metadata.
+
+## create_documents() method
+
+`RecursiveCharacterTextSplitter` provides `create_documents()` as well as `split_text()`.
+
+###  `split_text()` vs `create_documents()`
+
+| Method               | Input           | Output                               |
+| -------------------- | --------------- | ------------------------------------ |
+| `split_text()`       | A string        | List of text strings                 |
+| `create_documents()` | List of strings | List of LangChain `Document` objects |
+
+```py
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+
+# Since `transcript_full_string` is a single string, wrap it in a list:
+
+documents = text_splitter.create_documents([transcript_full_string])
+```
+
+Each `Document` contains:
+
+- `page_content` — the text of that chunk.
+- `metadata` — additional information, such as source information if provided.
+
+### Can we add metadata?
+
+Yes! You can pass metadata for the original text, and it will be copied to each generated document.
+
+```py
+documents = text_splitter.create_documents(
+    [transcript_full_string],
+    metadatas=[{"video_id": "YOUR_VIDEO_ID"}]
+)
+```
 
 --------
 

@@ -56,11 +56,17 @@
 
 22-10-2026
 Study time - 
-10:00 AM - 
+10:00 AM - 12:40 PM
+1:00 to 1:30
+3:30 pm - 5:30 pm
+
 
 
 Other - 
 6:30 AM to 8 AM - Sleep
 8 - 9 = daily routine work myself and kuku.
 9 - 10:00 = pooja + kuku ready + kuku school drop
+12:40 to 1 PM  - kuku pickup
+1:30 - 2:45 = went to office 
+2:45 - 3:30 = lunch + kuku lunch
 
