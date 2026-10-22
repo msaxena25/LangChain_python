@@ -459,6 +459,7 @@ Currently we have used FAISS that is basic vector store. For industry standard w
 5\. Context Token Budget Management: Estimate prompt token usage and limit the context so the combined instructions, question, retrieved content, and expected answer fit within the model's context window.
 
 6\. Answer grounding: means ensuring that the LLM's answer is based on the provided context or reliable source documents, rather than unsupported assumptions or its own potentially incorrect knowledge.
+
 ---------
 
 # RAG Improvements: Generation Phase
