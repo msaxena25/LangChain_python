@@ -4,59 +4,32 @@ You've now learned the four important building blocks of RAG:
 
 1. Document loaders — load data from PDFs, text files, websites, and other sources.
 2. Text splitters — divide documents into manageable chunks.
-3. Vector stores — store document embeddings and support similarity search.
+3. Embedding Generation and Vector store — store document embeddings and support similarity search.
 4. Retrievers — find relevant documents for a user's query.
 
-Now let's connect these components into a complete RAG application.
-
-RAG is a technique in which an LLM retrieves relevant information from an external knowledge source and uses that information to generate an answer.
+`RAG is a technique` in which an LLM retrieves relevant information from an external knowledge source and uses that information to generate an answer.
 
 ## What is parameterized knowledge?
 
 `Parameterized knowledge` is the information and patterns a model learns during training and represents through its learned `parameters` (weights).
 
-Let's understand this with a simple example.
-
-Suppose you ask an LLM:
-
-> Who wrote the Ramayana?
-
-The model answers:
-
-> The Ramayana is traditionally attributed to Valmiki.
-
-Where does this information come from if you haven't provided a document or used RAG?
-
-It may have learned this association during training. That learned information is part of its parameterized knowledge.
-
 ## How is knowledge stored in parameters?
 
 A neural network contains many numerical values called `parameters` or `weights`. During training, these values are adjusted to help the model predict the correct next tokens.
 
-```
-Model	        Parameter count
-GPT-3              175 B
-GPT-2               1.5 B
-Llama 2 7B         7 Billion
-```
+GPT-3 have `175 B` parameters, GPT-2 have `1.5 B` parametersetc..
 
-## How can access this information?
+## Why an LLM alone is not enough for a real-world application? 
 
-A user can access information encoded in an LLM's parameters by `asking questions through a prompt`.
+**Scenario 1: Private company documents**
 
-When this prompt or query goes to LLM, LLM use their saved parametric knowledge, process it and return response.
+A general LLM cannot answer reliably from private documents it has never been given access to.
 
-## why an LLM alone is not enough for a real-world application
-
-### Scenario 1: Private company documents
-
-A general LLM cannot answer reliably from private documents it has never been given access to. It might give a generic answer based on its training, but that doesn't mean it knows your company's actual policy.
-
-### Scenario 2: Today's news or recent information
+**Scenario 2: Today's news or recent information**
 
 A model's training data has a cutoff or coverage limitation. It cannot reliably know events that happened after its training.
 
-### Scenario 3: Hallucination
+**Scenario 3: Hallucination**
 
 Example: “Did Einstein play football for Germany in his early years?”
 
@@ -66,13 +39,11 @@ An LLM may confidently generate a false answer because it predicts plausible tex
 
 Fine-tuning means taking an already-trained LLM and training it further on a `specific dataset` so that it becomes better suited to a particular task or way of responding.
 
-You don't usually train a model from scratch. You start with an existing model and adapt it.
-
 ## How does fine-tuning work?
 
 1\. Choose a pre-trained model: An existing LLM
 
-2\. Prepare training data: Input examples + expected outputs
+2\. Prepare training data: Input examples + expected outputs (Hundreds to thousands OR Tens of thousands or more dataset)
 
 3\. Run fine-tuning: Update model weights to learn the examples
 
@@ -80,22 +51,7 @@ You don't usually train a model from scratch. You start with an existing model a
 
 5\. Deploy the adapted model
 
-During training, the model compares its predictions with the expected outputs and adjusts its trainable parameters to reduce the error. After training, the adapted model can be used for inference like other LLMs.
-
-## How much training data is required?
-
-There is no universal minimum. It depends on the task, the quality of your examples, the base model, and how much improvement you need.
-
-OpenAI API
-
-| Dataset size              | What it can be useful for                                  |
-| ------------------------- | ---------------------------------------------------------- |
-| 10–50 examples            | Small proof of concept                                     |
-| 50–200 examples           | Testing a specific behavior or output format               |
-| Hundreds to thousands     | More coverage of real-world variations                     |
-| Tens of thousands or more | Larger or more diverse tasks, if the additional data helps |
-
-These are rough planning ranges, not strict thresholds.
+During training, the model compares its predictions with the expected outputs and adjusts its trainable parameters to reduce the error.
 
 ## What should the training data look like?
 
@@ -109,7 +65,7 @@ For example, a file named `training_data.jsonl` could contain:
 {"messages":[{"role":"user","content":"The app crashes on startup."},{"role":"assistant","content":"{\"category\":\"TECHNICAL_ISSUE\"}"}]}
 ```
 
-So provided such JSONL data is called `Supervised fine tuning method (SFT)` where we give data in labelled format like above.
+So provided such JSONL data is called **Supervised fine tuning method (SFT)** where we give data in labelled format like above.
 
 ## How can you implement fine-tuning?
 
@@ -156,6 +112,7 @@ Trade-offs: You need compatible hardware or rented GPU compute, and more setup a
 `Continued Pre-Training (CPT)` means taking an already pre-trained LLM and training it further on additional text, usually using the same or a similar objective used during its original pre-training. This method is also called as `Unsupervised tuning method`.
 
 **Original pre-training:** The model learns general language and knowledge from a large text corpus.
+
 **Continued pre-training:** You train a model further on a large collection of banking documents, reports, and technical material.
 **Result: **The model may become more familiar with banking language and concepts.
 
@@ -172,25 +129,15 @@ The borrower repays the loan according to the agreed terms.
 
 `RLHF` (Reinforcement Learning from Human Feedback) is a fine-tuning approach that uses human preferences to help an LLM produce better responses.
 
-RLHF (Reinforcement Learning from Human Feedback) is a fine-tuning approach that uses human preferences to help an LLM produce better responses.
-
 ### How it works
 
-1. SFT: First, train the model on example questions and good answers.
-2. Human feedback: Humans compare different responses and choose which is better.
+1. Supervised fine tuning method (SFT): First, train the model on example questions and good answers.
+2. Human feedback: Humans checks different responses and choose which is better, Choose Response A or Response B
+  (We have seen many times on Chat GPT or Gemini to choose respones).
 3. Reward model: A model learns to predict which responses humans prefer.
 4. Reinforcement learning: The LLM is optimized to produce responses that receive higher reward scores.
 
-### Example
-
-User asks: “Explain AI simply.”
-
-- Response A: A complex explanation full of technical jargon.
-- Response B: A simple explanation with a practical example.
-
-A human prefers Response B. Feedback helps train the reward model, and reinforcement learning can then encourage the LLM to produce more responses like B.
-
-Remember: RLHF is not the same as JSONL, LoRA, or QLoRA. RLHF describes a `preference-based training approach`; JSONL is a data format, while LoRA and QLoRA are parameter-efficient training techniques.
+**Remember:** RLHF is not the same as JSONL, LoRA, or QLoRA. RLHF describes a `preference-based training approach`; JSONL is a data format, while LoRA and QLoRA are parameter-efficient training techniques.
 
 ---------
 
@@ -200,29 +147,18 @@ Remember: RLHF is not the same as JSONL, LoRA, or QLoRA. RLHF describes a `prefe
 2. Large data requirements — Collecting enough high-quality training examples can be difficult.
 3. Data quality — Incorrect or inconsistent examples can teach the model undesirable behavior.
 4. Technical complexity — Requires knowledge of training, models, datasets, and hardware.
-5. Catastrophic forgetting — The model may lose some previously learned capabilities.
-6. Hallucinations — Fine-tuning does not guarantee factual accuracy or eliminate hallucinations.
-7. Knowledge updates — Updating frequently changing facts requires repeated training if relying on model weights alone.
-8. Limited generalization — The model may perform well on training examples but poorly on unfamiliar inputs.
-9. Evaluation difficulty — Measuring whether fine-tuning genuinely improved results can be challenging.
-10. Overfitting — The model may memorize training examples rather than learn general patterns.
-11. Training time — Larger models and datasets can take substantial time to train.
-12. Model maintenance — New requirements or data may require additional training and evaluation.
-13. Privacy and security — Sensitive training data may be memorized or exposed through model outputs.
-14. Model compatibility — Not every model supports every fine-tuning method or hardware configuration.
-15. No guaranteed improvement — Fine-tuning may not outperform a good prompt or RAG pipeline.
-
-Key takeaway: Fine-tuning is most useful when you need to improve a model's behavior or specialized task performance—not as the default solution for accessing private or frequently changing information.
+4. Training time — Larger models and datasets can take substantial time to train.
+5. Model maintenance — New requirements or data may require additional training and evaluation.
+7. Model compatibility — Not every model supports every fine-tuning method or hardware configuration.
+8. Catastrophic forgetting — The model may lose some previously learned capabilities.
 
 ---------
 
 # In-context learning (ICL)
 
-In-context learning is the ability of an LLM to perform a task by using instructions or examples provided in the current prompt, without updating its model parameters. It became widely known through `the GPT-3 research paper, Language Models are Few-Shot Learners, published in 2020`.
+`In-context learning` is the ability of an LLM to perform a task by using instructions or examples provided in the current prompt, without updating its model parameters. It became widely known through `the GPT-3 research paper, Language Models are Few-Shot Learners, published in 2020`.
 
 In-context learning (ICL) can avoid many fine-tuning costs and complexities, but it cannot solve all fine-tuning problems or all LLM limitations.
-
-Instead of updating model weights, you provide instructions, examples, or relevant information directly in the prompt.
 
 | Fine-tuning challenge                   | Can ICL help?                                                            |
 | --------------------------------------- | ------------------------------------------------------------------------ |
@@ -261,7 +197,7 @@ Output:
 
 The model can infer the expected pattern and respond with `TECHNICAL_ISSUE`—without any fine-tuning.
 
-This is called `few-shot learning` because you provide a few examples in the prompt. With no examples, it is called zero-shot learning if you rely on instructions alone.
+This is called **few-shot learning** because you provide a few examples in the prompt. With no examples, it is called zero-shot learning if you rely on instructions alone.
 
 ----------
 
@@ -320,9 +256,6 @@ Add the retrieved information to the prompt along with the user's question.
 3\. Generation
 
 The LLM uses the question and supplied context to generate an answer.
-
-**Important:** In the LangChain workflow you've been learning, the retriever handles retrieval, the prompt template combines the question with retrieved context, and the LLM performs generation.
-
 ----
 
 ## Indexing
@@ -411,16 +344,9 @@ Here are the major techniques and a short description of each.
 | 2. Answer / Generation Evaluation        | Measures the correctness, relevance, and quality of the generated answer.                                             |
 | 3. Faithfulness Evaluation               | Checks whether the answer is supported by the retrieved context rather than invented.                                 |
 | 4. Context Precision                     | Measures whether the retrieved chunks are relevant, particularly whether relevant results rank above irrelevant ones. |
-| 5. Context Recall                        | Measures whether the retrieved context contains the information needed to answer the question.                        |
-| 6. Answer Relevancy                      | Measures how directly the answer addresses the user's question.                                                       |
-| 7. Correctness Evaluation                | Compares the generated answer with a reference or ground-truth answer.                                                |
-| 8. Hallucination Detection               | Identifies claims that are unsupported by the provided evidence or contradict it.                                     |
-| 9. Latency Evaluation                    | Measures the time required for retrieval and answer generation.                                                       |
-| 10. Cost Evaluation                      | Measures token usage, embedding costs, LLM costs, and overall cost per query.                                         |
-| 11. Robustness Evaluation                | Tests performance on ambiguous, misspelled, unexpected, or unanswerable questions.                                    |
-| 12. Safety and Access-Control Evaluation | Checks for unsafe outputs and whether users can access only the information they're authorized to see.                |
-
-These techniques overlap somewhat. For example, faithfulness and hallucination detection are closely related, but they're useful to consider separately when designing tests.
+| 5. Context Recall                        | Measures whether the retrieved context contains the information needed to answer the question.                        |                                            |
+| 6. Hallucination Detection               | Identifies claims that are unsupported by the provided evidence or contradict it.                                     |
+| 7. Cost Evaluation                      | Measures token usage, embedding costs, LLM costs, and overall cost per query.                                         |
 
 ## 3. Libraries and frameworks
 
@@ -466,39 +392,23 @@ Yes, a systematic evaluation process is strongly recommended for production-grad
 
 Remove unnecessary HTML, duplicated text, navigation content, transcription artifacts, and irrelevant boilerplate before creating chunks.
 
-Why it matters: noisy input produces noisy embeddings and poorer retrieval.
-
 2\. **Advanced chunking strategies**
 
 Go beyond fixed-size splitting. Consider semantic chunking, structure-aware chunking, sentence-based splitting, or document-specific strategies.
-
-Why it matters: chunks should preserve meaningful information without mixing unrelated topics.
 
 3\. **Optimize chunk size and overlap**
 
 Experiment with chunk size and overlap using an evaluation dataset instead of selecting arbitrary values.
 
-Why it matters: small chunks can lose context; large chunks can dilute relevance and consume more tokens.
-
 4\. **Metadata enrichment**
 
 Attach metadata such as source, document ID, video ID, title, topic, timestamps, creation date, and access permissions.
-
-Why it matters: enables filtering, source attribution, traceability, and access control.
 
 5\. **Deduplication and content validation**
 
 Detect duplicate documents or chunks, empty content, corrupted records, and invalid metadata before indexing.
 
-Why it matters: prevents redundant retrieval results and reduces wasted storage and embedding costs.
-
-6\. **Index configuration and optimization**
-
-Choose appropriate vector distance metrics, vector dimensions, and indexing structures. For large datasets, evaluate approximate nearest-neighbor indexes such as HNSW or IVF where supported.
-
-Why it matters: balances retrieval accuracy, query latency, memory use, and scalability.
-
-7\. **Vector store**
+6\. **Vector store**
 
 Currently we have used FAISS that is basic vector store. For industry standard we can with Pincone a cloud based vector store as well.
 
@@ -538,16 +448,6 @@ Currently we have used FAISS that is basic vector store. For industry standard w
 
 # RAG Improvement: Augmentation Phase
 
-Augmentation is the second stage of RAG. After retrieval, we take the relevant documents and combine them with the user's question to prepare the context that will be sent to the LLM.
-
-In your YouTube RAG application, your current flow is:
-
-`Question → Retriever → Retrieved documents → Format context → Prompt template → LLM`
-
-We can improve the augmentation phase through the following techniques.
-
-## 1. Augmentation improvement techniques
-
 1\. Context Formatting: Format retrieved chunks clearly, separating documents with newlines and including source information where useful.
 
 2\. Context Duplication & Compression: Remove repeated and Reduce unnecessary text while preserving information needed to answer the question, saving tokens and reducing noise.
@@ -558,7 +458,7 @@ We can improve the augmentation phase through the following techniques.
 
 5\. Context Token Budget Management: Estimate prompt token usage and limit the context so the combined instructions, question, retrieved content, and expected answer fit within the model's context window.
 
-6. Answer grounding: means ensuring that the LLM's answer is based on the provided context or reliable source documents, rather than unsupported assumptions or its own potentially incorrect knowledge.
+6\. Answer grounding: means ensuring that the LLM's answer is based on the provided context or reliable source documents, rather than unsupported assumptions or its own potentially incorrect knowledge.
 ---------
 
 # RAG Improvements: Generation Phase
