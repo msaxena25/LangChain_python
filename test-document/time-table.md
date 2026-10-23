@@ -53,21 +53,45 @@
 | 11:30 PM – 6:30 AM | Sleep                                        | 7 hr     |
 | Total study time                                                  | 12 hr 40 min 
 
+## 22-10-2026 
 
-22-10-2026
-Study time - 
-10:00 AM - 12:40 PM
-1:00 to 1:30
-4:00 pm - 5:30 pm
-6:30 PM to 7:30 PM
+— Study Time
+
+| Time slot           | Duration    |
+| ------------------- | ----------- |
+| 10:00 AM – 12:40 PM | 2 hr 40 min |
+| 1:00 PM – 1:30 PM   | 30 min      |
+| 4:00 PM – 5:30 PM   | 1 hr 30 min |
+| 6:30 PM – 8:15 PM   | 1 hr 45 min |
+| 10:30 PM – 11:00 PM | 30 min      |
+| Total study time    | 6 hr 55 min |
+
+— Other Activities
+
+| Time slot          | Activity                                  | Duration    |
+| ------------------ | ----------------------------------------- | ----------- |
+| 6:30 AM – 8:00 AM  | Sleep                                     | 1 hr 30 min |
+| 8:00 AM – 9:00 AM  | Daily routine — myself and Kuku           | 1 hr        |
+| 9:00 AM – 10:00 AM | Pooja, Kuku getting ready and school drop | 1 hr        |
+| 12:40 PM – 1:00 PM | Kuku pickup                               | 20 min      |
+| 1:30 PM – 2:45 PM  | Went to office                            | 1 hr 15 min |
+| 2:45 PM – 4:00 PM  | Lunch, Kuku's lunch and nap               | 1 hr 15 min |
+| 5:30 PM – 6:00 PM  | Masava doctor and discussion              | 30 min      |
+| 6:00 PM – 6:30 PM  | Resume update and replies                 | 30 min      |
+| 8:15 PM – 10:30 PM | Dinner outside                            | 2 hr 15 min |
+| 11:00 PM – 6:30 AM | Kuku + Bedtime and sleep                  | 7 hr 30 min |
+| Total other time   |                                           | 17 hr 5 min |
+
+23-10-2026
+
+study
+7 to 8 am 
 
 
-Other - 
-6:30 AM to 8 AM - Sleep
-8 - 9 = daily routine work myself and kuku.
-9 - 10:00 = pooja + kuku ready + kuku school drop
-12:40 to 1 PM  - kuku pickup
-1:30 - 2:45 = went to office 
-2:45 - 4:00 = lunch + kuku lunch + nap
-5:30 to 6 PM - masava doctor and discussion
-6 to 6:30 resume update and replies.
+other
+6:30 - 7 am = kuku
+8 am to 9 am = daily routing myself and kuku
+9:00 AM – 10:00 AM = Pooja, Kuku getting ready and school drop
+10: 00 - 10:30 = breakfast
+10:30 to 12:00 = masava doctor visit
+

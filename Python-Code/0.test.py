@@ -58,5 +58,22 @@ print(product.price)  #  700
 product.price = 80  # Validation runs
 # Warning: Minimum deposit is allowed 500.
 
-product.price = -100  # ValueError: Price cannot be negative
+# product.price = -100  # ValueError: Price cannot be negative
 
+#------------------------------------------------------------------------------
+
+import sys
+
+print('Version:', sys.version)       # Python version
+print('Platform:', sys.platform)      # Operating system platform
+print('Arguments:', sys.argv)          # Command-line arguments
+
+import textwrap
+
+text = "Python is useful for AI development."
+print('textwrap' ,textwrap.fill(text, width=15))
+'''
+Python is
+useful for AI
+development.
+'''

@@ -549,3 +549,96 @@ scikit-learn
 OpenAI -> BaseOpenAI -> BaseLLM
 
 ChatOpenAI -> BaseChatOpenAI -> BaseChatModel
+
+----------
+
+# Python built-in modules
+
+## 1. `os` — Operating system operations
+
+Purpose: Work with files, directories, and environment variables.
+
+```py
+import os
+
+print(os.getcwd())           # Current working directory
+print(os.listdir("."))       # Files and folders in current directory
+print(os.environ.get("PATH"))  # Read an environment variable
+```
+
+## 2. `sys` — Python interpreter information
+
+Purpose: Access information and functionality related to the running Python interpreter.
+
+```py
+import sys
+
+print(sys.version)       # Python version
+print(sys.platform)      # Operating system platform
+print(sys.argv)          # Command-line arguments
+```
+
+## 3. `math` — Mathematical operations
+
+```py
+import math
+
+print(math.sqrt(25))     # 5.0
+print(math.ceil(4.2))    # 5
+print(math.floor(4.8))   # 4
+print(math.pi)           # 3.141592...
+```
+
+## 4. `json` — Work with JSON data
+
+```py
+import json
+
+data = {"name": "Mohit", "age": 34}
+
+# Python dictionary -> JSON string
+json_string = json.dumps(data)
+print(json_string)
+
+# JSON string -> Python dictionary
+result = json.loads(json_string)
+print(result["name"])  # Mohit
+```
+
+## 5. `datetime` — Work with dates and times
+
+```py
+from datetime import datetime, date, timedelta
+
+print(date.today())                 # Today's date
+print(datetime.now())               # Current local date and time
+
+tomorrow = date.today() + timedelta(days=1)
+print(tomorrow)
+```
+
+-------------
+
+# import vs from ... import
+
+## 1. `import` — Import the whole module
+
+```py
+import math
+
+print(math.sqrt(25))
+print(math.pi)
+```
+
+You access functionality using the module name: `math.sqrt()`, `math.pi`.
+
+## 2. `from ... import` — Import specific functionality
+
+```py
+from math import sqrt, pi
+
+print(sqrt(25))
+print(pi)
+```
+
+---------

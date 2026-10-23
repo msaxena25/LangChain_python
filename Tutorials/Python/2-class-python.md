@@ -50,22 +50,17 @@
   - [5. Common operations](#5-common-operations)
   - [6. Nested collections](#6-nested-collections)
 
+
+## Create and call a simple function
+
 In Python, you define a function using the `def` keyword and call it using its name followed by parentheses `()`.
 
-## 1. Create and call a simple function
-
-```
+```py
 def greet():
     print("Hello, World!")
 
 # Call the function
 greet()
-```
-
-Output:
-
-```
-Hello, World!
 ```
 
 - `def` — defines a function.
@@ -74,28 +69,9 @@ Hello, World!
 - Indentation — defines the function body.
 - `greet()` — calls or executes the function.
 
-## 2. Function with parameters
+## Function with a default parameter
 
-Parameters let you pass values into a function.
-```
-def greet(name):
-    print(f"Hello, {name}!")
-
-greet("Mohit")
-```
-
-## 3. Function that returns a value
-
-Use `return` when you want a function to produce a result that you can reuse.
-
-```
-def add(a, b):
-    return a + b
-```
-
-## 4. Function with a default parameter
-
-```
+```py
 def greet(name="Guest"):
     print(f"Hello, {name}!")
 
@@ -105,20 +81,20 @@ greet("Mohit")
 
 ----
 
-# 1. Method Overloading
+# Method Overloading
 
 Method overloading means defining multiple methods with the same name but different parameters.
 
 In Java, this works:
 
-```
+```java
 add(int a, int b)   
 add(int a, int b, int c)
 ```
 
-In Python, if you define the same method multiple times in a class, the latest definition replaces the previous one.
+`In Python`, if you define the same method multiple times in a class, the latest definition replaces the previous one.
 
-```
+```py
 class Calculator:
     def add(self, a, b):
         return a + b
@@ -128,17 +104,16 @@ class Calculator:
 
 calc = Calculator()
 print(calc.add(2, 3))
+# This raises a `TypeError` because the second `add()` definition replaces the first, and it requires three arguments.
 ```
-
-This raises a `TypeError` because the second `add()` definition replaces the first, and it requires three arguments.
 
 ### But How can we achieve similar behavior in Python
 
-You can use default parameters:
+You can use `default parameters`:
 
-```
+```py
 class Calculator:
-    def add(self, a, b, c=0):
+    def add(self, a, b, c = 0):
         return a + b + c
 
 calc = Calculator()
@@ -149,7 +124,7 @@ print(calc.add(2, 3, 4))    # 9
 
 You can also use `*args` when the number of arguments varies.
 
-```
+```py
 def add(*args):
     return sum(args)
 
@@ -159,13 +134,13 @@ print(add(2, 3, 4))     # 9
 
 Python also supports `@overload` from the `typing` module for describing different type signatures to static type checkers, but it does not create multiple runtime implementations.
 
-# 2. Method Overriding
+# Method Overriding
 
 Method overriding means a child class provides its own implementation of a method inherited from its parent class.
 
 Python supports method overriding natively.
 
-```
+```py
 class Animal:
     def sound(self):
         print("Animal makes a sound")
@@ -177,18 +152,9 @@ class Dog(Animal):
 animal = Animal()
 dog = Dog()
 
-animal.sound()
-dog.sound()
+animal.sound() # Animal makes a sound
+dog.sound() # Dog barks
 ```
-
-Output:
-
-```
-Animal makes a sound
-Dog barks
-```
-
-Here, `Dog` overrides the `sound()` method inherited from `Animal`.
 
 You can also call the parent implementation using `super()`:
 
@@ -203,26 +169,13 @@ Calling `Dog().sound()` prints both messages.
  
  ----
 
-
 # this, in Python we have 'self' 
 
-Python does have this-related concepts, In Python, we use self to refer to the current object.
-
-self in Python serves the same purpose, but it is a conventional parameter name, not a Python keyword.
+Python does have this-related concepts, In Python, we use `self` to refer to the current object.
 
 Python passes the object as the first argument to an instance method automatically when you call it through an object.
 
-```java
-class Student {
-    String name;
-
-    void setName(String name) {
-        this.name = name;
-    }
-}
-```
-
-```python
+```py
 class Student:
     def set_name(self, name):
         self.name = name
@@ -232,12 +185,6 @@ student.set_name("Mohit")
 ```
 
 # How to define variables in Python
-
-```py
-name = "Mohit"
-age = 34
-is_active = True
-```
 
 You don't need to declare the variable type or use a special keyword.
 
@@ -251,7 +198,7 @@ Important: Python doesn't have a built-in `const` keyword. Uppercase names such 
 
 ## 2. How scope works in Python
 
-Python follows the LEGB rule for resolving variable names:
+Python follows the **LEGB** rule for resolving variable names:
 
 - L — Local: Inside the current function.
 - E — Enclosing: Inside an outer function.
@@ -346,7 +293,7 @@ print(message)  # Hello
 
 The variable remains accessible outside the `if` block because an `if` block does not create a separate scope in Python.
 
-Compare that with a function:
+**Compare that with a function:**
 
 ```py
 def example():
@@ -377,24 +324,7 @@ MAX_RETRIES: Final[int] = 3
 
 This indicates that the name should not be reassigned, but Python does not enforce it at runtime.
 
-## Quick summary
-
-| Feature                             | JavaScript             | Python                                          |
-| ----------------------------------- | ---------------------- | ----------------------------------------------- |
-| Variable declaration                | `let`, `const`, `var`  | Assignment (`=`)                                |
-| Function scope                      | Yes                    | Yes                                             |
-| `if`/`for` block scope              | Yes, for `let`/`const` | No separate scope                               |
-| Global reassignment inside function | Different rules        | `global`                                        |
-| Modify enclosing function variable  | Closures               | `nonlocal`                                      |
-| Constant declaration                | `const`                | Uppercase convention; `Final` for type checkers |
-
-----
-
 # Class
-
-In Python, you can create classes, constructors, instance variables, and methods just like in Java, but the syntax is simpler. The main difference is that Python uses naming conventions instead of strict access modifiers such as `private`, `protected`, and `public`.
-
-## 1. How to create a class and an object
 
 In Java, you use `new` to create an object. In Python, you call the class directly.
 
@@ -414,15 +344,10 @@ class Student:
 student = Student("Mohit", 34)
 
 student.display()
+# Name: Mohit, Age: 34
 ```
 
-Output:
-
-```
-Name: Mohit, Age: 34
-```
-
-What each part means:
+**What each part means:**
 
 - `class Student:` — defines a class.
 - `__init__()` — initializes the object's attributes.
@@ -506,21 +431,8 @@ Here:
 - `self.__balance` refers to the current object's balance.
 
 Python internally mangles `__balance` to a name similar to `_BankAccount__balance`.
-
-## 4. Java vs Python: quick comparison
-
-| Concept            | Java                      | Python                        |
-| ------------------ | ------------------------- | ----------------------------- |
-| Define a class     | `class Student`           | `class Student:`              |
-| Create an object   | `new Student()`           | `Student()`                   |
-| Constructor        | `Student()`               | `__init__()`                  |
-| Public variable    | `public String name`      | `self.name`                   |
-| Protected variable | `protected`               | `self._name` (convention)     |
-| Private variable   | `private String name`     | `self.__name` (name mangling) |
-| Private method     | `private void validate()` | `def __validate(self):`       |
-| Current object     | `this`                    | `self`                        |
-
-## 5. One additional concept: class variables vs instance variables
+ 
+## 4. One additional concept: class variables vs instance variables
 
 ```py
 class Employee:
@@ -542,7 +454,7 @@ print(e2.name)     # Rahul
 
 # Object || {} 
 
-Python supports creating objects using curly braces {}, but that creates a dictionary, not an instance of a class.
+Python supports creating objects using curly braces {}, but that creates a `dictionary`, not an instance of a class.
 
 ## 2. Three ways to create objects in Python
 
@@ -593,8 +505,6 @@ This creates a basic object, but you cannot add arbitrary attributes to it.
 
 # Data Types
 
-Python has several built-in data types. Unlike JavaScript, Python uses different types for integers, floating-point numbers, lists, tuples, sets, and dictionaries.
-
 ## 1. Basic data types in Python
 
 | Data type  | Example            | Description         |
@@ -621,40 +531,32 @@ languages.append("Java")
 print(languages[0])  # Python
 ```
 
-Similar to a JavaScript array.
-
 B. Tuple — `tuple`
 
-Ordered, immutable, allows duplicates.
+Ordered, immutable, allows duplicates. Useful for a fixed collection of values.
 
 ```py
 coordinates = (10, 20)
 print(coordinates[0])  # 10
 ```
 
-Useful for a fixed collection of values.
-
 C. Set — `set`
 
-Stores unique values; does not guarantee positional order.
+Stores unique values; does not guarantee positional order. Useful for removing duplicates and set operations.
 
 ```py
 numbers = {1, 2, 2, 3}
 print(numbers)  # {1, 2, 3}
 ```
 
-Useful for removing duplicates and set operations.
-
 D. Dictionary — `dict`
 
-Stores key-value pairs and is mutable.
+Stores key-value pairs and is mutable. Similar to a JavaScript object or a map of key-value pairs.
 
 ```py
 employee = {    "name": "Mohit",    "age": 34}
 print(employee["name"])  # Mohit
 ```
-
-Similar to a JavaScript object or a map of key-value pairs.
 
 E. Range — `range`
 
@@ -727,8 +629,6 @@ multiline string."""
 print(name)     # Mohit
 print(text)
 ```
-
-**Note:** Strings are immutable, meaning their characters cannot be changed in place.
 
 ## 2. Indexing and Slicing
 
@@ -832,6 +732,7 @@ Python's standard library includes these modules; no separate installation is ne
 import re
 
 text = "My ID is 12345"
+# now find Id only from above text -
 result = re.search(r"\d+", text)
 
 print(result.group())  # 12345
@@ -844,6 +745,12 @@ import textwrap
 
 text = "Python is useful for AI development."
 print(textwrap.fill(text, width=15))
+
+'''
+Python is
+useful for AI
+development.
+'''
 ```
 
 **`string.Template` — Placeholder-based templates**
@@ -962,16 +869,7 @@ for key, value in student.items():
     print(key, value)
 ```
 
-## 4. Comparison
-
-| Feature    | List    | Tuple   | Dictionary     |
-| ---------- | ------- | ------- | -------------- |
-| Syntax     | `[]`    | `()`    | `{key: value}` |
-| Mutable    | Yes     | No      | Yes            |
-| Access     | Index   | Index   | Key            |
-| Duplicates | Allowed | Allowed | Keys unique    |
-
-## 5. Common operations
+## 4. Common operations
 
 ```py
 numbers = [10, 20, 30]

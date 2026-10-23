@@ -74,41 +74,23 @@
 
 # 1. `if`, `elif`, and `else`
 
-Used to execute different code based on conditions.
-
 ```py
 age = 20
-
 if age < 18:
     print("Minor")
 elif age < 60:
     print("Adult")
 else:
     print("Senior citizen")
-
-# Output:
-# Adult
 ```
 
-- `if`: Checks the first condition.
-- `elif`: Checks another condition if previous conditions are false. You can use multiple `elif` blocks.
-- `else`: Runs when all previous conditions are false.
-- Indentation matters: Python uses indentation instead of `{}` to define code blocks.
-
 # 2. `for` loop
-
-Used to iterate over a sequence, such as a list, string, or range of numbers.
 
 ```py
 fruits = ["Apple", "Banana", "Mango"]
 
 for fruit in fruits:
     print(fruit)
-
-# Output:
-# Apple
-# Banana
-# Mango
 ```
 
 ### Using `range()`
@@ -118,13 +100,6 @@ for fruit in fruits:
 ```py
 for i in range(1, 6):
     print(i)
-
-# Output:
-# 1
-# 2
-# 3
-# 4
-# 5
 ```
 
 ### Using `enumerate()`
@@ -137,39 +112,22 @@ fruits = ["Apple", "Banana", "Mango"]
 for index, fruit in enumerate(fruits):
     print(index, fruit)
 
-# Output:
-# 0 Apple
-# 1 Banana
-# 2 Mango
-```
+# 0 Apple ..
 
-To start indexing from 1:
-
-```py
+# To start indexing from 1:
 for index, fruit in enumerate(fruits, start=1):
     print(index, fruit)
 
-# Output:
-# 1 Apple
-# 2 Banana
-# 3 Mango
+# 1 Apple ...
 ```
 
 # 3. `while` loop
 
-Repeats code as long as the condition is `True`.
-
 ```py
 count = 1
-
 while count <= 3:
     print(count)
     count += 1
-
-# Output:
-# 1
-# 2
-# 3
 ```
 
 # 4. `break`, `continue`, and `pass`
@@ -184,7 +142,6 @@ for i in range(1, 6):
         break
     print(i)
 
-# Output:
 # 1
 # 2
 ```
@@ -199,7 +156,6 @@ for i in range(1, 6):
         continue
     print(i)
 
-# Output:
 # 1
 # 2
 # 4
@@ -210,44 +166,33 @@ The loop skips printing `3` but continues with the remaining numbers.
 
 ### C. `pass` — do nothing
 
+`pass` is a placeholder. It does not skip an iteration or stop the loop.
+
 ```py
 for i in range(1, 4):
     if i == 2:
         pass
     print(i)
 
-# Output:
 # 1
 # 2
 # 3
 ```
 
-`pass` is a placeholder. It does not skip an iteration or stop the loop.
-
 # 5. `match-case` — Python's switch-like statement
-
-Python introduced `match-case` in Python 3.10. It is the closest built-in equivalent to a traditional `switch` statement.
 
 ```py
 day = 2
-
 match day:
     case 1:
         print("Monday")
     case 2:
         print("Tuesday")
-    case 3:
-        print("Wednesday")
-    case _:
+    case _:                  # default
         print("Invalid day")
 
-# Output:
 # Tuesday
 ```
-
-- `match`: Checks the value against patterns.
-- `case`: Defines a matching pattern.
-- `case _`: Acts as the default case.
 
 # 6. Other useful control flow concepts
 
@@ -259,7 +204,6 @@ languages = ["Python", "JavaScript", "Java"]
 if "Python" in languages:
     print("Python is available")
 
-# Output:
 # Python is available
 ```
 
@@ -275,13 +219,7 @@ if age >= 18 and has_id:
 if age < 18 or not has_id:
     print("Access denied")
 
-# Output:
-# Access granted
 ```
-
-- `and`: Both conditions must be true.
-- `or`: At least one condition must be true.
-- `not`: Reverses a Boolean value.
 
 ## C. `for-else` and `while-else`
 
@@ -313,12 +251,11 @@ else:
 # No output
 ```
 
-This is useful when searching a list and you want to know whether an item was found.
+**Important:** This is useful when searching a list and you want to know whether an item was found.
 
 ----
 
-
-# Input and Output (`input()`, `print()`)
+# Input and Output - `input()`, `print()` 
 
 - `print()` displays information on the screen.
 - `input()` accepts user input and always returns it as a string (`str`), even when the user enters a number.
@@ -326,20 +263,10 @@ This is useful when searching a list and you want to know whether an item was fo
 ```py
 # 1. print() - Display output
 print("Hello, Python!")
-print(100)
-
-# Output:
-# Hello, Python!
-# 100
-
 
 # 2. input() - Accept user input
 name = input("Enter your name: ")
 print("Hello", name)
-
-# Example input: Mohit
-# Output: Hello Mohit
-
 
 # 3. input() returns a string
 age = input("Enter your age: ")
@@ -348,14 +275,9 @@ print(type(age))
 # Example input: 25
 # Output: <class 'str'>
 
-
 # 4. Convert input to an integer
 age = int(input("Enter your age: "))
 print(age + 1)
-
-# Example input: 25
-# Output: 26
-
 
 # 5. Convert input to a float
 price = float(input("Enter price: "))
@@ -363,7 +285,6 @@ print(price)
 
 # Example input: 99.5
 # Output: 99.5
-
 
 # 6. Take multiple inputs using split()
 first_name, last_name = input("Enter full name: ").split()
@@ -377,23 +298,12 @@ print(last_name)
 
 # 7. print() separator and end
 print("Python", "Java", "JavaScript", sep=" | ")
-print("Hello", end=" ") #by default end make new lines but here end is space.
+print("Hello", end=" ") # by default end make new lines but here end is space.
 print("World")
 
 # Output:
 # Python | Java | JavaScript
 # Hello World
-
-
-# 9. Calculate using user input
-a = int(input("Enter first number: "))
-b = int(input("Enter second number: "))
-
-print("Sum:", a + b)
-
-# Example inputs: 10 and 20
-# Output: Sum: 30
-
 ```
 ----
 
@@ -402,6 +312,7 @@ print("Sum:", a + b)
 ```py
 # f-string need variable upfront to format string.
 # f-strings evaluate variables immediately; they don't remain dynamic templates automatically.
+
 topic="angular"
 level="junior"
 str1 = f"Explain {topic} for {level} developer."
@@ -409,20 +320,21 @@ print(str1)
 
 # how can we pass dynamically variables in f-string?
 # We can create a method and call that with variables
+
 def formatString(topic, level):
     str2 = f"Explain {topic} for {level} developer."
     return str2
 
 print(formatString("Java", "senior"))
 
-# string.format
+# string.format: it does not modify origional string, it returns new string.
 
-# string.format does not modify origional string, it returns new string.
 str = "Explain {topic} for {level} developer."
 output = str.format(topic="angular", level="beginner") 
 print(output)
 
 # use string.format in a function
+
 str3 = "Explain {topic} for {level} developer."
 def formatString1(topic, level):
     return str3.format(topic=topic, level=level)
@@ -432,14 +344,22 @@ print(formatString1('React', "Expert"))
 
 ---
 
-
 # Python Lambda Functions
 
-## 1. What is a lambda function?
+A lambda function is a small, anonymous function `written in a single expression`. It is useful when you need a short function without defining it using `def`.
 
-A lambda function is a small, anonymous function written in a single expression. It is useful when you need a short function without defining it using `def`.
+## Syntax
 
-Normal function using `def`:
+```py
+lambda arguments: expression
+```
+
+- `lambda` — keyword to create the function.
+- `arguments` — inputs passed to the function.
+- `expression` — the single expression whose result is returned automatically.
+-  `no return` - Unlike a normal function, a lambda doesn't require an explicit `return`.
+
+**Normal function using `def`:**
 
 ```py
 def add(a, b):
@@ -448,33 +368,14 @@ def add(a, b):
 print(add(10, 20))
 ```
 
-Output: `30`
-
-The same function using `lambda`:
+**The same function using `lambda`:**
 
 ```py
 add = lambda a, b: a + b
-
 print(add(10, 20))
 ```
 
-Output: `30`
-
-Both perform the same operation.
-
-## 2. Syntax
-
-```
-lambda arguments: expression
-```
-
-- `lambda` — keyword to create the function.
-- `arguments` — inputs passed to the function.
-- `expression` — the single expression whose result is returned automatically.
-
-Unlike a normal function, a lambda doesn't require an explicit `return`.
-
-## 3. Examples
+## Examples
 
 ```py
 # Example 1: No arguments
@@ -499,45 +400,6 @@ print(check_number(8))
 print(check_number(7))
 
 ```
-
-## 4. Lambda vs. normal function
-
-| Feature    | `def` function              | `lambda` function                           |
-| ---------- | --------------------------- | ------------------------------------------- |
-| Definition | `def` keyword               | `lambda` keyword                            |
-| Body       | Multiple statements allowed | One expression                              |
-| Return     | Usually explicit `return`   | Automatically returns expression result     |
-| Name       | Usually named               | Can be anonymous, or assigned to a variable |
-| Best use   | Complex/reusable logic      | Small, simple operations                    |
-
-Best practice: Use `def` for complex logic. Use lambda when a small function makes the code easier to read.
-
-## 5. Why do we use lambda in LangChain?
-
-LangChain's RunnableLambda lets you wrap a Python function so it can be used as a step in a chain.
-
-For example, imagine you want to convert text to uppercase before sending it to a model.
-
-```py
-
-from langchain_core.runnables import RunnableLambda
-
-uppercase = RunnableLambda(lambda text: text.upper())
-
-result = uppercase.invoke("learn langchain")
-
-print(result)
-
-```
-
-Output:
-
-```
-LEARN LANGCHAIN
-```
-
----
-
 
 # Python map and filter function
 
@@ -604,7 +466,6 @@ print(even_numbers)
 
 With `filter()`:
 
-
 Syntax:
 
 ```
@@ -633,7 +494,6 @@ Suppose you have prices and want to double only those greater than ₹1,000.
 ```py
 
 prices = [500, 1200, 800, 2500, 1500]
-
 result = list(
     map(
         lambda price: price * 2,
@@ -641,18 +501,10 @@ result = list(
     )
 )
 
-print(result)
-
+# [2400, 5000, 3000]
 ```
 
-Output:
-
-```
-[2400, 5000, 3000]
-```
----
-
-# dictionary unpacking (**) with Python's string formatting.
+# Dictionary unpacking (**) with Python's string formatting
 
 `string.format(**input_dict)` uses dictionary unpacking (**) with Python's string formatting.
 
@@ -660,15 +512,14 @@ It takes the key-value pairs from a dictionary and passes them to format() as na
 
 ```py
 template = "My name is {name} and I am {age} years old."
-
 input_dict = {
     "name": "Mohit",
     "age": 34
 }
-
 result = template.format(**input_dict)
-
 print(result)
+
+
 ```
 
 `template.format(**input_dict)`
@@ -678,13 +529,12 @@ is equivalent to:
 `template.format(name="Mohit", age=34)`
 
 ---
+
 # `and`, `or`, and `not`
 
 In Python, `and`, `or`, and `not` are logical operators used to combine or reverse conditions.
 
 ## 1. `and` operator
-
-Returns `True` only when both conditions are True.
 
 ```py
 age = 25
@@ -696,8 +546,6 @@ print(age >= 18 and False)   # False
 
 ## 2. `or` operator
 
-Returns `True` when at least one condition is True.
-
 ```py
 age = 16
 has_permission = True
@@ -708,8 +556,6 @@ print(age >= 18 or False)           # False
 
 ## 3. `not` operator
 
-Reverses the Boolean value: `True` becomes `False`, and `False` becomes `True`.
-
 ```py
 is_logged_in = True
 
@@ -717,47 +563,30 @@ print(not is_logged_in)  # False
 print(not False)         # True
 ```
 
-## 4. Practical example
-
-```py
-age = 25
-is_student = False
-
-if age >= 18 and not is_student:
-    print("Eligible")
-
-if age < 18 or is_student:
-    print("Special conditions apply")
-```
-
-## 5. Important difference: `and` vs `&`
+## 4. Important difference: `and` vs `&`
 
 - `and`, `or`, `not` are logical operators.
 - `&`, `|`, `~` are bitwise operators and can behave differently, especially with integers and Boolean arrays.
+
 ---
 
 # Define types for a variable
 
-## 1. How to define a type for a variable
+**type for a variable** - ype for a variablePython allows you to write type hints using `variable: type = value`.
 
-Python allows you to write type hints using `variable: type = value`.
+**types for collections** - Collections hold multiple values. The most common ones are lists, dictionaries, tuples, and sets.
 
-## 2. How to define types for collections
-
-Collections hold multiple values. The most common ones are lists, dictionaries, tuples, and sets.
-
-## A. List — `list[type]`
+### A. List — list[type]
 
 - `list[str | int]` → each item can be a string or an integer.
 - `list[str]` → list of strings.
 
 ```py
 prices: list[float] = [10.5, 20.0]
-
 mixed: list[str | int] = ["Mohit", 34, "Delhi"]
 ```
 
-## B. Dictionary — `dict[key_type, value_type]`
+### B. Dictionary — `dict[key_type, value_type]`
 
 A dictionary stores key-value pairs.
 
@@ -794,15 +623,13 @@ numbers: tuple[int, ...] = (10, 20, 30, 40)
 ```
 ## D. Set — `set[type]`
 
-A set stores unique values.
+A set stores unique values. Duplicate values are automatically removed.
 
 ```py
 ids: set[int] = {101, 102, 103}
 
 skills: set[str] = {"Python", "React", "Angular"}
 ```
-
-Duplicate values are automatically removed.
 
 ## E. Other important type hints
 
@@ -834,12 +661,6 @@ result: int = add(10, 20)
 def get_user() -> dict[str, str]:
     return {"name": "Mohit", "city": "Delhi"}
 ```
-
-Here:
-
-- `a: int` → first parameter should be an integer.
-- `b: int` → second parameter should be an integer.
-- `-> int` → the function is expected to return an integer.
 
 ----
 
@@ -881,9 +702,7 @@ I am the child class
 | Call parent constructor    | `super().__init__()`   | `super()`                              |
 | Multiple class inheritance | Supported              | Only one direct superclass for classes |
 
-One important distinction: In `class Child(Parent):`, `Parent` is a base class, not an argument passed to a function. The parentheses specify inheritance.
-
-So remember: Python inheritance = class definition + parent class in parentheses.
+**So remember:** Python inheritance = class definition + parent class in parentheses.
 
 # Abstract Class and Abstract Method in Python
 
@@ -984,7 +803,7 @@ account.deposit(-100) # try with invalid value, (nothing will happen)
 print(account.get_balance())  # 1500
 ```
 
-self.__balance	- Name mangling — Python changes the attribute name to reduce accidental access or clashes
+self.__balance	- `Name mangling` — Python changes the attribute name to reduce accidental access or clashes
 
 **Easy way to remember: Data + controlled access = Encapsulation.**
 
@@ -1149,7 +968,7 @@ class Product:
     def validate_code(code):
         return code.startswith("PROD-")
 
-# acess by bdirect class
+# acess by direct class
 print(Product.validate_code("PROD-123"))  # True
 
 # access through instance
