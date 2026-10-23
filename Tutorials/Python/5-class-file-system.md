@@ -1,13 +1,13 @@
-# Python Learning: File System
+**Python Learning: File System**
 
-# Python provides built-in functionality to interact with this file system.
+## Python provides built-in functionality to interact with this file system.
 
 - Text files (`.txt`) — read ordinary text.
 - PDF files (`.pdf`) — read document content using a `PDF library`.
 - JSON files (`.json`) — read structured data.
 - CSV files (`.csv`) — read tabular data.
 
-# Read a text file using `open()`
+## Read a text file using `open()`
 
 ```py
 file = open("notes.txt", "r")
@@ -23,7 +23,7 @@ Understand each part:
 - `file.read()` — reads all remaining content and returns it as a string.
 - `file.close()` — closes the file and releases its resources.
 
-# Recommended way: Use `with open()`
+## Recommended way: Use `with open()`
 
 In real projects, we usually use `with open()` instead of manually calling `close()`.
 
@@ -160,10 +160,9 @@ seek(n) moves the pointer to position n.
 
 # Read PDF
 
-
 A PDF is different from a plain text file. Although both are files on your computer, a PDF has its own document format.
 
-For PDF text extraction, you can use the `pypdf` library.
+For PDF text extraction, you can use the **`pypdf`** library.
 
 Install it first:
 
@@ -316,8 +315,7 @@ except FileNotFoundError:
 
 # Update txt File
 
-
-Let's understand how to update an existing text file in Python. There are three common operations:
+Let's understand how to `update an existing text file` in Python. There are three common operations:
 
 1. Overwrite — replace the existing content.
 2. Append — add new content at the end.
@@ -349,15 +347,173 @@ with open("notes.txt", "a", encoding="utf-8") as file:
 
 ## 3. Replace specific text in a file
 
-
 ```py
 with open("notes.txt", "r", encoding="utf-8") as file:
     content = file.read()
 
+# replace what you want
 content = content.replace("Learning AI", "Learning Python")
 
+# then again overwrite same file with replaced content
 with open("notes.txt", "w", encoding="utf-8") as file:
     file.write(content)
 ``` 
 
 ----
+
+# Create Files
+
+## Create a text file (`.txt`)
+
+You can use the built-in `open()` function with write mode (`"w"`).
+
+```py
+with open("notes.txt", "w", encoding="utf-8") as file:
+    file.write("Learning Python file handling.\n")
+    file.write("Next, I will learn LangChain.")
+```
+
+- If `notes.txt` doesn't exist, Python creates it.
+- If it already exists, `"w"` overwrites its existing content.
+- `with` automatically closes the file.
+
+## Create a CSV file (`.csv`)
+
+Python provides **a built-in `csv` module**.
+
+```py
+import csv
+
+with open("employees.csv", "w", newline="", encoding="utf-8") as file:
+    writer = csv.writer(file)
+
+    writer.writerow(["Name", "Department", "Salary"])
+    writer.writerow(["Amit", "Engineering", 80000])
+    writer.writerow(["Priya", "HR", 60000])
+```
+
+The resulting file contains:
+
+```
+Name,Department,Salary
+Amit,Engineering,80000
+Priya,HR,60000
+```
+
+## Create a PDF file (`.pdf`)
+
+Unlike text and CSV files, `PDFs have a structured binary format`. You generally use a library to create them.
+
+One option is `fpdf2`.
+
+First, install it in your terminal:
+
+```py
+python -m pip install fpdf2
+```
+
+Then create the PDF:
+
+```py
+from fpdf import FPDF
+
+pdf = FPDF()
+pdf.add_page()
+pdf.set_font("Helvetica", size=16)
+
+pdf.cell(0, 10, text="Learning Python File Handling")
+pdf.ln(10)
+pdf.set_font("Helvetica", size=12)
+pdf.multi_cell(0, 10, text="This is my first PDF created using Python.")
+
+pdf.output("notes.pdf")
+```
+**Note** - pypdf can be used to create PDF files, but its main purpose is reading, manipulating, merging, splitting, and extracting content from existing PDFs.
+-------------
+
+# What is pathlib?
+
+`pathlib` is a built-in Python module that provides an object-oriented way to work with file and directory paths.
+
+## Check files 
+
+```py
+
+from pathlib import Path
+
+file_path = Path('test-document/time-table.md')
+#file_path = Path('test.txt')
+
+print(file_path.name) # time-table.md
+print(file_path.parent)  # test-document
+print(file_path.suffix)  # .md
+print(file_path.exists())
+print(file_path.is_file())
+print(file_path.is_dir())
+print(file_path.is_absolute())
+print(Path.cwd()) #C:\Users\mohitsaxena\MY WORK BLOCK\LEARNING\LangChain_python # current working directory
+```
+
+## Create file and dir
+
+```py
+# create a folder
+folder = Path("data/reports")
+folder.mkdir(parents=True, exist_ok=True)
+
+parents=True creates missing parent directories.
+exist_ok=True avoids an error if the directory already exists.
+
+# create a file
+file = folder / "report.txt"
+file.touch() # method is used to create a file
+print(file.exists())
+```
+##  Read and write a file
+
+`pathlib` provides convenient methods so you don't always need `open()` for simple text-file operations.
+
+Important: write_text() overwrites existing content. Also, the parent directory must already exist.
+
+```py
+file_path = Path("test-document/sample-text.txt")
+file_path.write_text("Learning pathlib", encoding="utf-8")
+content = file_path.read_text(encoding="utf-8")
+print(content)
+```
+
+## resolve method
+
+resolve() returns an absolute path.
+
+```py
+relative_path = Path("test-document/sample-text.txt")
+absolute_path = relative_path.resolve()
+print(absolute_path)
+# resolve: C:\Users\mohitsaxena\MY WORK BLOCK\LEARNING\LangChain_python\test-document\sample-text.txt
+```
+
+## glob and rglob methods
+
+**glob - Find all files in a folder**
+
+```py
+data_folder = Path("test-document") # folder
+print('total files', len(list(data_folder.glob("*"))))
+
+for file_path in data_folder.glob("*"):
+    print(file_path.name)
+
+# for txt files only - data_folder.glob("*.txt")
+```
+
+
+**rglob - Find all files in a folder & its nested folder as well**
+
+```py
+data_folder = Path("test-document") # folder
+for file_path in data_folder.rglob("*.pdf"):
+    print(file_path)
+```
+
+--------------

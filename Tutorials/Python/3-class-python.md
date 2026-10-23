@@ -504,9 +504,68 @@ result = list(
 # [2400, 5000, 3000]
 ```
 
-# Dictionary unpacking (**) with Python's string formatting
+# Positional argument and Keyword argument
 
-`string.format(**input_dict)` uses dictionary unpacking (**) with Python's string formatting.
+**Positional argument:** Python matches the value to a parameter based on its position.
+
+**Keyword argument:** You specify the parameter name when passing the value.
+
+```py
+def greet(name, age):
+    print(name, age)
+
+greet("Mohit", 34)              # Positional arguments
+greet(name="Mohit", age=34)     # Keyword arguments
+greet(age=34, name="Mohit")     # Keyword order can change
+```
+
+## You can use both together
+
+```py
+def show_details(name, *args, **kwargs):
+    print("Name:", name)
+    print("Extra values:", args)
+    print("Named values:", kwargs)
+
+show_details("Mohit", 10, 20, city="Noida", role="Engineer")
+
+Name: Mohit
+Extra values: (10, 20)
+Named values: {'city': 'Noida', 'role': 'Engineer'}
+```
+
+# Unpacking argument list
+
+In Python, * and ** are used for unpacking, but they unpack different kinds of data:
+
+- * → unpacks an iterable, such as a list or tuple.
+- ** → unpacks a dictionary into keyword arguments.
+
+```py
+
+numbers = [10, 20, 30]
+print(*numbers) # 10 20 30
+print(numbers)   # [10, 20, 30]
+
+def add(a, b, c):
+    return a + b + c
+
+numbers = [10, 20, 30]
+print(add(*numbers))  # 60
+```
+
+```py
+
+user = {
+    "name": "Mohit",
+    "age": 34
+}
+def display_user(name, age):
+    print(name, age)
+
+display_user(**user) # Mohit 34
+```
+## Dictionary unpacking (**) with Python's string formatting
 
 It takes the key-value pairs from a dictionary and passes them to format() as named arguments.
 
@@ -518,17 +577,7 @@ input_dict = {
 }
 result = template.format(**input_dict)
 print(result)
-
-
 ```
-
-`template.format(**input_dict)`
-
-is equivalent to:
-
-`template.format(name="Mohit", age=34)`
-
----
 
 # `and`, `or`, and `not`
 

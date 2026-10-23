@@ -1,3 +1,1 @@
-DirectoryLoader in LangChain
-DirectoryLoader is used to load multiple files from a directory (folder) instead of loading each file individually.
-For example, suppose you have a folder containing 100 text files. Instead of creating 100 separate TextLoader instances, you can use DirectoryLoader to load them together.
+Learning pathlib

@@ -146,3 +146,89 @@ else:
 - KeyError — accessing a missing dictionary key.
 
 ----------
+
+# Slicing with [:] and [::]
+
+In Python, `[:] and [::] `are forms of slicing. Slicing lets you extract elements from a string, list, tuple, or other sequence.
+
+Syntex: sequence[start:stop:step]
+
+- start — index where slicing begins (included).
+- stop — index where slicing ends (excluded).
+- step — how many positions to move each time.
+
+## examples
+
+```py
+my_list = [1, 2, 3, 4, 5]
+
+print(my_list[1:3]) # [2, 3]
+print(my_list[::2]) # [1, 3, 5]
+print(my_list[1:3:2]) # [2]
+```
+
+## understand reverse (step will be in negative)
+
+```py
+my_list = [1, 2, 3, 4, 5]
+print(my_list[::-1]) # [5, 4, 3, 2, 1] - reverse the list
+```
+
+- Start: omitted → starts from the last element.
+- Stop: omitted → continues to the beginning.
+- Step: -1 → moves backward one position.
+
+```py
+print(my_list[-1:-6:-1]) # [5, 4, 3, 2, 1] - reverse the list
+
+print(my_list[::-2])  # [5, 3, 1]
+
+print(my_list[-2::]) # [4, 5]
+
+print(my_list[1::-1]) # [2, 1]
+
+print(my_list[1:1:-1]) # [] - empty list because stop is 1 and start is 1, so no elements to reverse
+```
+
+# Palindrome program
+
+```py
+word  = 'MADAM'
+revese_word = word[::-1]
+print('Palindrome' if word == revese_word else 'Not a Palindrome')
+```
+
+# Factorial program
+
+## with recursion
+
+```py
+def factorial(n):
+    if (n < 0):
+        return 'Factorial is not defined for negative numbers'
+    elif (n == 0):
+        return 1
+    else:
+        return n * factorial(n-1)
+
+number: str = input('Enter a positive number: ')
+print(factorial(int(number)))
+```
+# without recursion
+
+```py
+def factorial(n):
+    if (n < 0):
+        return 'Factorial is not defined for negative numbers'
+    elif (n == 0):
+        return 1
+    else:
+        result = 1
+        # In range(1, n + 1), n + 1 is used because Python excludes the stop value.
+        for i in range(1, n + 1):
+            result *= i
+        return result
+
+number: str = input('Enter a positive number: ')
+print('factorial with range loop:', factorial(int(number)))
+```

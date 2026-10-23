@@ -85,13 +85,19 @@
 23-10-2026
 
 study
-7 to 8 am 
-
+7 to 7:30 am
+10.30 to 11.00 am
+1 pm - 1:45 pm
+2:05 - 
 
 other
 6:30 - 7 am = kuku
-8 am to 9 am = daily routing myself and kuku
+7:30 - 8:15 = fresh + yoga exercise
+8:15 am to 9 am = daily routing myself and kuku
 9:00 AM – 10:00 AM = Pooja, Kuku getting ready and school drop
 10: 00 - 10:30 = breakfast
-10:30 to 12:00 = masava doctor visit
+11:00 - 12:45 = masava doctor visit
+12:45 - 1 pm - kuku picup
+1:45 to 2:05 = lunch
+
 
