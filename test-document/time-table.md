@@ -122,7 +122,8 @@ Study
 10:30 - 11:00
 11:20 - 2 pm 
 4 pm - 5 PM
-5:20 pm - 
+5:20 pm - 6:50
+8:45 - 
 
 
 Other
@@ -134,3 +135,5 @@ Other
 2 pm to 3:30 pm = cleaning + check stuff for distribute
 3:30 - 4 pm = lunch + kuku lunch
 5 to 5:20 = kuku sir + talk
+6:50 pm - 8:00 pm= rest + family time + outside + pooja + dinner
+8:00pm - 8:45pm = walk + park + kuku play

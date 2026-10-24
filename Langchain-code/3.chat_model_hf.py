@@ -11,6 +11,7 @@ HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 # repo_id: The ID of the model to use
 # task: The task to perform
 # model_kwargs: The kwargs to pass to the model
+
 # For more details, refer to the Hugging Face documentation: https://huggingface.co/docs/api-inference/python/html/quick-start.html
 
 llm = HuggingFaceEndpoint(
@@ -19,5 +20,7 @@ llm = HuggingFaceEndpoint(
 )
 
 model = ChatHuggingFace(llm=llm)
-result = model.invoke("Who is prime minister of India?") # This will print the response from the LLM
-print(result.content) # This will print the response from the LLM (content only)
+
+result = model.invoke("Who is prime minister of India?")
+
+print(result.content)
