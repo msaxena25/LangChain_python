@@ -7,6 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 import time
 
+# to LOG time taken to execute the code
 start = time.perf_counter()
 
 from dotenv import load_dotenv
@@ -39,6 +40,7 @@ model = ChatGoogleGenerativeAI(
 parser = StrOutputParser() # parser takes the AI message and returns plain text.
 
 print("Sending request to Gemini...", flush=True)
+
 '''
 Key takeaway: StrOutputParser is useful when you want plain text. For structured data, such as a JSON object with name, skills, and experience, you can use structured output or a suitable JSON parser instead.
 '''
@@ -47,18 +49,16 @@ Key takeaway: StrOutputParser is useful when you want plain text. For structured
 
 chain =  prompt | model | parser
 
-# Uncomment below to test 
-
-# try:
-#     response = chain.invoke({
-#     "yourName": "Ashish",
-#     "profileName": "Senior Frontend developer"
-#     })
-#     print(response) # we dont need to do response.content because we used parser in chain already.
-# except Exception as error:
-#     print("Error:", repr(error))
-# finally:
-#     print("Elapsed:", round(time.perf_counter() - start, 2), "seconds")
+try:
+    response = chain.invoke({
+    "yourName": "Ashish",
+    "profileName": "Senior Frontend developer"
+    })
+    print(response) # we dont need to do response.content because we used parser in chain already.
+except Exception as error:
+    print("Error:", repr(error))
+finally:
+    print("Elapsed:", round(time.perf_counter() - start, 2), "seconds")
 
 # below response is not full becasue max token limit is 100. But no worries, Chain is working.
 
@@ -212,7 +212,7 @@ prompt7 = PromptTemplate(
 # prompt7 required this parser - pydanticParser
 chain7 = prompt7 | model | pydanticParser
 
-# below run chain7 to test only what will be the output
+# below run chain7 to test what will be the output
 '''
 result = chain7.invoke({'feedback': 'This smartphone is very poor and does not work properly, Dont buy this.'})
 
@@ -246,7 +246,9 @@ conditional_chain = RunnableBranch(
         RunnableLambda(lambda x: "No sentiment found.")
 )
 
-# this default - (lambda x: "No sentiment found.") is not a chain and RunnableBranch only need chains so we can covert this to a chain using RunnableLambda.
+# RunnableLambda - is a function that takes a lambda function and returns a chain.
+
+# RunnableBranch only need chains so we can convert last function `lambda x: "No sentiment found."` to a chain using RunnableLambda.
 
 final_chain = chain7 | conditional_chain
 
@@ -260,3 +262,48 @@ We are truly sorry to hear that you had a negative experience with us, and we co
 
 We would love the opportunity to make things right for you. Please let us know the details of the issue you experienced, and our team will jump right in to help resolve it as quickly as possible. 
 '''
+
+"""
+Scratch Diagram of Conditional Chain Example:
+
+                +--------------------+
+                |    chain7          |
+                | (sentiment chain)  |
+                +---------+----------+
+                          |
+                          v
+        +-----------------------------------------+
+        |         conditional_chain (branch)      |
+        +------------------+----------------------+
+                           |
+        +------------------+----------------------+
+        |                                     |
+        v                                     v
++-------------------------------+   +-------------------------------+
+| if sentiment == 'positive'    |   | if sentiment == 'negative'    |
+|   => prompt8                  |   |   => prompt9                  |
+|   => model                    |   |   => model                    |
+|   => parser                   |   |   => parser                   |
++-------------------------------+   +-------------------------------+
+        |                                     |
+        +------------------+------------------+
+                           |
+                           v
+                  +---------------------+
+                  |  else:              |
+                  | RunnableLambda:     |
+                  | "No sentiment found"|
+                  +---------------------+
+
+Result:
+final_chain = chain7 | conditional_chain
+
+User input:
+{'feedback': 'This smartphone is very poor and does not work properly, Dont buy this.'}
+
+Flow:
+- chain7 analyzes feedback, detects sentiment ('negative')
+- conditional_chain detects 'negative' -> runs prompt9 -> model -> parser
+- Final reply is the apology/help response
+
+"""

@@ -1,3 +1,5 @@
+
+import langchain_core.prompts.chat
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
@@ -18,15 +20,17 @@ model = ChatGoogleGenerativeAI(
     )
 
 # Defined System message and Humen Message
-messages = [
+messages: list[HumanMessage | SystemMessage] = [
     SystemMessage(content = "You are expert in web technologies."),
     HumanMessage(content = "Tell me about React JS")
 ]
 
-result = model.invoke(messages)
+result: AIMessage = model.invoke(messages)
 
-# result that returns from LLM is called as AI Messsage so covert that to AI message format.
-messages.append(AIMessage(result))
+# you don't need to convert 'result' to AIMessage if 'model.invoke' already returns an AIMessage instance.
+# messages.append(AIMessage(result))
+
+messages.append(result)
 
 print(messages)
 
@@ -37,3 +41,73 @@ AIMessage — AI model's response.
 
 SystemMessage — instructions that define the AI's behavior.
 '''
+
+#-------------------------------------
+
+# Using tuple-based messages
+
+# Tuple-based syntax is the concise, recommended option for most everyday use cases.
+
+messages = [
+    ("system", "You are expert in web technologies."),
+    ("human", "Tell me about React JS")
+]
+
+response = model.invoke(messages)
+
+'''
+This is concise and commonly used with ChatPromptTemplate.
+
+Supported roles commonly include system, human, and assistant. 
+
+Tool interactions can also involve tool messages.
+'''
+
+#------------------------------------
+
+# Using ChatPromptTemplate
+
+# This approach is useful when messages contain dynamic variables or reusable instructions.
+
+from langchain_core.prompts import ChatPromptTemplate
+
+prompt: ChatPromptTemplate = ChatPromptTemplate.from_messages([
+    ("system", "You are expert in web technologies."),
+    ("human", "Tell me about {technology}")
+])
+
+response = (prompt | model).invoke({
+    "technology": "React JS"
+})
+
+#------------------------------------
+
+# Use SystemMessage, HumanMessage way inside the ChatPromptTemplate
+
+# But, these are fixed messages. You can't use template variables inside these messages.
+prompt = ChatPromptTemplate.from_messages([
+    SystemMessage(content="You are an expert in web technologies."),
+    HumanMessage(content="Tell me about React JS.")
+])
+
+#---------------------------------------------
+
+# SystemMessagePromptTemplate & HumanMessagePromptTemplate
+
+# SystemMessagePromptTemplate and HumanMessagePromptTemplate are templates that generate messages using dynamic variables.
+
+from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate
+
+prompt = ChatPromptTemplate.from_messages([
+    SystemMessagePromptTemplate.from_template(
+        "You are an expert in {technology}."
+    ),
+    HumanMessagePromptTemplate.from_template(
+        "Explain {topic} to me."
+    )
+])
+
+messages = prompt.invoke({
+    "technology": "web technologies",
+    "topic": "React JS"
+})

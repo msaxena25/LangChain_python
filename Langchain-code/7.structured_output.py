@@ -17,6 +17,8 @@ model = ChatGoogleGenerativeAI(
     max_retries=0
     )
 
+# TypedDict — define a dictionary's structure
+
 # Schema
 class Response(TypedDict):
     langName: str
@@ -24,17 +26,20 @@ class Response(TypedDict):
     creator: str
     whyPopular: str
 
-# define type Response.
-# When you will hover on field , it will give you suggesion of type
-# test_response: Response = {"langName": "ABC", "currentVersion": 1, "creator": 'ABC', "whyPopular": 'ABC'}
+'''
+Created a class Response with TypedDict.
 
-# Below will also work - 
-# test_response: Response = {"langName": "ABC", "currentVersion": '1', "creator": 'ABC', "whyPopular": 'ABC'}
+When you hover on field, it will give you suggesion of type.
 
+test_response: Response = {"langName": "ABC", "currentVersion": 1, "creator": 'ABC', "whyPopular": 'ABC'}
 
+Below will also work - 
 
+test_response: Response = {"langName": "ABC", "currentVersion": '1', "creator": 'ABC', "whyPopular": 'ABC'}
+'''
 
-# with_structured_output - method is used to set Typed Schema with Model.
+# `with_structured_output` - method is used to set Typed Schema with Model.
+
 structured_model = model.with_structured_output(Response)
 
 response = structured_model.invoke(
@@ -71,3 +76,30 @@ class Response(TypedDict):
     creator: str
     whyPopular: Annotated[str, "2 lines why that language is so popular now a days"]
 
+#------------------------------------------------
+
+# Pydantic Model
+
+
+from pydantic import BaseModel, Field
+
+class Product(BaseModel):
+    name: str = Field(min_length=2, max_length=50, description="Product name")
+    price: float = Field(gt=0)
+    quantity: int = Field(ge=0, default=1)
+    sku: str = Field(pattern=r"^[A-Z0-9]+$"),
+    tags: list[str] = Field(default_factory=list)
+
+product = Product(
+    name="Laptop",
+    price=75000,
+    sku="LAP123"
+)
+product.tags.append("Electronics")
+
+
+print(product.model_dump())
+
+# Output:
+# {'name': 'Laptop', 'price': 75000.0,
+#  'quantity': 1, 'sku': 'LAP123'}

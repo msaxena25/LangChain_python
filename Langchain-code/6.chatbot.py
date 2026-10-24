@@ -1,11 +1,11 @@
-# from langchain_openai import ChatOpenAI # this is not free available
+# this is not free available model, so we are using Google Gemini
+# from langchain_openai import ChatOpenAI 
 
 # Create Chatbot with Google Gemini
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from dotenv import load_dotenv
-
 import os
 load_dotenv()
 
@@ -20,12 +20,15 @@ model = ChatGoogleGenerativeAI(
     max_retries=0
     )
 
-# while True:
-#     user_input =  input("You: ")
-#     if (user_input == 'exit'):
-#         break
-#     result = model.invoke(user_input)
-#     print("AI:", result)
+# Simple Chatbot without Chat History
+
+while True:
+    user_input =  input("You: ")
+    if (user_input == 'exit'):
+        break
+    result = model.invoke(user_input)
+    print("AI:", result)
+
 
 '''
 You: Hello My name is Mohit.
@@ -33,8 +36,9 @@ AI: Hello Mohit. How may I help you?
 You: What is my Name?
 AI: I dont have information of your name.
 You: exit
-
 '''
+
+# Try with different input
 
 '''
 You: Which number is bigger 2 or 4.
@@ -53,44 +57,43 @@ You: exit
 chat_history = []
 
 
-# while True:
-#     user_input =  input("You: ")
-#     chat_history.append(user_input)
-#     if (user_input == 'exit'):
-#         break
-#     result = model.invoke(chat_history)
-#     chat_history.append(result.text)
-#     print("AI:", result.text)
+while True:
+    user_input =  input("You: ")
+    chat_history.append(user_input) # add user input to chat history
+    if (user_input == 'exit'):
+        break
+    result = model.invoke(chat_history)
+    chat_history.append(result.text) # add AI response to chat history
+    print("AI:", result.text)
 
-# print("You full chat history:", chat_history)
+print("You full chat history:", chat_history)
 
 '''
 You: which is bigger 2 or 5 ?.
 AI: 5 is bigger than 2.
+
 You: now add 10 to bigger number.
-AI: The bigger number is 5. 
+AI: The bigger number is 5. Adding 10 to 5 gives you **15**.
 
-Adding 10 to 5 gives you **15**.
 You: now multiply 20 with lesser number?
-AI: The lesser number is **2**. 
+AI: The lesser number is **2**. Multiplying 20 by the lesser number (2): 20 × 2 = **40**
 
-Multiplying 20 by the lesser number (2):
-20 × 2 = **40**
 You: now which is bigger after 2 operations?
 AI: To find out which is bigger after the two operations, let's compare the results:
-
 * Result of the first operation (adding 10 to the bigger number): **15**
 * Result of the second operation (multiplying 20 by the lesser number): **40**
-
 Comparing **15** and **40**, **40** is bigger. 
-
 So, the result of the second operation is the bigger number.
+
 You: exit
-You full chat history: ['which is bigger 2 or 5 ?', '5 is bigger than 2.', 'now add 10 to bigger number.', 'The bigger number is 5. \n\nAdding 10 to 5 gives you **15**.', 'now multiply 20 with lesser number?', 'The lesser number is **2**. \n\nMultiplying 20 by the lesser number (2):\n20 × 2 = **40**', 'now which is bigger after 2 operations?', "To find out which is bigger after the two operations, let's compare the results:\n\n* Result of the first operation (adding 10 to the bigger number): **15**\n* Result of the second operation (multiplying 20 by the lesser number): **40**\n\nComparing **15** and **40**, **40** is bigger. \n\nSo, the result of the second operation is the bigger number.", 'exit']
+
+full chat history: ['which is bigger 2 or 5 ?', '5 is bigger than 2.', 'now add 10 to bigger number.', 'The bigger number is 5. \n\nAdding 10 to 5 gives you **15**.', 'now multiply 20 with lesser number?', 'The lesser number is **2**. \n\nMultiplying 20 by the lesser number (2):\n20 × 2 = **40**', 'now which is bigger after 2 operations?', "To find out which is bigger after the two operations, let's compare the results:\n\n* Result of the first operation (adding 10 to the bigger number): **15**\n* Result of the second operation (multiplying 20 by the lesser number): **40**\n\nComparing **15** and **40**, **40** is bigger. \n\nSo, the result of the second operation is the bigger number.", 'exit']
 
 '''
 
-# Lets implement Messages now with chatbot
+#------------------------------------------------
+
+# Lets implement `Messages` with chatbot
 
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
