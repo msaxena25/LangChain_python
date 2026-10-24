@@ -120,7 +120,9 @@
 Study
 6:45 to 7:45
 10:30 - 11:00
-11:20 - 
+11:20 - 2 pm 
+4 pm - 5 PM
+5:20 pm - 
 
 
 Other
@@ -129,3 +131,6 @@ Other
 8:30 - 10:00 = cleaning + kuku time + kuku breakfast + water
 10:00 to 10:30  = daily routine bath + kuku bath + 
 11:00 - 11:20 = breakfast
+2 pm to 3:30 pm = cleaning + check stuff for distribute
+3:30 - 4 pm = lunch + kuku lunch
+5 to 5:20 = kuku sir + talk

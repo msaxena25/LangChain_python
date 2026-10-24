@@ -180,7 +180,7 @@ class GradeToolSchema(BaseModel):
     total_exam_marks: int = Field(description='total exam marks', default=500, gt=0)
     
 class GradeTool(BaseTool):
-    name: str = 'Grade Calculator'
+    name: str = 'Grade_Calculator' # Dont give spaces, Gemini does not allow in tool names.
     description: str = '''
     Create a tool to get a Grade in exams 
     If total obtained number >= 75% then grade A+
@@ -298,3 +298,8 @@ tools = student_toolkit.get_tools()
 grade = tools[0].invoke({'obtained_marks': 350})
 scholorship = tools[1].invoke({'grade': grade.get('grade')})
 print(scholorship)
+
+#--------------------------------------------------------------------
+
+
+

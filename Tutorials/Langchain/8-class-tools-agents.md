@@ -439,3 +439,86 @@ grade = tools[0].invoke({'obtained_marks': 350})
 scholorship = tools[1].invoke({'grade': grade.get('grade')})
 print(scholorship)
 ```
+
+-----------
+
+#  Tool Binding in LangChain
+
+Tool binding is the process of `connecting tools to LLMs (chat model)` so the model knows which tools are available, what each tool does, and what input arguments it accepts.
+
+Tool binding does not itself execute the tool. Tool binding makes tools available to the LLM so it can `request their execution` when appropriate.
+
+## How do we bind tools?
+
+The standard method is `.bind_tools()` on LLMs that supports tool calling.
+
+For your student example:
+
+```py
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+model = ChatGoogleGenerativeAI(model="your-supported-model")
+
+tools = student_toolkit.get_tools() # get all tools from Student Toolkit
+model_with_tools = model.bind_tools(tools)
+```
+
+Here, `model_with_tools` is the model with both student tools bound to it.
+
+# Tool Calling in LangChain
+
+Tool calling is the process in which an LLM decides that a tool is needed, generates a structured request containing the tool's name and input arguments, and asks the application to execute it.
+
+Tool calling is when the model requests a particular tool with specific arguments.
+
+## Implement tool calling
+
+### Step 1: Bind the tool to the model
+
+```py
+model_with_tools = model.bind_tools(tools)
+```
+
+### Step 2: Ask a question
+
+```py
+response = model_with_tools.invoke(
+    "Use the grade calculator to calculate the grade for 300 marks."
+)
+print(response.tool_calls)
+```
+
+**If the model analized that for this query, any tool is required, the response will contain that tool call similar to this.**
+
+```py
+[
+    {
+        "name": "grade_calculator",
+        "args": {
+            "obtained_marks": 300,
+            "total_exam_marks": 500
+        },
+        "id": "call_123"
+    }
+]
+```
+
+--------
+
+# Tools Execution 
+
+Tool execution is the process of `running the selected tool` with the `arguments provided by the LLM `and returning the tool's result.
+
+Tool execution performs the actual operation; the LLM can then use the result to formulate its final response.
+
+Use `.invoke()` to execute a tool by passing its required input arguments.
+
+```py
+# Execute the existing grade tool
+result = grade_tool.invoke({
+    "obtained_marks": 400,
+    "total_exam_marks": 500
+})
+
+print(result)
+```
