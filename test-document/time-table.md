@@ -82,22 +82,50 @@
 | 11:00 PM – 6:30 AM | Kuku + Bedtime and sleep                  | 7 hr 30 min |
 | Total other time   |                                           | 17 hr 5 min |
 
-23-10-2026
+## 23-10-2026 
 
-study
-7 to 7:30 am
-10.30 to 11.00 am
-1 pm - 1:45 pm
-2:05 - 
+— Study Time
 
-other
-6:30 - 7 am = kuku
-7:30 - 8:15 = fresh + yoga exercise
-8:15 am to 9 am = daily routing myself and kuku
-9:00 AM – 10:00 AM = Pooja, Kuku getting ready and school drop
-10: 00 - 10:30 = breakfast
-11:00 - 12:45 = masava doctor visit
-12:45 - 1 pm - kuku picup
-1:45 to 2:05 = lunch
+| Time slot        | Duration    |
+| ---------------- | ----------- |
+| 7:00 – 7:30 AM   | 30 min      |
+| 10:30 – 11:00 AM | 30 min      |
+| 1:00 – 1:45 PM   | 45 min      |
+| 2:15 – 5:30 PM   | 3 hr 15 min |
+| 7:40 – 8:30 PM   | 50 min      |
+| 10:30 – 11:20 PM | 50 min      |
+| Total study time | 6 hr 40 min | 
+
+— Other Activities
+
+| Time slot           | Activity                                        | Duration     |
+| ------------------- | ----------------------------------------------- | ------------ |
+| 6:30 – 7:00 AM      | Kuku                                            | 30 min       |
+| 7:30 – 8:15 AM      | Freshen up and yoga/exercise                    | 45 min       |
+| 8:15 – 9:00 AM      | Daily routine — myself and Kuku                 | 45 min       |
+| 9:00 – 10:00 AM     | Pooja, Kuku getting ready and school drop       | 1 hr         |
+| 10:00 – 10:30 AM    | Breakfast                                       | 30 min       |
+| 11:00 AM – 12:45 PM | Masava doctor visit                             | 1 hr 45 min  |
+| 12:45 – 1:00 PM     | Kuku pickup                                     | 15 min       |
+| 1:45 – 2:15 PM      | Lunch                                           | 30 min       |
+| 5:30 – 7:00 PM      | Masava doctor visit                             | 1 hr 30 min  |
+| 7:00 – 7:40 PM      | Rest, phone calls and Kuku's sleep              | 40 min       |
+| 8:30 – 10:30 PM     | Rest, family time, dinner and playing with Kuku | 2 hr         |
+| 11:20 PM – 12:00 AM | Kuku's bedtime                                  | 40 min       |
+| 12:00 – 6:00 AM     | Bedtime and sleep                               | 6 hr         |
+| 6:00 – 6:30 AM      | Wake up and mobile surfing                      | 30 min       |
+| Total other time    |                                                 | 16 hr 40 min |
+
+24-10-2026
+Study
+6:45 to 7:45
+10:30 - 11:00
+11:20 - 
 
 
+Other
+6:30 to 6:45 = time table manage
+7:45 - 8:30 = fresh + hair oil + sun light + yoga
+8:30 - 10:00 = cleaning + kuku time + kuku breakfast + water
+10:00 to 10:30  = daily routine bath + kuku bath + 
+11:00 - 11:20 = breakfast
