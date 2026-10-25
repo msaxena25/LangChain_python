@@ -232,3 +232,51 @@ def factorial(n):
 number: str = input('Enter a positive number: ')
 print('factorial with range loop:', factorial(int(number)))
 ```
+
+---
+
+# Magic Methods in python
+
+Magic methods are special methods whose `names start and end with double underscores`, like `__init__()`.
+
+Because of the double underscores, they are also called `dunder methods` (short for "double underscore").
+
+**Purpose**- They allow your objects to `work with Python's built-in operations`, such as printing, addition, comparison, length and object creation etc.
+
+There are numbers of magic methods in Python like `__add__()`, `__str__()`, `__init__()`, `__del__()`, `__contains__()`,` __mul__()`,` __gt__()` etc..
+
+## `__add__()`
+
+```py
+class Number:
+    def __init__(self, value):
+        self.value = value
+
+    def __add__(self, other):
+        return self.value + other.value
+
+
+a = Number(10)
+b = Number(20)
+
+print(a + b) # 30
+# Here, a + b triggers a.__add__(b).
+```
+## `__len__()`  
+
+```py
+class Company:
+  def __init__(self, employees):
+    self.employees = employees
+
+  def __len__(self):
+    return len(self.employees)
+
+c1 = Company(["Emil", "Tobias", "Linus"])
+
+print(len(c1)) # 3
+```
+
+**Note:** Without __len__(), calling len(c1) would raise a TypeError, since Python would not know what "length" means for a Company.
+
+-----

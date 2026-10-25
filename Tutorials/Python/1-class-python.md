@@ -492,63 +492,10 @@ python -m pip install --upgrade pip
 python -m pip --version
 ```
 
-# In LangChain, OpenAI, Google Gemini, and Anthropic use separate integration packages.
-
-Run this command inside your activated virtual environment:
-
-```
-python -m pip install langchain-openai langchain-google-genai langchain-anthropic
-```
-
-## Install HuggingFace
-
-```
-python -m pip install langchain-huggingface
-```
-
-If you also need Hugging Face's core libraries for models, tokenizers, and pipelines, install:
-
-```
-python -m pip install langchain-huggingface transformers huggingface-hub
-```
-
-### Verify installation
-
-```
-python -m pip show langchain-huggingface
-```
-
-### Example import
-
-```
-from langchain_huggingface import HuggingFaceEndpoint
-```
-
 ## Machine learning Utilities Packages _ will learn later
 
 numpy
 scikit-learn
-
-----
-
-# Diff between `OpenAI` and `ChatOpenAI`
-
-
-## 1. `OpenAI` vs `ChatOpenAI`
-
-| Feature      | `OpenAI`                                                    | `ChatOpenAI`                                             |
-| ------------ | ----------------------------------------------------------- | -------------------------------------------------------- |
-| Model type   | Text-completion models                                      | Chat models                                              |
-| Input        | Usually a text prompt                                       | Messages with roles, such as system, user, and assistant |
-| Output       | Text Simple                                             | Assistant message with additional informartion like tokens, uses etc.                                 |
-| Modern usage | Legacy completion workflows or compatible completion models | Recommended for modern OpenAI chat models                |
-| Import       | `langchain_openai`                                          | `langchain_openai`                                       |
-
-## Parent Classes of both
-
-OpenAI -> BaseOpenAI -> BaseLLM
-
-ChatOpenAI -> BaseChatOpenAI -> BaseChatModel
 
 ----------
 
@@ -642,3 +589,120 @@ print(pi)
 ```
 
 ---------
+
+# Python file and folder naming conventions
+
+Python conventionally uses `snake_case` for file and folder names.
+
+| Name                 | Recommended? | Why                                                     |
+| -------------------- | ------------ | ------------------------------------------------------- |
+| `student_toolkit.py` | Yes          | Clear, conventional module name                         |
+| `class_tools.py`     | Yes          | Lowercase with underscores                              |
+| `studentToolkit.py`  | Avoid        | CamelCase is less common for modules                    |
+| `StudentToolkit.py`  | Avoid        | PascalCase is generally used for classes                |
+| `15_class_tools.py`  | Avoid        | Starts with a number, so it cannot be imported normally |
+| `15.class-tools.py`  | Avoid        | Hyphen and multiple dots complicate normal imports      |
+
+**Use these naming conventions:**
+
+- Files and folders: `snake_case`, such as `student_tools.py`
+- Classes: `PascalCase`, such as `StudentToolkit`
+- Functions and variables: `snake_case`, such as `grade_tool()`
+- Constants: `UPPER_SNAKE_CASE`, such as `MAX_RETRIES`
+
+## How to import a function or class from another file
+
+We have a file named `student_toolkit.py` file.
+
+If `main.py` is in the same folder as `student_toolkit.py`, you can import specific items:
+
+**Import a class & function**
+
+```py
+from student_toolkit import StudentToolkit, calculate_grade
+
+student = StudentToolkit()
+student.grade_tool()
+print(calculate_grade(95))
+```
+
+**Import the entire module**
+
+```py
+import student_toolkit
+
+student = student_toolkit.StudentToolkit()
+print(student_toolkit.calculate_grade(95))
+```
+
+## How to import from another folder
+
+### With Use of `__init__.py` file - 
+
+It can mark a folder as a `regular Python package` and can expose selected classes or functions for convenient imports.
+
+**Suppose we have folder structure like below:**
+
+```
+project/
+├── main.py
+└── student/
+    ├── __init__.py
+    └── student_toolkit.py
+```
+
+So Inside `__init__.py` file we can write 
+
+```py
+from .student import StudentToolkit
+```
+**Pattern -**
+> from .[folder_name] import [ClassName], [function_name]  
+> (The dot before `[folder_name]` means a relative import.)
+
+**You can leave `__init__.py` completely blank**
+
+It depends on how you want to import the class.
+
+With Empty `__init__.py` file - 
+
+In main.py, import directly from the module:
+
+```py
+from student.student_toolkit import StudentToolkit
+```
+
+### Without `__init__.py` file - 
+
+Since `Python 3.3`, Python supports namespace packages, which can allow a directory without `__init__.py` to be imported as a package.
+
+You can directly write in main.py - 
+
+```py
+from student.student_toolkit import StudentToolkit
+```
+
+## Load a module dynamically
+
+IF you have different naming format of your files or your folder then you can load that file dynamically using `importlib` package.
+
+Suppose we have **filename -  "15.class-tools.py"**
+
+Then you can import this file into another file with below code -
+
+```py
+import importlib.util
+
+spec = importlib.util.spec_from_file_location(
+    "StudentToolkit",
+    "15.class-tools.py"
+)
+
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+StudentToolkit = module.StudentToolkit
+```
+
+-----------
+

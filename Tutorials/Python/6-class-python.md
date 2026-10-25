@@ -58,9 +58,9 @@ For example, if you set `level=logging.WARNING`, Python records `WARNING`, `ERRO
 
 ----
 
-# How to use?
+## How to use?
 
-## Without logging
+### Without logging
 
 ```py
 def greet(name):
@@ -71,7 +71,7 @@ greet() # called without argument
 
 Python raises a `TypeError` because the required `name` argument is missing.
 
-## With logging
+### With logging
 
 The important point is that the error happens when you call the function, so put the function call inside a `try-except` block.
 
@@ -103,7 +103,7 @@ TypeError: greet() missing 1 required positional argument: 'name'
 
 -----------
 
-# How to choose the logging level
+## How to choose the logging level
 
 - `INFO`: normal milestones in the workflow.
 - `DEBUG`: detailed internal steps.
@@ -124,7 +124,7 @@ TypeError: greet() missing 1 required positional argument: 'name'
 
 -------
 
-# Key differences print vs logging
+## Key differences print vs logging
 
 | Feature                                | `print()`               | `logging`                                       |
 | -------------------------------------- | ----------------------- | ----------------------------------------------- |
@@ -138,11 +138,11 @@ TypeError: greet() missing 1 required positional argument: 'name'
 
 -----
 
-# Configure logging at the application level
+## Configure logging at the application level
 
 This gives you centralized configuration and makes it easier to identify which file produced each log message.
 
-## 1. Recommended project structure
+### 1. Recommended project structure
 
 In `main.py`: at the application level
 
@@ -162,7 +162,7 @@ logger.info("Application started")
 
 This configures the root logger and its default file handler.
 
-## 2. Create a logger in each Python file
+### 2. Create a logger in each Python file
 
 In `document_loader.py`, or any file :
 
@@ -177,3 +177,4 @@ def load_documents():
 ```
 
 ------
+

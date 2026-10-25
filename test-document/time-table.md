@@ -177,4 +177,9 @@ O - 4:00 to 4:30 = kuku steam + zepto
 O - 4:30 - 5:10 = steamer order + kuku fever medicine + hould hold work
 S = 5:10 - 6 pm
 O - 6 to 7 -  Prakash ji  + kuku milk + pooja + hould hold work
-O - 7: 8: 10 - Kuku playing outside
+O - 7:00 - 8: 20 - Kuku playing outside + food order
+S - 8:20 - 9:20
+O - 9:20 - 9:50 = lunch + kuku medicines
+S - 9:50 - 10:50
+O - 10:50 to 11:30 = kuku brush + water + milk + hould hold work
+S -  11:25 to 
