@@ -9,7 +9,7 @@ Tell me two top IITs in India? And how much scholarship can I get if I achieve 4
 
 # Python module names should generally use letters, numbers, and underscores, and should not start with a number.
 # Thats why below is Invalid import
-# from 15.class-tools import StudentToolkit
+# from 1_custom_tools import StudentToolkit
 
 
 # Dynamically load Module with importlib
@@ -18,7 +18,7 @@ import importlib.util
 
 spec = importlib.util.spec_from_file_location(
     "StudentToolkit",
-    r"Langchain-code\15.class-tools.py"
+    r"Langchain-code\5-tools\1_custom_tools.py"
 )
 
 module = importlib.util.module_from_spec(spec)

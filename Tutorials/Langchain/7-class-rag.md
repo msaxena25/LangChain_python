@@ -310,7 +310,7 @@ We'll use:
 ## Complete RAG application Code
 
 ```
-Langchain-code\14.class-youtube-chatbot-rag.py
+Langchain-code\4-rag\5_youtube_chatbot_rag.py
 ```
 
 ----------
