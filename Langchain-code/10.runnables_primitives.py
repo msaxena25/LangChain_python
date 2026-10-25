@@ -35,6 +35,7 @@ chain = prompt1 | model
 #------------------------------------------------------------------------------------------------
 
 # RunnableParallel is a primitive Runnable that executes components in parallel.
+
 # It is a subclass of Runnable.
 # It is used to execute components in parallel.
 
@@ -49,12 +50,11 @@ prompt2 = PromptTemplate.from_template("Write a sentiment analysis of the follow
 sentiment_chain = RunnableSequence(prompt2, model)
 
 '''
-We can arguments into RunnableParallel in two ways:
-1. Keyword arguments
-2. Dictionary arguments
+There are two ways to pass arguments to RunnableParallel:
 
-Keyword arguments are more readable and easier to understand.
-Dictionary arguments are more flexible and can be used to build dynamic chains.
+1. Using keyword arguments — simpler and more readable
+
+2. Using a dictionary — useful when keys are dynamic or come from a variable
 '''
 
 
@@ -71,8 +71,8 @@ parallel_chain = RunnableParallel(
 
 # 2. Dictionary arguments
 
-#You explicitly pass a dictionary.
-#The dictionary keys become the output keys.
+# You explicitly pass a dictionary.
+# The dictionary keys become the output keys.
 
 # parallel_chain = RunnableParallel({"summary": summary_chain, "sentiment": sentiment_chain})
 
@@ -80,7 +80,8 @@ parallel_chain = RunnableParallel(
 There is no difference in functionality or output between these two approaches. 
 Both pass a mapping of keys to Runnables into RunnableParallel.
 
-My recommendation: Use keyword arguments when the keys are fixed and known in advance. Use a dictionary when the mapping is already stored in a variable or needs to be built dynamically.
+My recommendation: Use keyword arguments when the keys are fixed and known in advance. 
+Use a dictionary when the mapping is already stored in a variable or needs to be built dynamically.
 '''
 
 
@@ -91,7 +92,7 @@ My recommendation: Use keyword arguments when the keys are fixed and known in ad
 
 #------------------------------------------------------------------------------------------------
 
-# RunnablePassThrough is a primitive Runnable that preserves the input as it is with the final output.
+# RunnablePassThrough is a primitive Runnable that preserves the input with the final output.
 
 from langchain_core.output_parsers import StrOutputParser
 
@@ -107,6 +108,16 @@ print(result)
 
 
 # another working example
+
+'''
+Requirement:
+
+- You are a helpful assistant that can explain any topic and then write a summary of the explanation.
+
+- Output: 
+    - Explanation: Explanation of the topic
+    - Summary: Summary of the explanation
+'''
 
 print('Test RunnablePassthrough with RunnableParallel...')
 
@@ -136,17 +147,24 @@ parellel_chain = RunnableParallel(
 
 # combine both chains
 final_chain = RunnableSequence(explanation_generator_chain, parellel_chain)
+
 '''
-1. final_chain will be run first with the input {"topic": "AI"}
-2. explanation_generator_chain will be run with the input {"topic": "AI"} and output the explanation
-3. parellel_chain will be run with the input {"explanation": "AI is a technology that allows machines to learn from data and make decisions."} and output the summary
-4. final_chain will output the result {"explanation": "AI is a technology that allows machines to learn from data and make decisions.", "summary": "..."}
+Step-by-step execution:
+
+1. The `final_chain` is invoked using the input dictionary: {"topic": "AI"}.
+2. This triggers the `explanation_generator_chain`, which generates a detailed explanation for "AI".
+3. The result from the explanation generator is passed to the `parellel_chain`, which:
+   - Returns the explanation as is under the key "explanation".
+   - Simultaneously, uses the explanation to generate a concise summary under the key "summary".
+4. The output from `final_chain` is a dictionary containing both the generated explanation and its summary, like:
+   {"explanation": "...", "summary": "..."}
 '''
 
 #result = final_chain.invoke({"topic": "AI"})
 
 # print(result)
-# {    "explanation": "AI is a technology that allows machines to learn from data and make decisions.",    "summary": "..."}
+# { "explanation": "AI is a technology that allows machines to learn from data and make decisions.",   
+#  "summary": "..."}
 
 #------------------------------------------------------------------------------------------------
 
@@ -178,13 +196,54 @@ chain =  RunnableSequence(
     lambda text: {"explanation": text}, # coverting the explanation to a dictionary with key "explanation"
     RunnablePassthrough.assign(summary=summary_generator_chain))
 
-# uncomment to run
-#result = chain.invoke({"topic": "Cricket"})
+'''
+uncomment to run
+result = chain.invoke({"topic": "Cricket"})
 
-#print(result)
-# {    "explanation": "Cricket is a sport that is played between two teams of 11 players each. The game is played on a field with a rectangular shape and a target called the wicket. The objective of the game is to score runs by hitting the ball with a bat and running between the wickets. The team with the most runs at the end of the game wins.",    "summary": "..."}
+print(result)
 
-#------------------------------------------------------------------------------------------------
+{    
+"explanation": "Cricket is a sport that is played between two teams of 11 players each.
+ The team with the most runs at the end of the game wins.",  
+"summary": "Cricket is....."
+}
+'''
+
+#---------------------------------------------------
+
+# Understand Difference between RunnablePassthrough and RunnablePassthrough.assign()
+
+# Using RunnablePassthrough.assign()
+chain = RunnablePassthrough.assign(
+    topic_length=lambda x: len(x["topic"])
+)
+
+print(chain.invoke({"topic": "React"}))
+# { "topic": "React", "topic_length": 5 }
+
+
+# Using RunnablePassthrough and RunnableLambda
+
+from langchain_core.runnables import RunnablePassthrough, RunnableLambda
+
+chain = (
+    RunnablePassthrough() | RunnableLambda(lambda x: { **x, "topic_length": len(x["topic"]) }))
+
+print(chain.invoke({"topic": "React"}))
+# { "topic": "React", "topic_length": 5 }
+
+
+'''
+Simple rule
+
+- RunnablePassthrough() — Just passes the input to next component through unchanged.
+- RunnableLambda() — executes your custom calculation.
+- RunnablePassthrough.assign() — conveniently adds calculated fields while preserving the existing dictionary.
+
+So, yes, you can achieve the same result without .assign(), but .assign() is simpler when your goal is to add fields to a dictionary.
+'''
+
+#---------------------------------------------------
 
 # RunnableBranch
 
@@ -230,15 +289,13 @@ branch_chain = RunnableBranch(
 # RunnableBranch - another example
 
 '''
+Requirement:
+- Company's email-routing system.
 
-company's email-routing system. You want to:
-
-The workflow will classify the incoming email into one of four departments:
-
-- Complaint → Customer Support
-- Refund or payment → Payment Team
-- Technical issue → Technical Team
-- General query → Chatbot handles it directly
+- If email is about complaint, then route it to Customer Support Team.
+- If email is about refund or payment, then route it to Payment Team.
+- If email is about technical issue, then route it to Technical Team.
+- If email is about general query, then route it to Chatbot handles it directly.
 '''
 
 print('Test RunnableBranch - company email-routing system...')
@@ -312,6 +369,7 @@ runnable_branch_chain = RunnableBranch(
 )
 
 # final chain
+
 # RunnablePassthrough.assign - it will preserve the email input as it is.
 
 final_workflow_chain = RunnablePassthrough.assign(
@@ -320,40 +378,83 @@ final_workflow_chain = RunnablePassthrough.assign(
 
 # test the final workflow chain
 
-# uncomment to run
-#result = final_workflow_chain.invoke({
-#    "email": "I have a complaint about the product. Please refund the extra payment."
-#})
+result = final_workflow_chain.invoke({
+   "email": "I have a complaint about the product. Please refund the extra payment."
+})
 
-#print(result)
-# Customer Support Team
+print(result)
+# { "email": "I have a complaint about the product. Please refund the extra payment.", 
+# "result": "Customer Support Team" }
+
+
 
 result = final_workflow_chain.invoke({"email": "Could you please tell me, how can I order the product?"})
 print(result)
 '''
- {'email': 'Could you please tell me, how can I order the product?', 'result': "Hello! Thank you for reaching out to us. \n\nI am our automated customer support assistant, and I'd be happy to help you today. Since your message falls under a general query, could you please provide a few more details or let me know what specific question you have about our products, services, or policies? \n\nOnce you share the details, I'll get you the right information right away!"}
+ {'email': 'Could you please tell me, how can I order the product?', 
+ 'result': "Hello! Thank you for reaching out to us. \n\nI am our automated customer support assistant, and I'd be happy to help you today. Since your message falls under a general query, could you please provide a few more details or let me know what specific question you have about our products, services, or policies? \n\nOnce you share the details, I'll get you the right information right away!"}
 '''
 
 # Now understand steps one by one
 
 '''
-1. Creted email classification prompt and chain
-    - with email input and standard format instructions
-    - standard format instructions is used to parse the output into Pydantic Schema.
-2. Created customer support team chain
-3. Created payment team chain
-4. Created technical team chain
-5. 2,3,4 are the routing chains, we have to redirect that email to the respective team.
-6. For general queries, we have to handle it directly & handle with llm chatbot.
-    - created with same input email as it is.
-    - it will handle the general query with llm chatbot.
-7. So Created general query prompt and chain.
-8. Now we created runnable branch chain, it will route the email to the respective team based on the email classification.
-9. Finally we created final workflow chain with three components:
-    - Used RunnablePassthrough.assign() to preserve the email input as it is.
-    - email_classification_chain - it will classify the email into one of the four categories.
-    - runnable_branch_chain - it will route the email to the respective team based on the email classification.
-10. We tested the final workflow chain with a general query email.
+# Step-by-step process of the email routing workflow:
+1. Created an email classification prompt and chain:
+    - Accepts an email as input and uses standardized instructions.
+    - The output is parsed into a Pydantic Schema for reliable structure.
+2. Defined a customer support team chain.
+3. Defined a payment team chain.
+4. Defined a technical team chain.
+5. The above three chains (2, 3, 4) serve as routing destinations for their respective support scenarios.
+6. Set up handling for general queries using an LLM-powered chatbot:
+    - Uses the unaltered email input.
+    - Provides answers to general queries directly without team routing.
+7. Constructed a general query prompt and corresponding chain.
+8. Assembled a RunnableBranch chain that selects the appropriate team or LLM chatbot based on the classification output.
+9. Built the final workflow chain comprising:
+    - RunnablePassthrough.assign() to retain the original email input.
+    - email_classification_chain to determine the correct category.
+    - runnable_branch_chain to route the email based on the classified category.
+10. Validated the final workflow chain using an example general query email to ensure correct behavior.
 
+
+'''
+
+# Let Create final workflow without RunnablePassthrough.assign()
+
+workflow_chain = RunnableSequence(email_classification_chain, runnable_branch_chain)
+
+final_workflow_chain = RunnableParallel(
+    email=RunnableLambda(lambda x: x["email"]),
+    result=workflow_chain
+)
+
+result = final_workflow_chain.invoke({"email": "I have a complaint about the product. Please refund the extra payment."})
+
+'''
+Rule of thumb: 
+
+RunnableParallel is useful when you want to run multiple branches on the same input; 
+
+.assign() is more convenient when you want to add computed fields to the original dictionary.
+'''
+
+'''
+
+- Below Code will generate different output structure
+
+final_workflow_chain = RunnableParallel(
+    email=RunnablePassthrough(),
+    result=workflow_chain
+)
+
+{
+    "email": {
+        "email": "I have a complaint about the product. Please refund the extra payment."
+    },
+    "result": "..."  # Output from your workflow
+}
+
+- Thats why we have used RunnableLambda to convert the input to dictionary with key "email".
 
 '''

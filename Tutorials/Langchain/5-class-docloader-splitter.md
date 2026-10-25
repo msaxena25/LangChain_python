@@ -208,7 +208,7 @@ By default, `PyPDFLoader` generally creates one document per PDF page. The metad
 
 ## `DirectoryLoader`
 
-DirectoryLoader is used to l**oad multiple files from a directory (folder)** instead of loading each file individually.
+DirectoryLoader is used to **load multiple files from a directory (folder)** instead of loading each file individually.
 
 ```
 company_docs/
@@ -756,6 +756,7 @@ python_splitter = RecursiveCharacterTextSplitter.from_language(
     chunk_size=500, 
     chunk_overlap=50
 )
+
 # TypeScript
 ts_splitter = RecursiveCharacterTextSplitter.from_language(
     Language.TS, chunk_size=500, chunk_overlap=50
@@ -882,7 +883,7 @@ Lets first create a document with different - different topics -
 
 First 2 paragraphs are related to Pyhton, 3rd para = cricket and 4th and 5th paras related to enviournment.
 
-```
+```py
 Python is a programming language used to build applications, automate tasks, and process data.
 Python supports lists, dictionaries, functions, and classes.
 Cricket is a bat-and-ball sport played between two teams.
@@ -981,7 +982,6 @@ The environment includes forests, rivers, oceans, air, and living organisms. Pla
 # Below chunks with breakpoint_threshold_amount=0.5
 
 Chunk 1:
-
 Python is a programming language used to build applications, automate tasks, and process data. Python supports lists, dictionaries, functions, and classes. Cricket is a bat-and-ball sport played between two teams.
 
 Chunk 2:
@@ -1005,9 +1005,7 @@ Important: More splits doesn't necessarily mean more precise. A lower value may 
 
 -----
 
-# Same Embedding model for both document & user query
-
-Yes, your understanding is correct. ✅
+# Same Embedding model for both document & user query?
 
 For reliable similarity search in RAG, you should use the same embedding model for both your documents and the user's query.
 

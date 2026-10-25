@@ -1,4 +1,9 @@
-"""
+'''
+A `Document Loader` is a `component` that reads data from a source and converts it into LangChain 
+`Document` objects so that the data can be processed in a consistent way.
+'''
+
+
 # Load txt file with document loader
 
 from langchain_community.document_loaders import TextLoader
@@ -9,8 +14,14 @@ loader = TextLoader("test-document/notes.txt")
 
 result1 = loader.load()
 print(result1)
+
+# Every type of loader will return a list of Document objects.
+
 '''
-[Document(metadata={'source': 'test-document/notes.txt'}, page_content='Hello Python\nLearning AI\n\n\n19-10\n12.30 se start  1:30\n2:10 start ')]
+[Document(
+metadata={'source': 'test-document/notes.txt'}, 
+page_content='Hello Python\nLearning AI\n\n\n19-10\n12.30 se start  1:30\n2:10 start '
+)]
 '''
 
 print(result1[0].page_content)
@@ -31,10 +42,19 @@ print(result1[0].page_content)
 
 print(result1[0].metadata)
 '''
-{'producer': 'Microsoft® Word for Microsoft 365', 'creator': 'Microsoft® Word for Microsoft 365', 'creationdate': '2026-10-19T14:15:44+05:30', 'author': 'Mohit Saxena', 'moddate': '2026-10-19T14:15:44+05:30', 'source': 'test-document/test-pdf.pdf', 'total_pages': 4, 'page': 0, 'page_label': '1'}
+{'producer': 'Microsoft® Word for Microsoft 365', 
+'creator': 'Microsoft® Word for Microsoft 365', 
+'creationdate': '2026-10-19T14:15:44+05:30', 
+'author': 'Mohit Saxena', 
+'moddate': '2026-10-19T14:15:44+05:30', 
+'source': 'test-document/test-pdf.pdf', 
+'total_pages': 4, 'page': 0, 'page_label': '1'}
 '''
 
-
+'''
+By default, `PyPDFLoader` generally creates one document per PDF page. 
+The metadata includes the source and page number.
+'''
 
 #-------------------------------------------------
 
@@ -42,12 +62,21 @@ print(result1[0].metadata)
 
 print('Load multiple txt file from Directory with Directory Loader...')
 
+'''
+DirectoryLoader is used to load multiple files from a directory (folder) instead
+of loading each file individually.
+
+DirectoryLoader does not itself extract every file format. 
+It finds the files, then delegates each file to the loader you specify through `loader_cls`.
+'''
+
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 
 loader = DirectoryLoader(
     "test-document/", 
-    glob="*.txt", 
-    loader_cls=TextLoader)
+    glob="*.txt",  # glob is pattern to match the files.
+    loader_cls=TextLoader # Loader that will actually load that file.
+    )
 
 docs = loader.load()
 
@@ -66,20 +95,29 @@ from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 loader = DirectoryLoader(
     path= "test-document/", 
     glob="*.pdf", 
-    loader_cls=PyPDFLoader)
+    loader_cls=PyPDFLoader
+    )
 
 docs = loader.load()
 
 print("Total documents:", len(docs)) # 5
 
-# the resulting document count generally corresponds to the total number of PDF pages, not the number of PDF files.
+# the resulting document count generally corresponds to the total number of PDF pages, 
+# not the number of PDF files.
 
 print(docs[5].page_content) #IndexError: list index out of range
 print(docs[5].metadata) #IndexError: list index out of range
 
 #-----------------------------
 
+# Lazy Load
 
+'''
+- load document on demand
+- return a `generator` of document object.
+- Documents are not loaded at once, they are fetched one at a time as needed.
+- Use when dealing with large number of documents or you want stream processing (chunking, embedding) without using lots of memory.
+'''
 
 print('lazy_laod()...')
 
@@ -102,7 +140,12 @@ for doc in docs:
 
 #----------------------------------------------------
 
-# web based loader
+# Web based loader
+
+'''
+A web-based document loader fetches content from a webpage and converts the extracted content 
+into LangChain `Document` objects.
+'''
 
 print('Web based loader.....')
 
@@ -122,11 +165,17 @@ print(doc[0].metadata)
 
 # CSV Loader
 
+'''
+`CSVLoader` is a LangChain document loader that reads a CSV file and converts its rows into LangChain 
+`Document` objects.
+'''
+
 print('CSV Loader..')
 
 from langchain_community.document_loaders import CSVLoader
 
 loader = CSVLoader("test-document/test-csv.csv", metadata_columns=['id'])
+# metadata_columns is used to specify the columns that will be used as metadata.
 
 file = loader.load()
 
@@ -140,9 +189,19 @@ print(file[0].page_content)
 
 print(file[0].metadata)
 
+'''
+Step-by-step process of CSVLoader:
+
+1. CSVLoader reads the CSV file using CSV-reading logic.
+2. It identifies the column headers: id, name, description, and price.
+3. It reads the first data row and matches each value with its column name.
+4. It formats each column-value pair as `column: value` on a `separate line`.
+5. It stores that formatted text in Document.page_content
+'''
+
 
 for row in file:
-    line = row.page_content.splitlines()
+    line = row.page_content.splitlines() 
     print(line)
     # ['id: 101', 'name: Mouse', 'description: Wireless mouse', 'price: 799']
    
@@ -161,12 +220,31 @@ for row in file:
 
 #----------------------------------------------
 
+# TEXT splitter 
 
-# TEXT splitter (package used - langchain-text-splitters)
+'''
+A `Text Splitter` is a `component` that splits text into smaller chunks.
+'''
+
+# package used - langchain-text-splitters
 
 print('Text splitter....')
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# The most commonly used splitter is `RecursiveCharacterTextSplitter`.
+
+'''
+**Its default separator order is:**
+
+`\n\n` - 1. Paragraphs - Try splitting at blank lines.
+
+`\n` - 2. Lines - If still too large, try newlines.
+
+`" "` - 3. Words - If still too large, try spaces.
+
+`""` - 4. Characters - As a last resort, split between characters.
+'''
 
 text = '''
 Python is a programming language.
@@ -183,24 +261,35 @@ chunks = splitter.split_text(text)
 
 # print(chunks) # it just return single chunk with whole string.
 '''
-['Python is a programming language.\nIt is widely used for AI and machine learning.\nLangChain helps developers build applications with LLMs.\nText splitting is an important step in RAG.']
+['Python is a programming language.\nIt is widely used for AI and machine learning.\nLangChain helps 
+developers build applications with LLMs.\nText splitting is an important step in RAG.']
 
 '''
 
+# Lets pass some configurations to the splitter.
 
+'''
+chunk_size: The size of each chunk in characters.
+chunk_overlap: The number of characters to overlap between chunks.
+'''
 
 print('RecursiveCharacterTextSplitter with chunk size more then text length..')
+
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=1000,
-    chunk_overlap=0
+    chunk_overlap=50 # tries to retain 50 characters from the preceding chunk where applicable.
 )
 chunks = splitter.split_text(text)
 
-# print(chunks) # chunk size 1000 (more then text length so return only one chunk)
+# print(chunks) 
+# We did chunk size 1000 and that is more then our text length so it will return only one chunk.
+
 '''
-['Python is a programming language.\nIt is widely used for AI and machine learning.\nLangChain helps developers build applications with LLMs.\nText splitting is an important step in RAG.']
+['Python is a programming language.\nIt is widely used for AI and machine learning.\nLangChain 
+helps developers build applications with LLMs.\nText splitting is an important step in RAG.']
 '''
 
+# Chunk size 50
 
 print('RecursiveCharacterTextSplitter with chunk size 50..')
 
@@ -212,18 +301,27 @@ chunks = splitter.split_text(text)
 
 print(type(chunks)) # <class 'list'>
 # print(chunks)
+
 '''
+Outputs with different chunk_overlap values:
+
 chunk_overlap = 0 or 5
 
-['Python is a programming language.', 'It is widely used for AI and machine learning.', 'LangChain helps developers build applications', 'with LLMs.', 'Text splitting is an important step in RAG.']
+['Python is a programming language.', 'It is widely used for AI and machine learning.', 
+'LangChain helps developers build applications', 
+'with LLMs.', 'Text splitting is an important step in RAG.']
 
 # below with chunk_overlap = 20
 
-['Python is a programming language.', 'It is widely used for AI and machine learning.', 'LangChain helps developers build applications', 'build applications with LLMs.', 'Text splitting is an important step in RAG.']
+['Python is a programming language.', 'It is widely used for AI and machine learning.', 
+'LangChain helps developers build applications', 'build applications with LLMs.', 
+'Text splitting is an important step in RAG.']
 
 with chunk_overlap = 30
 
-['Python is a programming language.', 'It is widely used for AI and machine learning.', 'LangChain helps developers build applications', 'developers build applications with LLMs.', 'Text splitting is an important step in RAG.']
+['Python is a programming language.', 'It is widely used for AI and machine learning.', 
+'LangChain helps developers build applications', 'developers build applications with LLMs.', 
+'Text splitting is an important step in RAG.']
 
 '''
 
@@ -236,7 +334,6 @@ for index, chunk in enumerate(chunks, start=1):
 4 build applications with LLMs.
 5 Text splitting is an important step in RAG.
 '''
-
 
 
 #--------------------------------------------------
@@ -281,6 +378,8 @@ for index, chunk in enumerate(chunks, start=1):
 # CharacterTextSplitter
 
 print('CharacterTextSplitter.......')
+
+# `CharacterTextSplitter` splits text using one specific separator that you choose.
 
 from langchain_text_splitters import CharacterTextSplitter
 
@@ -330,14 +429,22 @@ splitter = CharacterTextSplitter(
 chunks = splitter.split_text(text)
 
 for i, chunk in enumerate(chunks, start=1):
-    print(f"Chunk {i}:", end=' ')
+    print(f"Chunk {i} & Length is {len(chunk)} chars: ", end=' ')
     print(chunk)
 
-"""
+'''
+Chunk 1 & Length is 58 chars:  Python is a programming language. It is widely used for AI
+Chunk 2 & Length is 54 chars:  and machine learning. LangChain helps developers build
+Chunk 3 & Length is 23 chars:  applications with LLMs.
+'''
+
 
 #---------------------------------------------------------------------------------
 
 # Sementic Splitter
+
+# The main idea is simple: instead of splitting text after a fixed number of characters, 
+# split it `when the meaning or topic changes`.
 
 print('Sementic Splitter with SemanticChunker...............')
 
@@ -350,12 +457,14 @@ Cricket is a bat-and-ball sport played between two teams.
 The environment includes forests, rivers, oceans, air, and living organisms.
 Planting trees, reducing plastic waste, and conserving water help protect natural resources.
 '''
+
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from dotenv import load_dotenv
 import os
 load_dotenv()
+
 # Load the environment variables
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
@@ -366,9 +475,22 @@ model = GoogleGenerativeAIEmbeddings(model='gemini-embedding-001', google_api_ke
 
 # print('embedding')
 # print(vector)
-# print("Total embedding vectors:", len(vector)) #Total embedding vectors: 3072
+# print("Total embedding vectors:", len(vector)) # Total embedding vectors: 3072
 
-splitter = SemanticChunker(embeddings=model, breakpoint_threshold_type="standard_deviation", breakpoint_threshold_amount=0)
+splitter = SemanticChunker(
+    embeddings=model,
+    breakpoint_threshold_type="standard_deviation", 
+    breakpoint_threshold_amount=0
+    )
+
+
+'''
+breakpoint_threshold_amount = range (0 to 1)
+
+Lower value = more splits. 
+Higher value = fewer splits, generally.
+'''
+
 
 chunks = splitter.create_documents([content])
 
@@ -382,7 +504,6 @@ for i, chunk in enumerate(chunks, start=1):
 Below chunks with breakpoint_threshold_amount=1
 
 Chunk 1:
-
 Python is a programming language used to build applications, automate tasks, and process data. Python supports lists, dictionaries, functions, and classes. Cricket is a bat-and-ball sport played between two teams.
 
 Chunk 2:
@@ -391,7 +512,6 @@ The environment includes forests, rivers, oceans, air, and living organisms. Pla
 Below chunks with breakpoint_threshold_amount=0.5
 
 Chunk 1:
-
 Python is a programming language used to build applications, automate tasks, and process data. Python supports lists, dictionaries, functions, and classes. Cricket is a bat-and-ball sport played between two teams.
 
 Chunk 2:

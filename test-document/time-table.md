@@ -116,30 +116,58 @@
 | 6:00 – 6:30 AM      | Wake up and mobile surfing                      | 30 min       |
 | Total other time    |                                                 | 16 hr 40 min |
 
-24-10-2026
-Study
-6:45 to 7:45
-10:30 - 11:00
-11:20 - 2 pm 
-4 pm - 5 PM
-5:20 pm - 6:50
-8:45 - 9:45
-10:25 - 11:15
-12:00 - 12:20
 
+## 24-10-2026 
 
-Other
-6:30 to 6:45 = time table manage
-7:45 - 8:30 = fresh + hair oil + sun light + yoga
-8:30 - 10:00 = cleaning + kuku time + kuku breakfast + water
-10:00 to 10:30  = daily routine bath + kuku bath + 
-11:00 - 11:20 = breakfast
-2 pm to 3:30 pm = cleaning + check stuff for distribute
-3:30 - 4 pm = lunch + kuku lunch
-5 to 5:20 = kuku sir + talk
-6:50 pm - 8:00 pm= rest + family time + outside + pooja + dinner
-8:00pm - 8:45pm = walk + park + kuku play
-9:45 - 10:25 = kuku water, medicines + other home works
-11:15 - 12:00 = milk + kuku and my brush + clothes + medicines
-12:20 - 12:35 = kuku sleep
+— Study Time
 
+| Time slot          | Duration    |
+| ------------------ | ----------- |
+| 6:45 – 7:45 AM     | 1 hr        |
+| 10:30 – 11:00 AM   | 30 min      |
+| 11:20 AM – 2:00 PM | 2 hr 40 min |
+| 4:00 – 5:00 PM     | 1 hr        |
+| 5:20 – 6:50 PM     | 1 hr 30 min |
+| 8:45 – 9:45 PM     | 1 hr        |
+| 10:25 – 11:15 PM   | 50 min      |
+| 12:00 – 12:20 AM   | 20 min      |
+| 12:45 – 1:20 AM    | 35 min      |
+| Total study time   | 8 hr 25 min |
+
+— Other Activities
+
+| Time slot           | Activity                                            | Duration     |
+| ------------------- | --------------------------------------------------- | ------------ |
+| 6:30 – 6:45 AM      | Timetable management                                | 15 min       |
+| 7:45 – 8:30 AM      | Freshen up, hair oil, sunlight and yoga             | 45 min       |
+| 8:30 – 10:00 AM     | Cleaning, Kuku time, Kuku's breakfast and water     | 1 hr 30 min  |
+| 10:00 – 10:30 AM    | Daily routine and Kuku's bath                       | 30 min       |
+| 11:00 – 11:20 AM    | Breakfast                                           | 20 min       |
+| 2:00 – 3:30 PM      | Cleaning and checking items for distribution        | 1 hr 30 min  |
+| 3:30 – 4:00 PM      | Lunch and Kuku's lunch                              | 30 min       |
+| 5:00 – 5:20 PM      | Kuku's sir and talk                                 | 20 min       |
+| 6:50 – 8:00 PM      | Rest, family time, outside, pooja and dinner        | 1 hr 10 min  |
+| 8:00 – 8:45 PM      | Walk, park and Kuku's playtime                      | 45 min       |
+| 9:45 – 10:25 PM     | Kuku's water, medicines and other household work    | 40 min       |
+| 11:15 PM – 12:00 AM | Milk, Kuku's and my brushing, clothes and medicines | 45 min       |
+| 12:20 – 12:45 AM    | Kuku's sleep and laptop restart                     | 25 min       |
+| 1:20 – 6:30 AM      | Bedtime and sleep                                   | 5 hr 10 min  |
+| Total other time    |                                                     | 13 hr 55 min |
+
+### Daily Summary
+
+- Study time: 8 hr 25 min
+- Other activities: 13 hr 55 min
+- Total recorded time: 22 hr 20 min
+- Unaccounted time: 1 hr 40 min
+
+# 25-10-2026
+
+For Other - I will write (O) and for Study - (S)
+
+Other - 6:30 am to 8:40 am = Sleep (kuku not well last night)
+Other - 8:40 to 9 = wakeup + water + giloy
+Study - 9 to 9:35
+O - 9:35 to 10:30 = daily routine work + kuku water
+O - 10:30 to 11:10 = breakfast + kuku bath and brush
+S - 11:10 - 
