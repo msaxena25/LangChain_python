@@ -170,4 +170,11 @@ Other - 8:40 to 9 = wakeup + water + giloy
 Study - 9 to 9:35
 O - 9:35 to 10:30 = daily routine work + kuku water
 O - 10:30 to 11:10 = breakfast + kuku bath and brush
-S - 11:10 - 
+S - 11:10 - 2:45
+O - 2:45 to 3:30 PM = lunch + kuku lunch and water + check lights etc.
+O - 3:30 to 4:00 PM = rest + steamer search 
+O - 4:00 to 4:30 = kuku steam + zepto
+O - 4:30 - 5:10 = steamer order + kuku fever medicine + hould hold work
+S = 5:10 - 6 pm
+O - 6 to 7 -  Prakash ji  + kuku milk + pooja + hould hold work
+O - 7: 8: 10 - Kuku playing outside
