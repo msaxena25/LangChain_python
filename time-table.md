@@ -161,25 +161,57 @@
 - Total recorded time: 22 hr 20 min
 - Unaccounted time: 1 hr 40 min
 
-# 25-10-2026
+## 25-10-2026 — Daily Time Log
 
-For Other - I will write (O) and for Study - (S)
+### 1. Study Time (S)
 
-Other - 6:30 am to 8:40 am = Sleep (kuku not well last night)
-Other - 8:40 to 9 = wakeup + water + giloy
-Study - 9 to 9:35
-O - 9:35 to 10:30 = daily routine work + kuku water
-O - 10:30 to 11:10 = breakfast + kuku bath and brush
-S - 11:10 - 2:45
-O - 2:45 to 3:30 PM = lunch + kuku lunch and water + check lights etc.
-O - 3:30 to 4:00 PM = rest + steamer search 
-O - 4:00 to 4:30 = kuku steam + zepto
-O - 4:30 - 5:10 = steamer order + kuku fever medicine + hould hold work
-S = 5:10 - 6 pm
-O - 6 to 7 -  Prakash ji  + kuku milk + pooja + hould hold work
-O - 7:00 - 8: 20 - Kuku playing outside + food order
-S - 8:20 - 9:20
-O - 9:20 - 9:50 = lunch + kuku medicines
-S - 9:50 - 10:50
-O - 10:50 to 11:30 = kuku brush + water + milk + hould hold work
-S -  11:25 to 
+| Time Slot           | Duration    |
+| ------------------- | ----------- |
+| 9:00 – 9:35 AM      | 35 min      |
+| 11:10 AM – 2:45 PM  | 3 hr 35 min |
+| 5:10 – 6:00 PM      | 50 min      |
+| 8:20 – 9:20 PM      | 1 hr        |
+| 9:50 – 10:50 PM     | 1 hr        |
+| 11:30 PM – 12:40 AM | 1 hr 10 min |
+| Total Study Time    | 8 hr 10 min |
+
+### 2. Other Activities (O)
+
+| Time Slot        | Activity                                                | Duration    |
+| ---------------- | ------------------------------------------------------- | ----------- |
+| 6:30 – 8:40 AM   | Sleep (Kuku was unwell last night)                      | 2 hr 10 min |
+| 8:40 – 9:00 AM   | Wake up, water and giloy                                | 20 min      |
+| 9:35 – 10:30 AM  | Daily routine and Kuku's water                          | 55 min      |
+| 10:30 – 11:10 AM | Breakfast, Kuku's bath and brushing                     | 40 min      |
+| 2:45 – 3:30 PM   | Lunch, Kuku's lunch and water, checking lights          | 45 min      |
+| 3:30 – 4:00 PM   | Rest and steamer search                                 | 30 min      |
+| 4:00 – 4:30 PM   | Kuku's steam and Zepto                                  | 30 min      |
+| 4:30 – 5:10 PM   | Steamer order, Kuku's fever medicine and household work | 40 min      |
+| 6:00 – 7:00 PM   | Prakash ji, Kuku's milk, pooja and household work       | 1 hr        |
+| 7:00 – 8:20 PM   | Kuku playing outside and food order                     | 1 hr 20 min |
+| 9:20 – 9:50 PM   | Dinner and Kuku's medicines                             | 30 min      |
+| 10:50 – 11:30 PM | Kuku's brushing, water, milk and household work         | 40 min      |
+| 12:40 – 6:30 AM  | Bedtime and sleep                                       | 5 hr 50 min |
+| Total Other Time |                                                         | 15 hr 50 min |
+
+### 3. Daily Summary
+
+| Category         | Total        |
+| ---------------- | ------------ |
+| Study            | 8 hr 10 min  |
+| Other activities | 15 hr 50 min |
+| Total            | 24 hours     |
+
+## 26-10-2026
+
+6: 30 - 7:10 = Sleep
+S 7:10 - 8:00
+O - 8 to 10 = house hold works
+S - 10 - 11 = GEN AI traning
+O 11 - 12:20 = Pradeep talk on AI and learning
+O 12:20 - 12:40  - kuku school
+S - 12:40 - 2:30 
+O - 2:30 to 3:30 = lunch + kuku lunch + rest
+S: 3:30 - 5:30
+O - 5:30 - 7:15 = family time
+S: 7: 15 - 

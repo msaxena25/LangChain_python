@@ -1,0 +1,227 @@
+# Models
+
+The two main concepts are Discriminative Models and Generative Models. Both are used in Machine Learning, including Deep Learning.
+
+## Discriminative Model
+
+Purpose: Learns to distinguish between categories or predict an output from input data.
+
+Example: You provide a cat or dog image, and the model predicts whether it is a cat or a dog.
+
+- Input: Image
+- Output: `Cat` or `Dog`
+
+It learns the relationship.
+
+## Generative Model
+
+Purpose: Learns patterns in data and `can generate new` samples that resemble the learned data.
+
+Example: You ask an image-generation model to create a picture of a cat, and it generates a new image.
+
+- Input: Prompt or other conditioning information
+- Output: Newly generated image
+
+## Real-world examples
+
+| Task                            | Model type               |
+| ------------------------------- | ------------------------ |
+| Detect spam vs. genuine email   | Discriminative           |
+| Predict house prices            | Typically discriminative |
+| Classify an image as cat or dog | Discriminative           |
+| Generate a new image            | Generative               |
+| Generate text using ChatGPT     | Generative               |
+| Generate new music              | Generative               |
+
+----
+
+# What is Artificial Intelligence (AI)?
+
+Artificial Intelligence, or AI, is a `branch of computer science` that focuses on building systems capable of performing tasks that typically require human intelligence, such as learning, reasoning, problem-solving, understanding language, recognizing patterns, and making decisions.
+
+AI is a broad field that includes several approaches:
+
+1. Machine Learning (ML)  
+2. Deep Learning (DL)  
+3. Generative AI  
+4. Large Language Models (LLMs) 
+
+### Example: An AI-powered enterprise chatbot uses - 
+
+- LLM: Understands the user's question and generates a response.
+- RAG: Retrieves relevant information from private company documents.
+- Embeddings and vector search: Help find semantically relevant document chunks.
+- Prompt engineering: Provides instructions and context to guide the model's response.
+- Evaluation and guardrails: Help assess answer quality and manage risks.
+
+## Machine Learning vs Deep Learning
+
+**Machine Learning (ML)** is when a computer learns from data to make predictions or recognize things.
+
+*Example:* A spam filter that learns to tell spam emails from non-spam by studying lots of emails.
+
+**Deep Learning (DL)** is a special type of machine learning that uses brain-like structures called "neural networks" with many layers to learn from lots of data.
+
+*Example:* `Face recognition` on your phone uses deep learning to recognize who you are from your photo.
+
+**In short:**
+- All deep learning is machine learning, but not all machine learning is deep learning.
+- Deep learning works well with huge amounts of data—like pictures, speech, or videos.
+
+
+--------
+
+# Explain AI Family
+
+Think of it as a family tree, from the broadest parent to the most specific child.
+
+| Technology            | Family relationship |
+| --------------------- | ------------------- |
+| AI                    | Great-grandparent   |
+| Machine Learning (ML) | Grandparent         |
+| Deep Learning (DL)    | Parent              |
+| Generative AI         | Child               |
+| LLM                   | Grandchild          |
+
+The hierarchy is:
+
+AI → ML → Deep Learning → Generative AI → LLM
+
+------
+
+# What are Tokens?
+
+A token is a unit of text processed by an LLM. It can represent a word, part of a word, punctuation, or other text.
+
+### Sizes - 
+
+```
+1 token ≈ 4 characters in English text.
+1,000 tokens ≈ 750 words in typical English prose.
+
+But that will be different in other language or code.
+```
+
+### Important points about Tokens
+
+- Tokens are not exactly words or characters. A word can be one token or multiple tokens.
+- Punctuation, spaces, numbers, code, and uncommon words affect token counts.
+- Different models and `tokenizers` may split the same text differently.
+
+---
+
+# Context Window
+
+The context window is the `maximum number of tokens` a model can process within its supported context for a request, including relevant input and generated output.
+
+**Note** - A tokenizer affects how much text becomes tokens, but the context window is a separate model-design and deployment specification.
+
+# Diff b/w Vector and Embedding
+
+`A vector `is a list of numerical values, whereas an embedding is a vector that represents the meaning or features of data.
+
+```
+vector = [0.2, 0.5, 0.8, 0.1]
+```
+
+Vector is a general mathematical concept used in mathematics, physics, computer graphics, geography, AI, and many other fields.
+
+**Example** - RGB colors [255, 0, 0] and latitude-longitude coordinates [28.6139, 77.2090] can be represented as vectors.
+
+`An embedding` is a numerical representation of data, such as text, an image, or audio, generated by an embedding model. In a real application, an embedding may contain hundreds or thousands of dimensions.
+
+```
+embedding = [0.21, 0.75, -0.32, 0.48]
+```
+
+**Every embedding is a vector.** But **Not every vector is an embedding.**
+
+# Coshine similarity 
+
+Cosine similarity measures how similar the direction of two vectors is. In AI and RAG, it is commonly used to compare embeddings and find semantically similar text.
+
+Range = −1 to 1.
+
+Let's see one example.
+
+### Step 1: Calculate cosine similarity
+
+We have two vectors:
+
+- A = [1, 2]
+- B = [2, 1]
+
+The formula for cosine similarity between two vectors **A** and **B** is:
+
+cosine_similarity = `(A · B) / (||A|| × ||B||)`
+
+Where:
+- `A · B` is the dot product of vectors A and B.
+- `||A||` and `||B||` are the `magnitudes` (lengths) of vectors A and B respectively.
+
+1. **Dot product:**
+
+> A · B = (1 × 2) + (2 × 1) = 2 + 2 = 4
+
+2. **Magnitude of A:**
+
+> ||A|| = sqrt(1² + 2²) = sqrt(1 + 4) = sqrt(5) ≈ 2.2361
+
+3. **Magnitude of B:**
+
+> ||B|| = sqrt(2² + 1²) = sqrt(4 + 1) = sqrt(5) ≈ 2.2361
+
+4. **Cosine similarity:**
+
+> cosine_similarity = 4 / (2.2361 × 2.2361) = 4 / 5 = 0.8
+
+**Final result:**  
+**Cosine similarity = 0.8**
+
+cosine similarity ranges from −1 to +1. In our example, 0.8 indicates that the two vectors point in a similar direction.
+
+| Cosine similarity | Meaning                                             |
+| ----------------- | --------------------------------------------------- |
+| `+1.0`            | Same direction — maximum directional similarity     |
+| `+0.8`            | Strong directional similarity                       |
+| `0.0`             | Perpendicular directions — no directional alignment |
+| `−0.8`            | Opposite-ish directions                             |
+| `−1.0`            | Opposite directions                                 |
+
+## Calculate Angle
+
+The angle is mainly a way `for us to understand cosine similarity geometrically`. In most RAG systems, AI applications use the cosine similarity score directly, not the angle in degrees.
+
+IF we plot that vectors A and B on graph then angle between those is approximately 36.87 degreee.
+
+- **Angle = 0°** means **Cosine similarity = +1.0** (same direction; maximum similarity)
+- **Angle = 90°** means **Cosine similarity = 0.0** (perpendicular; no similarity)
+- **Angle = 180°** means **Cosine similarity = -1.0** (exactly opposite directions; complete dissimilarity)
+
+**Note:**  
+- In LLM and RAG applications if similarity ≥ 0.7 or an angle less than ~45°, that is mostly considered.  
+
+-------
+
+# What is Attention mechanism?
+
+**Sentense** - "The animal did not cross the street because `it` was too tired."
+
+**The question is**: when the LLM processes the word "it", how does it determine that "it" refers to "the animal" rather than "the street"?
+
+1. The model first converts the text into tokens and then into numerical representations called embeddings.
+2. The model processes these token representations through its `Transformer layers` to build `context-aware representations`.
+3. The Transformer allows each token's representation to add information from other relevant tokens in the context. And that is called `self-attention`.
+
+For the token `it`, here's the simplified process:
+
+- "animal" — an animal can become tired.
+- "street" — a street generally cannot become tired.
+- "because" — signals a reason for not crossing.
+
+4. The model learns linguistic patterns and relationships from its training data. These patterns help it associate "it" with "the animal" as the most useful interpretation.
+
+# Causal masking
+
+Causal masking ensures that an LLM can only attend to the current token and previous tokens, not future tokens, when predicting the next token.
+
