@@ -194,24 +194,46 @@
 | 12:40 – 6:30 AM  | Bedtime and sleep                                       | 5 hr 50 min |
 | Total Other Time |                                                         | 15 hr 50 min |
 
-### 3. Daily Summary
+## 26-10-2026 
 
-| Category         | Total        |
-| ---------------- | ------------ |
-| Study            | 8 hr 10 min  |
-| Other activities | 15 hr 50 min |
-| Total            | 24 hours     |
+— Study Time (S)
 
-## 26-10-2026
+| Time slot        | Activity        | Duration    |
+| ---------------- | --------------- | ----------- |
+| 7:10 – 8:00 AM   | Study           | 50 min      |
+| 10:00 – 11:00 AM | Gen AI training | 1 hr        |
+| 12:40 – 2:30 PM  | Study           | 1 hr 50 min |
+| 3:30 – 5:30 PM   | Study           | 2 hr        |
+| 7:15 – 8:15 PM   | Study           | 1 hr        |
+| 10:00 – 10:30 PM | Study           | 30 min      |
+| 11:10 – 11:30 PM | Study           | 20 min      |
+| Total study time |                 | 7 hr 30 min |
 
-6: 30 - 7:10 = Sleep
-S 7:10 - 8:00
-O - 8 to 10 = house hold works
-S - 10 - 11 = GEN AI traning
-O 11 - 12:20 = Pradeep talk on AI and learning
-O 12:20 - 12:40  - kuku school
-S - 12:40 - 2:30 
-O - 2:30 to 3:30 = lunch + kuku lunch + rest
-S: 3:30 - 5:30
-O - 5:30 - 7:15 = family time
-S: 7: 15 - 
+- Other Activities (O)
+
+| Time slot           | Activity                                                  | Duration    |
+| ------------------- | --------------------------------------------------------- | ----------- |
+| 6:30 – 7:10 AM      | Sleep                                                     | 40 min      |
+| 8:00 – 10:00 AM     | Household work                                            | 2 hr        |
+| 11:00 AM – 12:20 PM | Discussion with Pradeep about AI and learning             | 1 hr 20 min |
+| 12:20 – 12:40 PM    | Kuku's school                                             | 20 min      |
+| 2:30 – 3:30 PM      | Lunch, Kuku's lunch and rest                              | 1 hr        |
+| 5:30 – 7:15 PM      | Family time                                               | 1 hr 45 min |
+| 8:15 – 10:00 PM     | Dinner, family and Kuku time                              | 1 hr 45 min |
+| 10:30 – 11:10 PM    | Family time and Kuku care                                 | 40 min      |
+| 11:30 PM – 6:30 AM  | Kuku care (Kuku was unwell; you got only 1 hour of sleep) | 7 hr        |
+
+
+## 27-10-2026
+
+O - 6:30 to 8:30 = kuku fever + medicine + spong + nebulize
+O - 8:30 - 10 am = daily routing + pooja
+O- 10 - 11:30 = breakfast + family time (tv) + kuku steam
+S- 11:30 - 12:30
+O - 12 :30 to 1 = rest
+S - 1 to 2 = AI tranining
+S = 2 to 2:45 
+O - 2:45 to 3:30 = lunch + kuku lunch
+O = 3:30 - 5:30 = lights hanging, connections
+O = 5:30 - 7 = tea + kuku steam + nebulizer + kuku sleep + pooja
+S = 7 to 8

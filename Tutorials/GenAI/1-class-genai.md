@@ -225,3 +225,248 @@ For the token `it`, here's the simplified process:
 
 Causal masking ensures that an LLM can only attend to the current token and previous tokens, not future tokens, when predicting the next token.
 
+--------
+
+# Feed-Forward
+
+Feed-forward in a Transformer is the step right after self-attention. Attention lets a word look at the other words. Feed-forward then takes that one word’s updated meaning and rewrites it on its own, without looking at the other words again.
+
+Flow:
+
+Self-Attention → Feed-Forward Network → Next Transformer layer
+
+Example: In the sentence "The animal is tired", 
+
+- self-attention helps a token gather context from other tokens. 
+- The feed-forward network then transforms that token's contextual representation to learn more complex features such as "state of the animal = exhausted.
+
+---------
+
+# Types of Training
+
+## Machine Learning Training
+
+The three main types of Machine Learning training are:
+
+1\. **Supervised Learning** — Trains on labeled data (input + correct answer).
+
+- Example: Emails labeled as spam or not spam.
+
+2\. **Unsupervised Learning** — Trains on unlabeled data to discover patterns or groups.
+
+- Example: Grouping customers based on purchasing behavior.
+
+3\. **Reinforcement Learning** — Learns through rewards and penalties for actions.
+
+- Example: An AI agent learning to play a game.
+
+## LLM Tranining
+
+- **Pretraining**: This is self-supervised learning on a huge text corpus (web pages, books, code).
+
+-  **Supervised fine-tuning (instruction tuning)**: The model is then trained with ordinary supervised learning (like instructions, optional input and desired answer) to produce that answer.
+
+- **Preference alignment**: Supervised fine-tuning teaches one good answer. Alignment teaches the model which of several answers people prefer.
+
+    - **RLHF** (reinforcement learning from human feedback) - This is most useful method of Preference Alignment.
+    People rank answers. A reward model learns those rankings. The LLM is then updated with reinforcement learning (often PPO) to get higher reward.
+
+------------
+
+# Context Window
+
+When an LLM reaches its context window limit, it cannot process more tokens than its configured limit in a single request.
+
+The application may then:
+
+1. Reject the request because it exceeds the limit.
+2. Remove or truncate older conversation history to make room.
+3. Summarize older messages and send the summary instead.
+4. Limit the generated response to keep the request within the available context.
+
+## Context management strategies
+
+1. Sliding Window — Keep only the most recent messages that fit within the context limit. Older messages are dropped as new messages arrive.
+
+2. Conversation Summarization — Summarize older conversation messages into a compact summary. Send the summary plus recent messages to preserve important context.
+
+3. Conversation Buffer / Memory — Maintain conversation history across requests and selectively include it in future prompts. The history may be stored in application memory or a database.
+
+4. Structured State Management — Store important facts, preferences, task status, and decisions in structured fields rather than relying only on raw conversation history. Common in AI agents and multi-step workflows.
+
+-----
+
+# How does an LLM choose the next token?
+
+Suppose your prompt is: `The sky is`
+
+The model might assign these probabilities to the next token:
+
+| Candidate token | Probability |
+| --------------- | ----------- |
+| blue            | 60%         |
+| clear           | 30%         |
+| beautiful       | 12%         |
+| falling         | 5%          |
+| other tokens    | 3%          |
+
+These are illustrative probabilities, not actual model outputs.
+
+The model uses these probabilities to select a next token, depending on its decoding settings
+
+### What is Top-k?
+
+Top-k limits token selection to the k most probable candidates.
+
+For example, if `top_k = 3`, the candidates are:
+
+- blue — 60%
+- clear — 30%
+- beautiful — 12%
+
+The remaining candidates are excluded from selection at that step.
+
+### What is Top-p (nucleus sampling)?
+
+Top-p selects the `smallest group of highest-probability` tokens whose cumulative probability reaches a specified threshold.
+
+`Cumulative probability` is calculated by adding the probabilities one by one, starting with the highest-probability token.
+
+Suppose `top_p = 0.80` or `80%`:
+
+- blue — 60% (cumulative 60%)
+- clear — 30% (cumulative 60 + 30 = 90%)
+
+The candidate group would be `blue` and `clear` in this example.
+
+The important point is that top-p requires the cumulative probability to reach or exceed 80%, not stay below 80%. Once threashold meets,stop there. And thats why group will be blue and clear.
+
+------
+
+# How to get Token Uses?
+
+## 1. OpenAI / ChatGPT model — Python
+
+Before sending the request: use the `OpenAI token-counting API` to count the input tokens.
+
+```py
+from openai import OpenAI
+
+client = OpenAI()
+
+result = client.responses.input_tokens.count(
+    model="YOUR_MODEL_NAME",
+    input="Explain cosine similarity."
+)
+print(result.input_tokens)
+```
+
+After receiving the response: check the `usage information` returned by the API.
+
+```py
+response = client.responses.create(
+    model="YOUR_MODEL_NAME",
+    input="Explain cosine similarity."
+)
+
+print(response.usage.input_tokens)
+print(response.usage.output_tokens)
+```
+
+## 2. Gemini model — Python
+
+Before sending the request:
+
+```py
+from google import genai
+
+client = genai.Client()
+
+result = client.models.count_tokens(
+    model="YOUR_GEMINI_MODEL",
+    contents="Explain cosine similarity."
+)
+print(result.total_tokens)
+```
+
+After receiving the response:
+
+```py
+response = client.models.generate_content(
+    model="YOUR_GEMINI_MODEL",
+    contents="Explain cosine similarity."
+)
+
+print(response.usage_metadata.prompt_token_count)
+print(response.usage_metadata.candidates_token_count)
+print(response.usage_metadata.total_token_count)
+```
+
+## 3. With Langchain
+
+```py
+
+from langchain_google_genai import ChatGoogleGenerativeAI
+llm = ChatGoogleGenerativeAI(model="YOUR_GEMINI_MODEL")
+
+# Count tokens before sending the request
+text = "Explain cosine similarity."
+token_count = llm.get_num_tokens(text)
+print(token_count)
+
+# Count tokens after the LLM responds
+response = llm.invoke("Explain cosine similarity.")
+print(response.usage_metadata)
+``` 
+
+-------
+
+# Transformer : The architecture behind modern LLMs
+
+A Transformer is a `deep-learning architecture` designed to process sequences of data, such as text, by using `attention mechanisms` to understand relationships between tokens.
+
+## 1. Why do we need a Transformer?
+
+Suppose we give an LLM this sentence:
+
+> The animal did not cross the street because it was tired.
+
+To understand this sentence, the model needs to determine what `it` most likely refers to. It needs to consider other words and their relationships, rather than interpreting every word independently.
+
+Transformers help the model do this through self-attention, which allows each token to gather relevant information from other tokens.
+
+## 2. How does a Transformer work?
+
+```
+Input text
+    ↓
+Tokenization
+    ↓
+Embeddings + position
+    ↓
+Transformer block  ←──────────────┐
+    ↓                              │ next block (transformer block repeats many times..)
+Self-attention                     │
+    ↓                              │
+Feed-forward                       │
+    ↓                              │
+Residual connections + normalization
+    ↓                              │
+    └──────────────────────────────┘
+    ↓
+Output layer (next-token scores)
+    ↓
+Token selection (top-p sampling)
+```
+
+## History of the Transformer
+
+**2017 — Transformer introduced**
+
+Eight researchers published a paper called `Attention Is All You Need`. Their main idea was a new model design called the Transformer. It reads a sequence of words using `attention`: each word looks at the other words and learns which ones matter.
+
+Older models read text one word at a time, or in small local chunks. The Transformer can work on many words at the same time, so training is faster. Its first strong result was machine translation, turning text from one language into another.
+
+**2020 onward — Large language models**
+
+Very large Transformer models, such as GPT-3 and later ChatGPT, made this kind of language model widely used. Other companies built their own model families too, including Google's Gemini and Anthropic's Claude.
