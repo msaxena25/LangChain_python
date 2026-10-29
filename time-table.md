@@ -236,4 +236,47 @@ S = 2 to 2:45
 O - 2:45 to 3:30 = lunch + kuku lunch
 O = 3:30 - 5:30 = lights hanging, connections
 O = 5:30 - 7 = tea + kuku steam + nebulizer + kuku sleep + pooja
-S = 7 to 8
+S = 7 to 8:30 
+O = 8:30 to 10:30 = dinner + family time
+S = 10:30 - 11:30 
+O 11:30 to 6:30 bed time + kuku steam etc..
+
+## 28-10-2026
+
+### 1. Study Time (S)
+
+| Time                | Duration | Activity |
+| ------------------- | -------- | -------- |
+| 10:15 – 11:15 AM    | 1h       | Study    |
+| 11:30 AM – 12:15 PM | 45m      | Study    |
+| 3:10 – 4:10 PM      | 1h       | Study    |
+| 4:45 – 6:00 PM      | 1h 15m   | Study    |
+| 7:20 – 8:20 PM      | 1h       | Study    |
+| 9:30 – 11:00 PM     | 1h 30m   | Study    |
+| Total Study Time    | 6h 30m   |          |
+
+### 2. Other Activities (O)
+
+| Time                | Duration | Activity                                                         |
+| ------------------- | -------- | ---------------------------------------------------------------- |
+| 6:30 – 8:00 AM      | 1h 30m   | Sleep                                                            |
+| 8:00 – 10:15 AM     | 2h 15m   | Daily routine, Kuku's nebulization, pooja, breakfast and cartons |
+| 11:15 – 11:30 AM    | 15m      | Kuku's steam                                                     |
+| 12:15 – 3:10 PM     | 2h 55m   | Office, scooty petrol and lunch                                  |
+| 4:10 – 4:40 PM      | 30m      | Kuku's care and sleep                                            |
+| 6:00 – 7:20 PM      | 1h 20m   | Tea, family time, Kuku's sleep and nebulization                  |
+| 8:20 – 9:30 PM      | 1h 10m   | Housework and dinner                                             |
+| 11:00 PM – 12:00 AM | 1h       | Family time                                                      |
+| 12:00 – 6:00 AM     | 6h       | Bedtime, Kuku's care and sleep                                   |
+| Total Other Time    | 16h 55m  |                                                                  |
+
+## 29-10-2026 (From this date time cycle is from 12 AM to 12 AM)
+
+12:00 am -  6:10 am = Sleep time + kuku care + Nebulize
+S 6:10 am - 7:45
+7:45 to 8:30 = fresh + kuku nebu.
+8:30 - 10:40 =  kuku wakeup + water + daily routing + medicines
+S 10:40- 12:30
+12:30 to 1:00 - kuku + clothes + rest
+S 1  - 1:50
+1:50 to 2:20 = kuku steam

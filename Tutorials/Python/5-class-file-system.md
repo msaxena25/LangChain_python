@@ -1,6 +1,6 @@
 **Python Learning: File System**
 
-## Python provides built-in functionality to interact with this file system.
+## We will see below files with file system.
 
 - Text files (`.txt`) — read ordinary text.
 - PDF files (`.pdf`) — read document content using a `PDF library`.
@@ -154,13 +154,11 @@ with open("requirements.txt", "r") as file:
 ```
 seek(0) moves the pointer back to position 0, the beginning of the file.
 
-seek(n) moves the pointer to position n.
+**seek(n) moves the pointer to position n.**
 
 -----
 
 # Read PDF
-
-A PDF is different from a plain text file. Although both are files on your computer, a PDF has its own document format.
 
 For PDF text extraction, you can use the **`pypdf`** library.
 
@@ -429,6 +427,7 @@ pdf.multi_cell(0, 10, text="This is my first PDF created using Python.")
 pdf.output("notes.pdf")
 ```
 **Note** - pypdf can be used to create PDF files, but its main purpose is reading, manipulating, merging, splitting, and extracting content from existing PDFs.
+
 -------------
 
 # What is pathlib?
@@ -517,3 +516,80 @@ for file_path in data_folder.rglob("*.pdf"):
 ```
 
 --------------
+
+## How to check whether a file exists before opening it
+
+```py
+from pathlib import Path
+
+file_path = Path("notes.txt")
+
+if file_path.exists(): #  returns `True` if the path exists, whether it's a file or a directory.
+    with open(file_path, "r", encoding="utf-8") as file:
+        content = file.read()
+        print(content)
+else:
+    print("File does not exist.")
+
+# If you specifically want to check for a file, use `is_file()`.
+# if file_path.is_file():  
+``` 
+
+## How to delete a file
+
+Use `Path.unlink()`.
+
+```py
+from pathlib import Path
+
+file_path = Path("notes.txt")
+
+if file_path.is_file():
+    file_path.unlink(missing_ok=True) # missing_ok=True` to avoid an error when the file is missing:
+    print("File deleted.")
+else:
+    print("File does not exist.")
+```
+
+---------
+
+## Using os module
+
+You can use Python's built-in `os` module for both checking whether a file exists and deleting it.
+
+## 1. Check whether a file exists using `os`
+
+```py
+import os
+
+file_path = "notes.txt"
+
+if os.path.isfile(file_path):
+    with open(file_path, "r", encoding="utf-8") as file:
+        print(file.read())
+else:
+    print("File does not exist.")
+```
+
+- `os.path.exists(file_path)` checks whether a file or directory exists.
+- `os.path.isfile(file_path)` checks whether the path points to a file.
+
+## 2. Delete a file using `os`
+
+```py
+import os
+
+file_path = "notes.txt"
+
+if os.path.isfile(file_path):
+    os.remove(file_path)
+    print("File deleted.")
+else:
+    print("File does not exist.")
+```
+
+`os.remove()` deletes the file. If the file doesn't exist, it raises `FileNotFoundError` unless you handle the exception.
+
+Recommend `pathlib` for new code because its object-oriented syntax is readable. You'll still encounter `os` frequently in existing Python projects and environment/configuration code.
+
+-----

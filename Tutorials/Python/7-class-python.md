@@ -6,6 +6,8 @@
 - [Pydantic library](#pydantic-library)
   - [Common `Field()` options](#common-field-options)
 
+# `TypedDict` and `Pydantic`
+
 Both `TypedDict` and `Pydantic` help you define the expected structure of data in Python, but they serve different purposes.
 
 - `TypedDict` defines the expected dictionary structure for static type checking.
@@ -121,21 +123,7 @@ except ValidationError as error:
 
 ```
 
-### Common `Field()` options
-
-`Field()` lets you add constraints, defaults, descriptions, and other metadata.
-
-| Option                     | Purpose                                 | Example                          |
-| -------------------------- | --------------------------------------- | -------------------------------- |
-| `default`                  | Provide a default value                 | `Field(default=18)`              |
-| `default_factory`          | Generate a default value                | `Field(default_factory=list)`    |
-| `gt`, `ge`                 | Greater than / greater than or equal to | `Field(gt=0)`                    |
-| `lt`, `le`                 | Less than / less than or equal to       | `Field(le=100)`                  |
-| `min_length`, `max_length` | Constrain string or collection length   | `Field(min_length=2)`            |
-| `pattern`                  | Match a regular expression              | `Field(pattern=r"^[A-Z]+$")`     |
-| `strict`                   | Control type coercion                   | `Field(strict=True)`             |
-| `alias`                    | Accept an alternative field name        | `Field(alias="userId")`          |
-| `description`, `title`     | Document the field                      | `Field(description="User name")` |
+### `Field()` options
 
 ```py
 
@@ -163,3 +151,221 @@ print(product.model_dump())
 #  'quantity': 1, 'sku': 'LAP123'}
 ```
 ----
+
+# SQLite3 in Python: Basic Database Operations
+
+Python provides a built-in package called `sqlite3` to work with SQLite databases. You do not need to install it using pip.
+
+## Connect to a database
+
+```py
+import sqlite3
+conn = sqlite3.connect("mobile_store.db") # create db of fetch existing
+cursor = conn.cursor() #cursor is an object used to execute SQL queries and retrieve their results.
+```
+
+## Create a table
+
+Let's create a `products` table.
+
+```py
+create_table_query = '''
+        CREATE TABLE IF NOT EXISTS products 
+        (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_name TEXT NOT NULL,
+            product_description TEXT NOT NULL,
+            product_price REAL NOT NULL,
+            in_stock INTEGER NOT NULL
+        )
+'''
+# REAL - Stores decimal numbers 
+
+# Create the table if it doesn't exist
+cursor.execute(create_table_query)
+conn.commit() # Commit changes to db
+```
+
+## Insert data into a table
+
+```py
+# Product Data
+products = [
+    ("iPhone 15", "The latest iPhone model", 1000, 100),
+    ("Samsung Galaxy S23", "The latest Samsung Galaxy model", 900, 100),
+]
+
+# Insert products into the table
+insert_products_query = '''
+INSERT INTO products (product_name, product_description, product_price, in_stock)
+VALUES (?, ?, ?, ?)
+'''
+#Execute the insert_products_query for each product in the products list
+cursor.executemany(insert_products_query, products)
+
+# execute  = for single record
+# executemany = multiple records
+# The `?` placeholders are filled with the supplied values in order.
+```
+
+## Read or fetch data from a table
+
+Use `SELECT` to retrieve data.
+
+### Fetch all records
+
+```py
+cursor.execute("SELECT * FROM products")
+rows = cursor.fetchall() # fetch all rows
+for row in rows:    
+    print(row)
+
+# cursor.fetchone() = fetch one record
+cursor.execute("SELECT * FROM products WHERE id = ?", (1,))
+row = cursor.fetchone()
+print(row)
+```
+
+## Update
+
+```py
+cursor.execute("UPDATE products SET price = ?, in_stock = ? WHERE id = ?", (74900, 1, 1))
+conn.commit()
+```
+
+## Delete the complete database
+
+SQLite does not provide a SQL command such as `DROP DATABASE` for deleting a database file.
+
+Instead, close the connection and remove the database file using Python's `os` module.
+
+```py
+
+conn.close()
+if os.path.exists(db_path):    
+    os.remove(db_path)
+```
+
+------------
+
+# NumPy - Python library
+
+NumPy is a Python library used for working efficiently with numerical data, arrays, and mathematical operations.
+
+```py
+python -m pip install numpy
+
+# use 
+import numpy as np
+```
+
+NumPy provides `an array` instead of using a regular Python list for numerical operations.
+
+```py
+# Python list
+numbers_list = [10, 20, 30, 40]
+
+# NumPy array
+import numpy as np
+numbers_array = np.array([10, 20, 30, 40])
+
+python_list = numbers_array.tolist() # Use .tolist() to convert a NumPy array into a Python list.
+```
+
+## One example: Multiply each number by 2
+
+```py
+# Python list
+numbers = [10, 20, 30]
+print(numbers * 2) # [10, 20, 30, 10, 20, 30] (The list is repeated twice.)
+
+# numpy array
+import numpy as np
+numbers = np.array([10, 20, 30])
+print(numbers * 2) # [20 40 60] (Each element is multiplied by 2.)
+
+print(type(numbers)) # <class 'numpy.ndarray'>
+```
+
+## Useful operations
+
+`arr = [1, 2, 3, 4, 5]`
+
+First, convert the Python list into a NumPy array.
+
+```py
+import numpy as np
+arr = [1, 2, 3, 4, 5]
+np_arr = np.array(arr)
+```
+
+## 1. Basic properties
+
+| Property             | Example         | Output               |
+| -------------------- | --------------- | -------------------- |
+| Data type            | `np_arr.dtype`  | `int64` (may vary)   |
+| Number of dimensions | `np_arr.ndim`   | `1`                  |
+| Array shape          | `np_arr.shape`  | `(5,)`               |
+| Total elements       | `np_arr.size`   | `5`                  |
+| Total bytes          | `np_arr.nbytes` | Depends on data type |
+
+## 2. Mathematical operations
+
+| Method / Function  | Example             | Output                                   |
+| ------------------ | ------------------- | ---------------------------------------- |
+| Sum                | `np.sum(np_arr)`    | `15`                                     |
+| Mean (average)     | `np.mean(np_arr)`   | `3.0`                                    |
+| Minimum            | `np.min(np_arr)`    | `1`                                      |
+| Maximum            | `np.max(np_arr)`    | `5`                                      |
+| Standard deviation | `np.std(np_arr)`    | `1.414...`                               |
+| Variance           | `np.var(np_arr)`    | `2.0`                                    |
+| Product            | `np.prod(np_arr)`   | `120`                                    |
+| Cumulative sum     | `np.cumsum(np_arr)` | `[1, 3, 6, 10, 15]`                      |
+| Square root        | `np.sqrt(np_arr)`   | `[1., 1.414..., 1.732..., 2., 2.236...]` |
+| Sort               | `np.sort(np_arr)`   | `[1, 2, 3, 4, 5]`                        |
+
+## 3. Indexing and filtering
+
+```py
+print(np_arr[0])             # 1
+print(np_arr[-1])            # 5
+print(np_arr[1:4])           # [2 3 4]
+
+# Filtering 
+
+print(np_arr[np_arr > 3])    # [4 5]
+print(np.where(np_arr > 3))  # (array([3, 4]),)
+```
+
+## 4. Array modification and transformation
+
+```py
+print(np_arr * 2)                 # [ 2  4  6  8 10]
+print(np_arr + 10)                # [11 12 13 14 15]
+
+print(np_arr.reshape(5, 1))       # 5 rows, 1 column
+print(np_arr.astype(float))       # Convert elements to float
+print(np.unique([1, 2, 2, 3, 3])) # [1 2 3]
+```
+
+Note that arithmetic operations on NumPy arrays usually work element by element, unlike Python lists.
+
+
+## 5. shape property
+
+```py
+import numpy as np
+arr = np.array([1, 2, 3, 4, 5])
+print(arr.shape) # (5,)
+
+# The comma indicates that the shape is a tuple with one value. This is a 1D array of 5 elements.
+
+arr = np.array([
+    [1, 2, 3],
+    [4, 5, 6]
+])
+
+print(arr.shape) # (2,3)   => (row, column)
+```
+
+---------------
