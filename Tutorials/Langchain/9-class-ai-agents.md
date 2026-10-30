@@ -6,7 +6,7 @@ An AI agent is an `LLM-powered system` that can decide what action to take, use 
 
 # Agent and AgentExecutor
 
-**Notes** - Creating seperate Agent and AgentExecutor is older apprach of Langchain 0.X Versions, while modern LangChain provides a higher-level API named create_agent().  We will learn both one by one.
+**Notes** - Creating seperate Agent and AgentExecutor is older approach of Langchain 0.X Versions, while modern LangChain provides a higher-level API named `create_agent()`.  We will learn both one by one.
 
 ## 1. What is an Agent?
 
@@ -50,12 +50,6 @@ The cycle repeats as needed. The agent makes decisions; the executor manages the
 In the traditional API, you might see an `AgentExecutor` wrapping an agent.
 
 In modern LangChain, the commonly recommended high-level API is `create_agent`. It provides an agent runtime that handles the tool-calling loop, so you generally don't need to create a separate `AgentExecutor`.
-
-Remember this simple distinction:
-
-- Agent = decision-maker.
-- AgentExecutor = execution-loop manager.
-- Modern `create_agent` = the higher-level API that brings agent behavior and execution together.
 
 ------
 
@@ -107,10 +101,6 @@ ReAct `(Reasoning and Acting)` is an AI agent design pattern in which an LLM rea
 - `Acting`: The system uses tools to obtain information or perform actions.
 
 ## Thought–Action–Observation loop
-
-The `Thought–Action–Observation loop` is a pattern used to explain how an AI agent solves a problem through repeated decisions and tool interactions. It is commonly `associated with the ReAct (Reasoning and Acting) approach`.
-
-## Three main steps
 
 1. Thought: The LLM decides what information it needs or what to do next.
 2. Action: The agent requests a tool, and the application executes it.

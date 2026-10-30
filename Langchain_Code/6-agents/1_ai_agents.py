@@ -39,7 +39,7 @@ This adds a special placeholder to the prompt template, which allows the agent's
 
 This helps the agent remember its previous thoughts/actions during the reasoning and action-taking loop.
 
-If you miss this, You will get Error: ValueError: Prompt missing required variables: {'agent_scratchpad'}
+If you miss this, You will get ValueError: Prompt missing required variables: {'agent_scratchpad'}
 '''
 
 agent = create_tool_calling_agent(
@@ -98,7 +98,7 @@ Generate Answer..
 '''
 An Agent is the `decision-making component.` It cannot execute tool by itself.
 
-`AgentExecutor` is the execution loop manager that manages, runs entire loop cycle - Thought–Action–Observation.
+`AgentExecutor` is the execution loop manager that manages, runs entire loop cycle - Thought – Action – Observation.
 '''
 
 #-------------------------------------------------------------
@@ -108,15 +108,16 @@ An Agent is the `decision-making component.` It cannot execute tool by itself.
 '''
 ReAct prompt is a predefined prompt template designed to guide an LLM through the ReAct pattern: Thought → Action → Observation → repeat.
 
-Instead of writing this detailed prompt yourself, you can pull a reusable template from LangChain Hub. The classic ReAct prompt is published under the identifier.
+Instead of writing this detailed prompt yourself, you can pull a reusable template from LangChain Hub. The classic ReAct prompt is published under the identifier `hwchase17/react`.
 
-# Below way to pull prompt does not support public prompts.
+# Below way does not support pulling public prompts, It is older and deprecated.
+
 from langchain_classic import hub
 prompt = hub.pull("hwchase17/react")
 
 hub.pull is also deprecated. Call the LangSmith client directly, which is the function that actually accepts dangerously_pull_public_prompt flag.
 
-# Correct way to pull prompt -
+# Correct way to pull prompt - (using langsmith client)
 
 from langsmith import Client
 prompt = Client().pull_prompt(
@@ -140,10 +141,6 @@ prompt = Client().pull_prompt(
     dangerously_pull_public_prompt=True,
 )
 
-# Pull the reusable ReAct prompt
-# from langchain_classic import hub
-#prompt = hub.pull("hwchase17/react", dangerously_pull_public_prompt=True)
-
 # Create the agent
 agent = create_react_agent(
     llm=model,
@@ -154,7 +151,7 @@ agent = create_react_agent(
 # Create the executor
 agent_executor = AgentExecutor(
     agent=agent,
-     tools = [serch_tool],
+    tools = [serch_tool],
     verbose=True,
     return_intermediate_steps=True
 )

@@ -363,3 +363,138 @@ final_result = ollama.chat(model="llama3.1:8b", messages=messages)
 print(final_result.message.content)
 ```
 
+----------
+
+# Pass images 
+
+First Check Model that it supports Image processing or not or choose different model that is fit for Images.
+
+## 1. Pass single or multiple image using `ollama.chat()`
+
+Then pass the image path in the message.
+
+```py
+import ollama
+
+response = ollama.chat(
+    model="gemma3:4b",
+    messages=[
+        {
+            "role": "user",
+            "content": "Describe this image.",
+            "images": [ # pass single or multiple images in messages itself
+                "C:/images/product_before.jpg",
+                "C:/images/product_after.jpg"
+            ]
+        }
+    ]
+)
+print(response.message.content)
+```
+
+## 3. Pass an image using `ollama.generate()`
+
+With `generate()`, you pass the image through the top-level `images` argument instead of placing it inside a message.
+
+```py
+import ollama
+
+response = ollama.generate(
+    model="gemma3:4b",
+    prompt="Compare these images and explain the differences.",
+    images=[
+        "C:/images/image1.jpg",
+        "C:/images/image2.jpg"
+    ]
+)
+
+print(response.response)
+```
+
+----------
+
+# Ollama Modelfile
+
+A Modelfile is a` configuration file` that lets you create a `customized version of an existing Ollama model`. You can define its behavior, default instructions, and generation parameters without training a new model.
+
+For example, you could create a model that always behaves like a Python tutor, answers in simple English, and generates concise responses.
+
+## 1. Create a Modelfile
+
+Create a file named exactly `Modelfile` (without a `.txt` extension) in your project folder.
+
+Example content:
+
+```py
+FROM llama3.1:8b
+
+PARAMETER temperature 0.3
+PARAMETER num_predict 200
+PARAMETER num_ctx 4096
+PARAMETER top_k 40
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.1
+
+SYSTEM """
+You are a Python tutor.
+Explain concepts in simple English.
+Prefer short, practical examples.
+"""
+```
+
+What each instruction means:
+
+| Instruction             | Purpose                                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| `FROM`                  | Specifies the existing model to use as the base.                                            |
+| `PARAMETER temperature` | Controls response variability; a lower value generally produces more predictable responses. |
+| `PARAMETER num_predict` | Sets a limit on the number of tokens generated.                                             |
+| `SYSTEM`                | Defines the model's default behavioral instructions.                                        |
+
+**Note** 
+- In an Ollama Modelfile, You can not define multiple models with FROM, you define one base model only.
+- If you omit FROM from an Ollama Modelfile, ollama create will fail because Ollama needs a base model to create your custom model.
+
+## 2. Create the custom model
+
+Open PowerShell in the folder containing your `Modelfile` and run:
+
+```bash
+ollama create python-tutor -f ./Modelfile
+```
+
+Ollama reads the configuration and creates a model named `python-tutor`.
+
+You can test it directly:
+
+```bash
+ollama run python-tutor
+```
+
+Ask:
+
+```
+Explain Python decorators.
+```
+
+The model should follow the Python-tutor instructions you defined.
+
+## 3. How do we use it in Python?
+
+You don't pass the Modelfile itself to every request. You pass the custom model's name.
+
+```py
+import ollama
+
+response = ollama.chat(
+    model="python-tutor", # Pass custom model name
+    messages=[
+        {
+            "role": "user",
+            "content": "Explain Python decorators."
+        }
+    ]
+)
+
+print(response.message.content)
+```

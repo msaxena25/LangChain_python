@@ -224,22 +224,33 @@
 | 11:30 PM – 6:30 AM  | Kuku care (Kuku was unwell; you got only 1 hour of sleep) | 7 hr        |
 
 
-## 27-10-2026
+## Daily Schedule — 27-10-2026
 
-O - 6:30 to 8:30 = kuku fever + medicine + spong + nebulize
-O - 8:30 - 10 am = daily routing + pooja
-O- 10 - 11:30 = breakfast + family time (tv) + kuku steam
-S- 11:30 - 12:30
-O - 12 :30 to 1 = rest
-S - 1 to 2 = AI tranining
-S = 2 to 2:45 
-O - 2:45 to 3:30 = lunch + kuku lunch
-O = 3:30 - 5:30 = lights hanging, connections
-O = 5:30 - 7 = tea + kuku steam + nebulizer + kuku sleep + pooja
-S = 7 to 8:30 
-O = 8:30 to 10:30 = dinner + family time
-S = 10:30 - 11:30 
-O 11:30 to 6:30 bed time + kuku steam etc..
+### 1. Study Time (S)
+
+| Time                | Duration | Activity    |
+| ------------------- | -------- | ----------- |
+| 11:30 AM – 12:30 PM | 1h       | Study       |
+| 1:00 – 2:00 PM      | 1h       | AI training |
+| 2:00 – 2:45 PM      | 45m      | Study       |
+| 7:00 – 8:30 PM      | 1h 30m   | Study       |
+| 10:30 – 11:30 PM    | 1h       | Study       |
+| Total Study Time    | 5h 15m   |             |
+
+### 2. Other Activities (O)
+
+| Time               | Duration | Activity                                                   |
+| ------------------ | -------- | ---------------------------------------------------------- |
+| 6:30 – 8:30 AM     | 2h       | Kuku's fever care, medicine, sponging and nebulization     |
+| 8:30 – 10:00 AM    | 1h 30m   | Daily routine and pooja                                    |
+| 10:00 – 11:30 AM   | 1h 30m   | Breakfast, family/TV time and Kuku's steam                 |
+| 12:30 – 1:00 PM    | 30m      | Rest                                                       |
+| 2:45 – 3:30 PM     | 45m      | Lunch and Kuku's lunch                                     |
+| 3:30 – 5:30 PM     | 2h       | Hanging lights and electrical connections                  |
+| 5:30 – 7:00 PM     | 1h 30m   | Tea, Kuku's steam and nebulization, Kuku's sleep and pooja |
+| 8:30 – 10:30 PM    | 2h       | Dinner and family time                                     |
+| 11:30 PM – 6:30 AM | 7h       | Bedtime, Kuku's steam and other care                       |
+| Total Other Time   | 19h 15m  |                                                            |
 
 ## 28-10-2026
 
@@ -268,15 +279,50 @@ O 11:30 to 6:30 bed time + kuku steam etc..
 | 8:20 – 9:30 PM      | 1h 10m   | Housework and dinner                                             |
 | 11:00 PM – 12:00 AM | 1h       | Family time                                                      |
 | 12:00 – 6:00 AM     | 6h       | Bedtime, Kuku's care and sleep                                   |
-| Total Other Time    | 16h 55m  |                                                                  |
+| Total Other Time    | 16h 55m  |       
+                                                           |
+## Daily Schedule — 29-10-2026
 
-## 29-10-2026 (From this date time cycle is from 12 AM to 12 AM)
+Time cycle: 12:00 AM to 12:00 AM
 
-12:00 am -  6:10 am = Sleep time + kuku care + Nebulize
-S 6:10 am - 7:45
-7:45 to 8:30 = fresh + kuku nebu.
-8:30 - 10:40 =  kuku wakeup + water + daily routing + medicines
-S 10:40- 12:30
-12:30 to 1:00 - kuku + clothes + rest
-S 1  - 1:50
-1:50 to 2:20 = kuku steam
+### 1. Study Time (S)
+
+| Time                | Duration | Activity |
+| ------------------- | -------- | -------- |
+| 6:10 – 7:45 AM      | 1h 35m   | Study    |
+| 10:40 AM – 12:30 PM | 1h 50m   | Study    |
+| 1:00 – 1:50 PM      | 50m      | Study    |
+| 2:20 – 2:45 PM      | 25m      | Study    |
+| 4:15 – 4:50 PM      | 35m      | Study    |
+| 5:50 – 7:00 PM      | 1h 10m   | Study    |
+| Total Study Time    | 6h 25m   |          |
+
+### 2. Other Activities (O)
+
+| Time             | Duration | Activity                                         |
+| ---------------- | -------- | ------------------------------------------------ |
+| 12:00 – 6:10 AM  | 6h 10m   | Sleep, Kuku's care and nebulization              |
+| 7:45 – 8:30 AM   | 45m      | Freshen up and Kuku's nebulization               |
+| 8:30 – 10:40 AM  | 2h 10m   | Kuku wake-up, water, daily routine and medicines |
+| 12:30 – 1:00 PM  | 30m      | Kuku, clothes and rest                           |
+| 1:50 – 2:20 PM   | 30m      | Kuku's steam                                     |
+| 2:45 – 4:15 PM   | 1h 30m   | Lunch and market                                 |
+| 4:50 – 5:50 PM   | 1h       | Kuku's sleep and housework                       |
+| 7:00 – 11:00 PM  | 4h       | Karwa Chauth festival, pooja and household work  |
+| Total Other Time | 16h 35m  | 
+Unaccounted time   | 1h      |                                                 |
+
+### 3. Daily Summary
+
+| Category            | Total   |
+| ------------------- | ------- |
+| Study time          | 6h 25m  |
+| Other activities    | 16h 35m |
+| Total recorded time | 23h     |
+| Unaccounted time    | 1h      |
+
+# 30-10-2026 - 
+
+Only record study time, Rest time are house hold work + Family time + Kuku time + pooja + market etc.
+
+S 5:30 am -  

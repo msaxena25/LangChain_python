@@ -50,7 +50,7 @@ create_table_query = '''
 # Create the table if it doesn't exist
 cursor.execute(create_table_query)
 
-discont_query = '''
+discount_query = '''
     CREATE TABLE IF NOT EXISTS discounts
 (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,7 +60,7 @@ discont_query = '''
 )
 '''
 # Create the table if it doesn't exist
-cursor.execute(discont_query)
+cursor.execute(discount_query)
 
 # Product Data
 products = [
@@ -130,7 +130,7 @@ conn.close()
 
 # Above we only did the data manipulation part with SQLite, now we will do the tool calling part.
 
-# Define Python functions that query the database
+# Define Simple Python functions that query the database
 
 def check_stock(product_name: str) -> int:
     # with statement is used to ensure that the connection is closed after the block of code is executed.
@@ -160,6 +160,9 @@ messages = [
 
 # Give the tools to an Ollama model
 tools = [check_stock, check_price]
+
+# Note  - ollama.generate dont have feature of tools, so we use ollama.chat
+
 result = ollama.chat(model="llama3.1:8b", messages=messages, tools=tools)
 
 print(result.message.tool_calls)

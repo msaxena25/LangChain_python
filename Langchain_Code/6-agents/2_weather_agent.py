@@ -17,6 +17,7 @@ from langsmith import Client
 
 base_url = 'https://api.weatherstack.com/current?access_key=your_key'
 
+# Define custom tool get current weather data for given city based on weatherstack API
 @tool
 def weather_tool(city: str) -> str:
     '''This tool fetches current weather data for given city'''
@@ -25,6 +26,7 @@ def weather_tool(city: str) -> str:
     return response.json()
     
 
+# Pull the reusable ReAct prompt
 prompt = Client().pull_prompt('hwchase17/react', dangerously_pull_public_prompt=True)
 
 agent = create_react_agent(
