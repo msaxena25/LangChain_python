@@ -220,3 +220,75 @@ Begin!
 Question: {input}
 Thought:{agent_scratchpad}
 ```
+
+---------------
+
+# `create_agent()` -  a modern way
+
+`create_agent()` is LangChain 1.x’s `high-level agent API`. You pass a model and tools; it runs the tool-calling loop for you (decide → call tool → observe → repeat until a final answer), so you usually don’t need a separate AgentExecutor.
+
+LangChain 1.x recommends `create_agent()` over both the older LangChain Classic ReAct approach and the previous `langgraph.prebuilt.create_react_agent()` API.
+
+## Code example of create_agent
+
+```py
+from langchain.agents import create_agent
+
+# You can pass model, tools and system_prompt here only.
+agent = create_agent(
+    model=model,
+    tools=tools,
+    system_prompt="You are a helpful assistant."
+)
+# It takes messages list to invoke.
+result = agent.invoke({
+    "messages": [
+        {"role": "user", "content": "Check order status for order 2235"}
+    ]
+})
+print(result["messages"][-1].content)
+
+# You can also inspect the entire conversation:
+for message in result["messages"]:
+    print(type(message).__name__, ":", message.content)
+```
+
+## Old approach vs modern approach
+
+| Old approach                   | Modern approach                                            |
+| ------------------------------ | ---------------------------------------------------------- |
+| `create_react_agent()`         | `create_agent()`                                           |
+| `AgentExecutor` required       | No separate executor                                       |
+| Explicit prompt template       | `system_prompt`                                            |
+| Input uses `input`             | Input uses `messages`                                      |
+| Legacy text-based ReAct format | Native structured tool calling when supported by the model |
+| More manual configuration      | Simpler high-level interface                               |
+
+
+## What problem does `create_agent()` solve?
+
+With the older approach, you had to manage:
+
+- Agent creation.
+- Agent executor.
+- ReAct prompt formatting.
+- Tool execution and iteration limits.
+- Tool observations and final-answer handling.
+
+With `create_agent()`, LangChain provides a ready-made agent execution loop.
+
+**The internal flow is:**
+
+- User input: What is the weather in Delhi?
+- Agent / LLM: Decides whether a tool is needed
+- Tool execution: Calls the weather API
+- Agent / LLM: Reads the API result and prepares an answer
+- Final response: Returns the weather information
+
+If the model requests another tool, the loop continues. If it responds without requesting another tool, the agent finishes.
+
+Under the hood, `create_agent()` is built on LangGraph. This also gives it access to state management, checkpointing, and middleware for more advanced workflows.
+
+`create_agent()` can handle dependent tool execution automatically, provided the model correctly understands the dependency and decides to call the second tool with the first tool's output.
+
+------------

@@ -92,6 +92,7 @@ tools = [get_order_status, get_refund_status]
 # Create Model with ChatOllama.
 model = ChatOllama(model="llama3.1:8b", temperature=0.1)
 
+
 # Bind tools to the model.
 model_with_tools = model.bind_tools(tools)
 
@@ -499,4 +500,79 @@ Solution - To solve this I have updated system prompt to guide the agent to call
 # llama3.1:8b model is not good to use with agent and tool calling agent.
 
 
+#--------------------------------------
 
+# create_agent - Modern way to create agent.
+
+# I also tried create_agent with above Model llama3.1:8b but it is not able to generate the final answer.
+
+# Lets try with create_agent
+print('Try Code Using create_agent and Model qwen3.5:latest...')
+
+from langchain.agents import create_agent
+from langchain_ollama import ChatOllama
+
+# Use qwen3.5:latest model to see the difference in response.
+model = ChatOllama(model="qwen3.5:latest", temperature=0.2)
+
+@tool
+def get_order_status(order_id: int) -> dict:
+    '''Find an order by ID and return its refund_order_id and refund_amount.
+    After getting refund_order_id, use get_refund_status to check the refund'''
+    result = {}
+    selected_order = list(filter(lambda x: x['order_id'] == order_id, returned_orders))
+    if(len(selected_order) == 0):
+        return {'error': 'Order not found'}
+    else:
+        result = {'refund_order_id': selected_order[0]['refund_order_id'], 'refund_amount': selected_order[0]['refund_amount']}
+    
+    return result
+
+# InjectedToolArg is not required in tool calling agent.
+@tool
+def get_refund_status(refund_order_id: int) -> dict:
+    '''Check refund status using the refund_order_id returned by get_order_status.'''
+    result = {}
+    selected_refund = list(filter(lambda x: x['refund_order_id'] == refund_order_id, refund_status))
+    if(len(selected_refund) == 0):
+        return {'error': 'Refund not found'}
+    else:
+        result = {'refund_status': selected_refund[0]['refund_status']}
+    return result
+
+# Print the tool call schema to understand the input and output of the tool.
+print(json.dumps(get_refund_status.tool_call_schema.model_json_schema(), indent=2))
+
+tools = [get_order_status, get_refund_status]
+
+agent = create_agent(
+    model=model,
+    tools=tools,
+    system_prompt='''You are a helpful assistant that can check the order status and refund status of a returned item.
+    You check returned orders in two steps.
+    Step 1: call only get_order_status with the order id.
+    Step 2: after that tool result returns refund_order_id,
+    call get_refund_status with that exact refund_order_id.
+    Never invent a refund_order_id. Never call both tools in the same step.
+    '''
+)
+
+result = agent.invoke({
+    "messages": [
+        {
+            "role": "user",
+            "content": "Check Order status and then check refund status for order Id 2235."
+        }
+    ]
+})
+
+# Why [-1]? It gets the last message, which is normally the agent's final response after tool execution.
+print(result["messages"][-1].content)
+
+'''
+For order ID 2235:
+
+- **Refund Order ID**: 3333
+- **Refund Amount**: $600
+- **Refund Status**: Once the order arrives at the warehouse, it will be refunded in 4-5business days.
+'''
