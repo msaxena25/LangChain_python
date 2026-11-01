@@ -1,4 +1,32 @@
-"""
+# Print method with Color Text
+
+# You can change the text color in Python's print() using ANSI escape codes.
+
+def color_text(text, color):
+    colors = {
+        "black": "\033[30m",
+        "red": "\033[31m",
+        "green": "\033[32m",
+        "yellow": "\033[33m",
+        "blue": "\033[34m",
+        "magenta": "\033[35m",
+        "cyan": "\033[36m",
+        "white": "\033[37m"
+    }
+
+    color_code = colors.get(color.lower())
+
+    if color_code is None:
+        return text
+
+    return f"{color_code}{text}\033[0m"
+
+print(color_text("Hello World", "red"))
+print(color_text("AI Response", "blue"))
+print(color_text("Success!", "green"))
+print(color_text("Warning!", "yellow"))
+
+#----------------------------------------------------------------
 
 # map function
 
@@ -106,11 +134,15 @@ print(my_list[-2::]) # [4, 5]
 print(my_list[1::-1]) # [2, 1]
 print(my_list[1:1:-1]) # [] - empty list because stop is 1 and start is 1, so no elements to reverse
 
+#----------------------------------------------------------------
+
 # Palindrome program
 
 word  = 'MADAM'
 revese_word = word[::-1]
 print('Palindrome' if word == revese_word else 'Not a Palindrome')
+
+#--------------------------------------------------------------
 
 # Factorial program
 
@@ -144,7 +176,7 @@ def factorial(n):
 number: str = input('Enter a positive number: ')
 print('factorial with range loop:', factorial(int(number)))
 
-"""
+
 
 #-----------------------------
 

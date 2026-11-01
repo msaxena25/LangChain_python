@@ -321,8 +321,56 @@ Unaccounted time   | 1h      |                                                 |
 | Total recorded time | 23h     |
 | Unaccounted time    | 1h      |
 
-# 30-10-2026 - 
+## Daily Schedule — 30-10-2026
 
-Only record study time, Rest time are house hold work + Family time + Kuku time + pooja + market etc.
+### 1. Study Time (S)
 
-S 5:30 am -  
+| Time                | Duration |
+| ------------------- | -------- |
+| 5:30 – 8:00 AM      | 2h 30m   |
+| 8:45 – 10:10 AM     | 1h 25m   |
+| 11:45 AM – 12:10 PM | 25m      |
+| 2:10 – 5:30 PM      | 3h 20m   |
+| 7:40 – 8:10 PM      | 30m      |
+| 10:30 – 11:10 PM    | 40m      |
+| Total Study Time    | 8h 50m   |
+
+### 2. Rest / Other Time
+
+15 hours.
+
+## Daily Schedule — 31-10-2026
+
+### 1. Study Time (S)
+
+| Time               | Duration |
+| ------------------ | -------- |
+| 8:00 – 9:30 AM     | 1h 30m   |
+| 11:20 AM – 1:30 PM | 2h 10m   |
+| 2:15 – 3:00 PM     | 45m      |
+| 3:40 – 4:40 PM     | 1h       |
+| 6:50 – 7:50 PM     | 1h       |
+| Total Study Time   | 6h 25m   |
+
+### 2. Rest / Other Time (O)
+
+| Time                    | Duration | Activity                                                                    |
+| ----------------------- | -------- | --------------------------------------------------------------------------- |
+| 8:00 – 10:30 PM         | 2h 30m   | Outside dinner at The Grill                                                 |
+| Remaining time          | 15h 05m  | Household work, family time, Kuku's care, pooja, sleep and other activities |
+| Total Rest / Other Time | 17h 35m  |                                                                             |
+
+# 1 - 11 - 2026
+
+8:15 - 9:25
+10:45 - 1:00
+1:30 - 2:20
+3:35 - 4:35
+5:10 to 5:50
+7:10 - 8:05
+9:45 - 
+
+
+
+Suggest me 3 hotels in mumbai for my family trip?
+
