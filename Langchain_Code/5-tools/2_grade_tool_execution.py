@@ -103,7 +103,6 @@ messages.append(query)
 [SystemMessage(content="Answer the User's question based on provided tools", additional_kwargs={},response_metadata={}), HumanMessage(content='Tell me top 2 IITs in India? And how much scholarship can I get if I achieve 400 marks out of 500 in my entrance exam?', additional_kwargs={}, response_metadata={})]
 '''
 
-"""
 
 # now invoke our model -  LLM Models return AIMessage 
 
@@ -188,7 +187,6 @@ Regarding your entrance exam:
 * With an **A+** grade, you are **eligible for a scholarship amount of ₹50,000**.
 '''
 
-"""
 
 #------------------------------------------------------
 

@@ -360,17 +360,100 @@ Unaccounted time   | 1h      |                                                 |
 | Remaining time          | 15h 05m  | Household work, family time, Kuku's care, pooja, sleep and other activities |
 | Total Rest / Other Time | 17h 35m  |                                                                             |
 
-# 1 - 11 - 2026
+## Daily Schedule — 01-11-2026
 
-8:15 - 9:25
-10:45 - 1:00
-1:30 - 2:20
-3:35 - 4:35
-5:10 to 5:50
-7:10 - 8:05
-9:45 - 
+### 1. Study Time (S)
+
+| Time               | Duration |
+| ------------------ | -------- |
+| 8:15 – 9:25 AM     | 1h 10m   |
+| 10:45 AM – 1:00 PM | 2h 15m   |
+| 1:30 – 2:20 PM     | 50m      |
+| 3:35 – 4:35 PM     | 1h       |
+| 5:10 – 5:50 PM     | 40m      |
+| 7:10 – 8:05 PM     | 55m      |
+| 9:45 – 10:37 PM    | 52m      |
+| 10:48 – 11:00 PM   | 12m      |
+| Total Study Time   | 7h 54m   |
+
+## Daily Schedule — 02-11-2026
+
+### 1. Study Time (S)
+
+| Time                | Duration |
+| ------------------- | -------- |
+| 6:25 – 7:00 AM      | 35m      |
+| 7:15 – 8:10 AM      | 55m      |
+| 9:55 – 10:15 AM     | 20m      |
+| 11:10 AM – 12:20 PM | 1h 10m   |
+| 4:00 – 5:10 PM      | 1h 10m   |
+| 7:45 – 8:10 PM      | 25m      |
+| 9:00 – 10:00 PM     | 1h       |
+| Total Study Time    | 5h 35m   |
+
+### 2. Other Activities (O)
+
+| Time             | Duration | Activity                                                        |
+| ---------------- | -------- | --------------------------------------------------------------- |
+| 12:45 – 4:00 PM  | 3h 15m   | Kuku's dental doctor visit and lunch                            |
+| 5:10 – 6:00 PM   | 50m      | Kuku's therapy discussion                                       |
+| Remaining time   | 14h 20m  | Family, household work, Kuku's care, sleep and other activities |
+| Total Other Time | 18h 25m  |                                                                 |
+
+## Daily Schedule — 03-11-2026
+
+### 1. Study Time (S)
+
+| Time                | Duration |
+| ------------------- | -------- |
+| 6:00 – 7:30 AM      | 1h 30m   |
+| 10:00 AM – 12:15 PM | 2h 15m   |
+| 12:40 – 1:30 PM     | 50m      |
+| 2:30 – 3:30 PM      | 1h       |
+| 4:00 – 6:00 PM      | 2h       |
+| 11:00 PM – 12:00 AM | 1h       |
+| Total Study Time    | 8h 35m   |
+
+### 2. Other Activities (O)
+
+| Category          | Duration |
+| ----------------- | -------- |
+| Study time        | 8h 35m   |
+| Rest / Other time | 15h 25m  |
+| Total day         | 24h      |
 
 
+# 4 - 11 - 2026
 
-Suggest me 3 hotels in mumbai for my family trip?
+6:40 - 7:45
+10:30 - 12:30
+1:30 - 2:40
+4:25 - 5:00
+
+# 5 - 11 - 2026
+
+5:40 - 8:00
+
+# 6 - 11
+
+deevali festive time and preprations, get together day
+
+# 7 - 11
+
+travel to home day
+
+# 8 to 14 (limited study due to diwali)
+
+# 15-11
+7:50 - 8:40
+10:35 - 11:50
+1:50 2-10
+3:03 - 4:10
+11:10 - 12:00
+
+# 16 - 11
+
+7 - 8:45
+10:00 - 11:10
+12:30 - 
 

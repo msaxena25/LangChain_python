@@ -1,5 +1,3 @@
-"""
-
 from langchain_community.tools import DuckDuckGoSearchRun
 
 search_tool = DuckDuckGoSearchRun()
@@ -67,9 +65,9 @@ print(create_fabanaccri_series.args_schema.model_json_schema())
 '''
 Lets Create a Income TAX Calculator tool
 If salary < 5 lakhs no tax
-if salary 5 to 10 lakhs > 10 %
-if salary 10 to 20 lakhs > 20 %
-if > 20 lakhs 30%
+if salary 5 to 10 lakhs = 10 %
+if salary 10 to 20 lakhs = 20 %
+if salary > 20 lakhs = 30%
 Return the tax amount
 
 Note - This tax percentages must be configurable by the user with its default values.
@@ -148,8 +146,6 @@ print(income_tax_calculator_tool.args_schema.model_json_schema())
     'title': 'IncomeTaxCalculatorSchema',
     'type': 'object'}
 '''
-
-"""
 
 #---------------------------------------
 
@@ -292,7 +288,9 @@ The toolkit groups the tools, but it does not automatically execute them in sequ
 '''
 
 # How to use that toolkit?
+
 print('Use of toolkit...')
+
 tools = student_toolkit.get_tools()
 
 grade = tools[0].invoke({'obtained_marks': 350})

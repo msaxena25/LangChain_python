@@ -160,7 +160,7 @@ I recommend reaching out to them as soon as possible to discuss cancellation opt
 # AI did not try any cancel action itself, it just gave the information to cancel the booking. And that is completely correct.
 
 
-# Now Lets check to search hotels in different city with is not listed in the database.
+# Now Lets check to search hotels in different city which are not listed in the database.
 
 '''
 You: Can you suggest me some hotels in Kolkata?

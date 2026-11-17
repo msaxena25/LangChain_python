@@ -131,8 +131,8 @@ for tool in response.tool_calls:
         result = get_refund_status.invoke(tool_args)
     messages.append(
         ToolMessage(
-            content=json.dumps(result), # covert dist to string
-            tool_call_id=tool['id'], # required prop.
+            content=json.dumps(result), # convert dictionary to string
+            tool_call_id=tool['id'], # required property.
             name=tool_name,
         )
     )

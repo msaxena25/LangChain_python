@@ -1,78 +1,3 @@
-
-# Vector Store
-
-A vector store is a system designed to store and retrieve data represented as numerical vectors.
-
-## Key Features
-
-1. **Storage** - Ensures that vectors and their `associated metadata` are retained, whether `in-memory` for quick lookups or `on-disk` for durability and large-scale use.
-
-    **Storage can be:**
-
-    - In-memory: Kept in RAM. Fast, but data may disappear when the application stops unless it is persisted.
-    - On-disk or database-backed: Stored persistently so the data can survive application restarts.
-
-2. **Similarity Search** - Helps retrieve the vectors most similar to a query vector.
-
-    **Similarity is commonly measured using:**
-
-    - Cosine similarity: Compares the direction of two vectors.
-    - Euclidean distance: Measures the straight-line distance between vectors.
-    - Dot product: Measures the product of corresponding vector values, summed together.
-
-3. **Indexing** - Provide a `data structure` or method that enables fast similarity searches on high-dimensional vectors (e.g., `approximate nearest neighbor lookups`).
-
-    **Indexing — Find similar vectors faster**
-
-    One common technique is Approximate Nearest Neighbor (ANN) search. It aims to find very similar vectors quickly without necessarily checking every vector.
-
-4. **CRUD Operations** - Manage the lifecycle of data-adding new vectors, reading them, updating existing entries, removing outdated vectors.
-
-----
-
-## Use-cases
-
-1. Semantic Search
-2. RAG
-3. Recommender Systems
-4. Image/Multimedia search
-
-------
-
-## Indexing Algo - Cluster-Based Indexing (IVF)
-
-IVF stands for Inverted File.
-
-1\. Create clusters: Divide all stored vectors into groups based on their similarity. Each group is called a cluster.
-
-2\. Choose cluster centers: Identify a center point for each cluster, called a `centroid`.
-
-3\. Assign vectors: Assign each vector to its nearest centroid.
-
-4\. Receive a query: Convert the user's query into an embedding vector.
-
-5\. Find relevant clusters: Compare the query vector with the cluster centroids and select the closest clusters.
-
-6\. Search selected clusters: Compare the query vector with vectors inside only those selected clusters, instead of searching every stored vector.
-
-7\. Return results: Return the closest matching vectors found in the selected clusters.
-
-**Advantage:** Can reduce the amount of data searched and use less memory than some alternatives.
-
-**Disadvantage:** If the relevant movie is in an unsearched cluster, it can be missed.
-
-**Best for:** Large datasets where clustering and tuning can deliver an appropriate speed–accuracy trade-off.
-
-## 2. Other indexing algorithms and techniques
-
-\- **Flat (Brute-Force) Search:** Compares the query against every stored vector. It provides exact nearest-neighbor results but can be slow for large datasets.
-
-\- **HNSW (Hierarchical Navigable Small World):** Builds a graph connecting nearby vectors and navigates that graph to find similar vectors quickly. It generally provides a good balance between speed and search accuracy.
-
-\- **PQ (Product Quantization):** Compresses vectors into smaller representations to reduce memory usage. It can be combined with IVF or other search methods to make large-scale vector search more efficient.
-
----------
-
 # Vector Store Vs Vector Database
 
 ## Vector Store
@@ -87,18 +12,65 @@ o Examples - `FAISS`, `Chroma`, `Annoy`, `QdrantVectorStore`, `PineconeVectorSto
 
 ## Vector Database
 
-o A full-fledged database system designed to store and query vectors.
-
-o Offers additional "database-like" features:
-
-    · Distributed architecture for horizontal scaling
-    . Durability and persistence (replication, backup/restore)
-    · Metadata handling (schemas, filters)
-    · Potential for ACID or near-ACID guarantees
-    · Authentication/authorization and more advanced security
-    · Example - `Milvus`, `Qdrant`, `Weaviate`, `Pinecone`
+o A full-fledged database system designed to store and query vectors where you can do SQL operations.
 
 **Important: Vector database is effectively a vector store with extra database feature.**
+
+------
+
+# How we effeciently find smiliar Embeddings from Vector Store
+
+**Indexing** is the process of organizing vectors so that we can efficiently find similar vectors without necessarily comparing the query against every stored vector.
+
+There are two common approaches:
+
+### **A. Brute-force search (Exact Search)**
+
+Imagine you have 10,000 stored vectors.
+
+The database:
+
+1. Takes the query embedding.
+2. Calculates its similarity/distance against vector 1.
+3. Calculates against vector 2.
+4. Continues until all 10,000 vectors are checked.
+5. Sorts the results and returns the Top-K most similar vectors.
+
+Advantages:
+
+- Accurate nearest-neighbor results.
+- Simple implementation.
+
+Disadvantage:
+
+- Can become slow with millions of vectors.
+
+### **B. Approximate Nearest Neighbor (ANN)**
+
+Instead of comparing against every vector, the database creates an optimized search structure during indexing.
+
+Some popular techniques:
+
+| Algorithm | Basic idea                                |
+| --------- | ----------------------------------------- |
+| `HNSW` (Hierarchical Navigable Small World)      | Creates a graph connecting nearby vectors |
+| `IVF`       | Groups vectors into clusters based on their similarity           |
+| `PQ`        | Compresses vectors to reduce memory usage |
+
+---------------
+
+Generally, **we don't manually configure HNSW or other indexing algorithms in everyday LangChain projects.** They are often handled automatically by the vector database.
+
+However, it depends on which vector database you use.
+
+| Vector Store | Indexing behavior                                                            |
+| ------------ | ---------------------------------------------------------------------------- |
+| FAISS        | Default is `IndexFlatL2` (exact search). HNSW requires manual configuration. |
+| Chroma       | Uses HNSW-based indexing by default.                                         |
+| Pinecone     | Index configuration is handled through index creation settings.              |
+| Qdrant       | Supports HNSW and manages index construction automatically.                  |
+
+By using `faiss.IndexHNSWFlat` we can configure HNSW with FAISS.
 
 --------
 

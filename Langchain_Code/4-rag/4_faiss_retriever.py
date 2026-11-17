@@ -35,7 +35,6 @@ llm_model = ChatGoogleGenerativeAI(
     timeout=20,
     max_retries=0
     )
-"""
 documents: list[Document] = [
     Document(
         page_content="LangChain supports conversation history using message history and memory patterns."
@@ -123,7 +122,6 @@ Then you pass that retriever into MultiQueryRetriever. Its workflow is:
 Your result of 4 documents simply means the searches collectively found 4 unique documents.
 '''
 
-"""
 
 # Context Compression retriever
 

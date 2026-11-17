@@ -404,14 +404,6 @@ Experiment with chunk size and overlap using an evaluation dataset instead of se
 
 Attach metadata such as source, document ID, video ID, title, topic, timestamps, creation date, and access permissions.
 
-5\. **Deduplication and content validation**
-
-Detect duplicate documents or chunks, empty content, corrupted records, and invalid metadata before indexing.
-
-6\. **Vector store**
-
-Currently we have used FAISS that is basic vector store. For industry standard we can with Pincone a cloud based vector store as well.
-
 ---------
 
 # RAG Retrieval Improvements
@@ -422,27 +414,22 @@ Currently we have used FAISS that is basic vector store. For industry standard w
 
 2\. Query Expansion / Multi-Query Retrieval: Generate multiple alternative queries for the same question to retrieve relevant information expressed in different ways.
 
-3\. Query Contextualization: Use conversation history to convert follow-up questions into standalone queries that can be understood without previous messages.
 
 ## 2. During-retrieval Techniques
 
-1\. Similarity Search Tuning: Optimize the number of retrieved chunks (`k`) and search configuration to balance relevance and context coverage.
+1\. Similarity Search Tuning: Optimize the number of retrieved chunks (`k`) and search configuration to balance relevance and context coverage.`
 
 2\. Similarity Score Threshold: Retrieve only documents whose relevance scores meet a specified threshold, avoiding weak matches.
 
 3\. MMR (Maximal Marginal Relevance): Retrieve relevant documents while reducing redundancy among the selected chunks.
 
-4\. Hybrid Search: Combine semantic vector search with keyword-based search, such as BM25, to capture both meaning and exact keyword matches.
-
-5\. Ensemble Retrieval or Domain Aware routing: Combine results from multiple retrievers using techniques such as Reciprocal Rank Fusion (RRF) to improve retrieval coverage.
+4\. Ensemble Retrieval or Domain Aware routing: Combine results from multiple retrievers using techniques such as Reciprocal Rank Fusion (RRF) to improve retrieval coverage.
 
 ## 3. Post-retrieval Techniques
 
-1\. Reranking: Use a reranking model, often a cross-encoder, to rescore retrieved documents against the query and reorder them by relevance.
+1\. `Reranking`: Use a reranking model, often a `cross-encoder`, to rescore retrieved documents against the query and reorder them by relevance.
 
 2\. Contextual Compression: Remove irrelevant portions of retrieved documents or extract only the information relevant to the user's question.
-
-3\. Deduplication: Remove duplicate or substantially overlapping chunks from the retrieved results.
 
 ---------
 
@@ -456,25 +443,19 @@ Currently we have used FAISS that is basic vector store. For industry standard w
 
 4\. Conversation History Integration: For conversational RAG, include only the relevant previous messages alongside the retrieved context, avoiding unnecessary history.
 
-5\. Context Token Budget Management: Estimate prompt token usage and limit the context so the combined instructions, question, retrieved content, and expected answer fit within the model's context window.
-
-6\. Answer grounding: means ensuring that the LLM's answer is based on the provided context or reliable source documents, rather than unsupported assumptions or its own potentially incorrect knowledge.
-
 ---------
 
 # RAG Improvements: Generation Phase
 
-1\. Hallucination Reduction: Instruct the model to acknowledge missing information rather than inventing an answer. This reduces risk but does not eliminate hallucinations.
+1\. Hallucination Reduction: Instruct the model to acknowledge missing information rather than inventing an answer.
 
-2\. Structured Output: Use formats such as JSON with defined fields or schemas to produce predictable, machine-readable responses.
+2\. Structured Output: Use formats such as JSON with defined fields or schemas.
 
-3\. Temperature Tuning: Adjust temperature to control output variability. Lower values often suit factual RAG answers, although they do not guarantee correctness
+3\. Temperature Tuning: Adjust temperature to control output variability.
 
 4\. Citation Generation: Ask the LLM to include source IDs, document references, or timestamps supporting its answer, then validate those citations.
 
-5\. Streaming Responses: Stream the generated answer to the user as tokens arrive, improving perceived responsiveness.
-
-6\. Guardrails: are rules and validation mechanisms that control an AI application's inputs and outputs to make it safer, more reliable, and compliant with business requirements.
+5\. Guardrails: are rules and validation mechanisms that control an AI application's inputs and outputs to make it safer, more reliable, and compliant with business requirements.
 
 ----------
 
@@ -493,3 +474,263 @@ Important distinction: These approaches are not mutually exclusive. You can comb
 For example, a personalized video assistant could retrieve video transcripts and frames (multimodal), remember previous conversations (memory-based), and decide dynamically when to search again (agentic).
 
 -----------
+
+# Reranking in RAG
+
+Reranking is a `technique` used in the retrieval phase of RAG to improve the relevance of documents before sending them to the LLM.
+
+The main problem it solves is:
+
+Vector search can retrieve relevant documents, but it doesn't always rank the most relevant documents at the top.
+
+Let's understand this with an example.
+
+## 1. What problem does reranking solve?
+
+Suppose a user asks:
+
+> What is the refund policy for cancelled hotel bookings?
+
+Your vector database searches through 1,000 documents and returns the top 5 based on semantic similarity.
+
+Imagine it returns:
+
+| Initial rank | Retrieved document                 | Relevance |
+| ------------ | ---------------------------------- | --------- |
+| 1            | Hotel cancellation charges         | High      |
+| 2            | Hotel booking modification policy  | Medium    |
+| 3            | General hotel payment policy       | Low       |
+| 4            | Refund processing timeline         | High      |
+| 5            | Cancellation and refund conditions | Very high |
+
+**Notice the problem:** the most relevant document is at position 5, not position 1.
+
+If we directly send these documents to the LLM, we may provide less useful context or waste the context window.
+
+**Reranking solves this `by evaluating the retrieved documents again` and sorting them by relevance to the original query.**
+
+After reranking:
+
+| New rank | Retrieved document                 |
+| -------- | ---------------------------------- |
+| 1        | Cancellation and refund conditions |
+| 2        | Hotel cancellation charges         |
+| 3        | Refund processing timeline         |
+| 4        | Hotel booking modification policy  |
+| 5        | General hotel payment policy       |
+
+## 2. How does reranking work internally?
+
+Most commonly, reranking uses a Cross-Encoder model.
+
+**Cross-Encoder models** are commonly used for reranking but their actual purpose is to `calculate the relevance` or relationship between two pieces of text.
+
+## Who provides these Cross Encoder Models?
+
+**Anthropic** does not provide its own dedicated embedding or reranking model. However, its documentation recommends `third-party providers such as Voyage AI`.
+
+**Google** provides a dedicated ranking service. `semantic-ranker-default-004` and `semantic-ranker-fast-004`
+
+**Open AI** also does not have standalone public reranking model/API.
+
+**Sentence Transformers team** - Provides `cross-encoder/ms-marco-MiniLM-L6-v2`. that are mostly used.
+
+## Understand `cross-encoder/ms-marco-MiniLM-L6-v2`
+
+It is published by the `Sentence Transformers team,` `under the Hugging Face` organization `cross-encoder`.
+
+It uses Microsoft's `MiniLM` architecture as its base model and was `fine-tuned on the MS MARCO Passage` Ranking dataset.
+
+**Understand Model name**
+
+`cross-encoder`	 - Model architecture / model collection  
+`ms-marco`	     - Fine-tuned on MS MARCO ranking data  
+`MiniLM`         - Lightweight Transformer architecture  
+`L6`             - Six Transformer layers  
+`v2`             - Second version of this model series
+
+---------
+
+You can download this with > `pip install sentence-transformers`
+
+**Load the model:**
+
+```py
+from sentence_transformers import CrossEncoder
+
+# We dont need to download this model manually. CrossEncoder will auto download it from hugging face when first time execute file and caches it locally.
+model = CrossEncoder(
+    "cross-encoder/ms-marco-MiniLM-L6-v2"
+)
+```
+
+## 3. How do we implement reranking?
+
+### Without Langchain - 
+
+1. Retrieve documents from the vector store
+2. Load the Cross-Encoder model
+3. Prepare query-document pairs: Combine the same user query with each retrieved document.
+4. Calculate relevance scores: Pass all pairs to the `Cross-Encoder` to get their relevance scores.
+5. Sort documents by relevance score: Sort the documents in descending order based on their scores.
+6. Select the top 5 documents
+7. Pass the selected documents to the LLM
+
+```py
+# retrieve 20 candidate documents instead of directly retrieving the final 5. 
+retriever = vectorstore.as_retriever(search_kwargs={"k": 20})
+
+query = "What is the refund policy for cancelled bookings?"
+
+# Initial retrieval
+documents = retriever.invoke(query)
+
+# Load the reranker model
+reranker_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+
+pairs = [
+    (query, doc.page_content) for doc in documents
+]
+
+scores = reranker_model.predict(pairs)
+
+ranked_documents = sorted(
+    zip(documents, scores),
+    key=lambda item: item[1],
+    reverse=True
+)
+
+top_documents = [
+    doc for doc, score in ranked_documents[:5]
+]
+```
+
+### Using LangChain
+
+LangChain also provides a `CrossEncoderReranker` and `ContextualCompressionRetriever` integration.
+
+For LangChain 1.x, the integration is available through the `langchain-classic` package:
+
+```bash
+pip install langchain-classic langchain-huggingface sentence-transformers
+```
+
+```py
+from langchain_classic.retrievers import ContextualCompressionRetriever
+from langchain_classic.retrievers.document_compressors import CrossEncoderReranker
+from langchain_huggingface import HuggingFaceCrossEncoder
+
+# Load model with package HuggingFaceCrossEncoder
+model = HuggingFaceCrossEncoder(
+    model_name="cross-encoder/ms-marco-MiniLM-L-6-v2"
+)
+
+compressor = CrossEncoderReranker(
+    model=model,
+    top_n=5
+)
+
+retriever = vectorstore.as_retriever(search_kwargs={"k": 20})
+
+# ContextualCompressionRetriever  - It will invoke retriever directly, fetch document and pass those document to Compressor
+compression_retriever = ContextualCompressionRetriever(
+    base_retriever=retriever,
+    base_compressor=compressor
+)
+
+results = compression_retriever.invoke(query)
+```
+
+This lets LangChain manage the retrieval and reranking integration.
+
+------------
+
+# Model switching or LLM Routing or Model Routing
+
+Production applications `don't necessarily use one LLM for every task`. They can select different models depending on the operation, complexity, cost, and latency requirements.
+
+You can initialize multiple models in your application.
+
+```py
+from langchain_ollama import ChatOllama
+
+# small task
+fast_model = ChatOllama(
+    model="qwen3.5:latest",
+    temperature=0.2
+)
+
+# complex task
+powerful_model = ChatOllama(
+    model="another-model",
+    temperature=0.2
+)
+```
+
+### How does LangChain support this?
+
+LangChain supports dynamic model selection through `agent middleware`.
+
+You can configure an agent to use different models depending on the request rather than creating completely separate agents for every model.
+
+### Three ways to classify user queries
+
+**A. Rule-based classification (Python only)** - No LLM cost, Fast execution.
+
+```py
+def classify_query(query):
+    query = query.lower()
+
+    if any(word in query for word in ["hello", "hi", "hey"]):
+        return "greeting"
+
+    if any(word in query for word in ["search", "find", "hotels"]):
+        return "hotel_search"
+
+    if any(word in query for word in ["compare", "recommend", "best"]):
+        return "complex"
+
+    return "general"
+```
+
+**B. ML-based classification (Python libraries)** - No LLM required but need training examples and a suitable model.
+
+You can use traditional machine learning or NLP libraries to classify queries.
+
+`scikit-learn` - 	Train an intent classification model
+`spaCy`	       -  NLP processing and text classification
+
+**C. LLM-based classification** - Can use lightweight LLM to classify the query and return structured output through Pydantic.
+
+----------
+
+# Token and Cost Optimization
+
+Token and Cost Optimization is an important when building production-level LangChain applications, especially agents and RAG systems.
+
+There are two primary token categories: Input Token and Output Token
+
+**Suppose your hotel assistant receives:**
+
+- System instructions: 500 tokens
+- Conversation history: 1,000 tokens
+- User query: 50 tokens
+- Retrieved documents: 2,000 tokens
+Total input = 3,550 tokens.
+
+Suppose the LLM generates 300 tokens called Output Token.
+
+Total tokens processed = 3,850.
+
+### Important techniques for token and cost optimization
+
+**Prompt Optimization** -  Avoid unnecessarily lengthy system prompts and repeated instructions.
+
+**Conversation History Management** - Instead of sending entire conversation history with each call, Keep only the last N relevant messages, Summarize older conversation history, Remove irrelevant tool outputs.
+
+**Context Optimization in RAG**- If vector database retrieves 20 documents, rerank them, select top 5 and then send to LLM.
+
+**Model Selection** - You don't need to use an expensive model for every task.
+
+-------------
+

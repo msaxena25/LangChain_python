@@ -33,8 +33,8 @@ cursor.execute(create_table_rooms_query)
 # First delete all data from the tables
 cursor.execute('DELETE FROM hotels')
 cursor.execute('DELETE FROM rooms')
-# Insert Data into Hotels Table
 
+# Insert Data into Hotels Table
 insert_data_hotels_query = '''INSERT OR IGNORE INTO hotels (hotel_id, hotel_name, phone, city, rating) VALUES (?, ?, ?, ?, ?)'''
 
 # Insert multiple data into hotels table using executemany

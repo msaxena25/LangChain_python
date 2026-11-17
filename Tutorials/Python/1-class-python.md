@@ -301,6 +301,22 @@ python -m pip show langchain
 
 You should see Python 3.13.x and the installed LangChain package details.
 
+3. Run Python 3.13
+
+```
+py -3.13 --version
+```
+
+4. Create a virtual environment using Python 3.13
+
+```bash
+py -3.13 -m venv .venv
+
+.\.venv\Scripts\Activate.ps1
+
+python --version
+```
+
 ---
 
 # `-m` means “run a module as a script
@@ -332,7 +348,7 @@ Here:
 
 ---
 
-# Python `requirements.txt`
+# Python `  `
 
 ## 1. What problem does it solve?
 

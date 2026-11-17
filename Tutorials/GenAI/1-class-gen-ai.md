@@ -2,9 +2,9 @@
 
 The two main concepts are Discriminative Models and Generative Models. Both are used in Machine Learning, including Deep Learning.
 
-## Discriminative Model
+### Discriminative Model
 
-Purpose: Learns to distinguish between categories or predict an output from input data.
+Purpose: Learns to `distinguish between categories` or predict an output from input data.
 
 Example: You provide a cat or dog image, and the model predicts whether it is a cat or a dog.
 
@@ -13,7 +13,7 @@ Example: You provide a cat or dog image, and the model predicts whether it is a 
 
 It learns the relationship.
 
-## Generative Model
+### Generative Model
 
 Purpose: Learns patterns in data and `can generate new` samples that resemble the learned data.
 
@@ -54,7 +54,9 @@ AI is a broad field that includes several approaches:
 - Prompt engineering: Provides instructions and context to guide the model's response.
 - Evaluation and guardrails: Help assess answer quality and manage risks.
 
-## Machine Learning vs Deep Learning
+-----------------------------------
+
+# Machine Learning vs Deep Learning
 
 **Machine Learning (ML)** is when a computer learns from data to make predictions or recognize things.
 
@@ -85,13 +87,13 @@ Think of it as a family tree, from the broadest parent to the most specific chil
 
 The hierarchy is:
 
-AI → ML → Deep Learning → Generative AI → LLM
+`AI → ML → Deep Learning → Generative AI → LLM`
 
 ------
 
 # What are Tokens?
 
-A token is a unit of text processed by an LLM. It can represent a word, part of a word, punctuation, or other text.
+A token is a `unit of text processed by an LLM`. It can represent a word, part of a word, punctuation, or other text.
 
 ### Sizes - 
 
@@ -116,6 +118,8 @@ The context window is the `maximum number of tokens` a model can process within 
 
 **Note** - A tokenizer affects how much text becomes tokens, but the context window is a separate model-design and deployment specification.
 
+------------------
+
 # Diff b/w Vector and Embedding
 
 `A vector `is a list of numerical values, whereas an embedding is a vector that represents the meaning or features of data.
@@ -136,9 +140,11 @@ embedding = [0.21, 0.75, -0.32, 0.48]
 
 **Every embedding is a vector.** But **Not every vector is an embedding.**
 
+-----
+
 # Coshine similarity 
 
-Cosine similarity measures how similar the direction of two vectors is. In AI and RAG, it is commonly used to compare embeddings and find semantically similar text.
+Cosine similarity measures `how similar the direction of two vectors` is. In AI and RAG, it is commonly used to compare embeddings and find semantically similar text.
 
 Range = −1 to 1.
 
@@ -155,30 +161,32 @@ The formula for cosine similarity between two vectors **A** and **B** is:
 
 cosine_similarity = `(A · B) / (||A|| × ||B||)`
 
-Where:
-- `A · B` is the dot product of vectors A and B.
-- `||A||` and `||B||` are the `magnitudes` (lengths) of vectors A and B respectively.
+Where:  
+-`A · B` is the dot product of vectors A and B.  
+-`||A||` and `||B||` are the `magnitudes` (lengths) of vectors A and B respectively.
 
+```
 1. **Dot product:**
 
-> A · B = (1 × 2) + (2 × 1) = 2 + 2 = 4
+A · B = (1 × 2) + (2 × 1) = 2 + 2 = 4
 
 2. **Magnitude of A:**
 
-> ||A|| = sqrt(1² + 2²) = sqrt(1 + 4) = sqrt(5) ≈ 2.2361
+||A|| = sqrt(1² + 2²) = sqrt(1 + 4) = sqrt(5) ≈ 2.2361
 
 3. **Magnitude of B:**
 
-> ||B|| = sqrt(2² + 1²) = sqrt(4 + 1) = sqrt(5) ≈ 2.2361
+||B|| = sqrt(2² + 1²) = sqrt(4 + 1) = sqrt(5) ≈ 2.2361
 
 4. **Cosine similarity:**
 
-> cosine_similarity = 4 / (2.2361 × 2.2361) = 4 / 5 = 0.8
+cosine_similarity = 4 / (2.2361 × 2.2361) = 4 / 5 = 0.8
 
 **Final result:**  
 **Cosine similarity = 0.8**
+```
 
-cosine similarity ranges from −1 to +1. In our example, 0.8 indicates that the two vectors point in a similar direction.
+cosine similarity `ranges from −1 to +1`. In our example, 0.8 indicates that the two vectors point in a similar direction.
 
 | Cosine similarity | Meaning                                             |
 | ----------------- | --------------------------------------------------- |
@@ -223,19 +231,19 @@ For the token `it`, here's the simplified process:
 
 # Causal masking
 
-Causal masking ensures that an LLM can only attend to the current token and previous tokens, not future tokens, when predicting the next token.
+Causal masking ensures that an LLM can `only attend to the current token and previous tokens`, not future tokens, when predicting the next token.
 
 --------
 
 # Feed-Forward
 
-Feed-forward in a Transformer is the step right after self-attention. Attention lets a word look at the other words. Feed-forward then takes that one word’s updated meaning and rewrites it on its own, without looking at the other words again.
+`Feed-forward` in a Transformer is the step right after self-attention. Attention lets a word look at the other words. Feed-forward then takes that `one word’s updated meaning and rewrites it` on its own, without looking at the other words again.
 
-Flow:
+**Flow:**
 
 Self-Attention → Feed-Forward Network → Next Transformer layer
 
-Example: In the sentence "The animal is tired", 
+**Example: In the sentence "The animal is tired"**
 
 - self-attention helps a token gather context from other tokens. 
 - The feed-forward network then transforms that token's contextual representation to learn more complex features such as "state of the animal = exhausted.
@@ -248,34 +256,34 @@ Example: In the sentence "The animal is tired",
 
 The three main types of Machine Learning training are:
 
-1\. **Supervised Learning** — Trains on labeled data (input + correct answer).
+**Supervised Learning** — Trains on labeled data (input + correct answer).
 
 - Example: Emails labeled as spam or not spam.
 
-2\. **Unsupervised Learning** — Trains on unlabeled data to discover patterns or groups.
+**Unsupervised Learning** — Trains on unlabeled data to discover patterns or groups.
 
 - Example: Grouping customers based on purchasing behavior.
 
-3\. **Reinforcement Learning** — Learns through rewards and penalties for actions.
+**Reinforcement Learning** — Learns through rewards and penalties for actions.
 
 - Example: An AI agent learning to play a game.
 
 ## LLM Tranining
 
-- **Pretraining**: This is self-supervised learning on a huge text corpus (web pages, books, code).
+**Pretraining**: This is self-supervised learning on a huge text corpus (web pages, books, code).
 
--  **Supervised fine-tuning (instruction tuning)**: The model is then trained with ordinary supervised learning (like instructions, optional input and desired answer) to produce that answer.
+**Supervised fine-tuning (instruction tuning)**: The model is then trained with ordinary supervised learning (like instructions, optional input and desired answer) to produce that answer.
 
-- **Preference alignment**: Supervised fine-tuning teaches one good answer. Alignment teaches the model which of several answers people prefer.
+**Preference alignment**: Supervised fine-tuning teaches one good answer. Alignment teaches the model which of several answers people prefer.
 
-    - **RLHF** (reinforcement learning from human feedback) - This is most useful method of Preference Alignment.
-    People rank answers. A reward model learns those rankings. The LLM is then updated with reinforcement learning (often PPO) to get higher reward.
+- **RLHF** (reinforcement learning from human feedback) - This is most useful method of Preference Alignment.
+People rank answers. A reward model learns those rankings. The LLM is then updated with reinforcement learning (often PPO) to get higher reward.
 
 ------------
 
 # Context Window
 
-When an LLM reaches its context window limit, it cannot process more tokens than its configured limit in a single request.
+When an LLM reaches its context `window limit`, it cannot process more tokens than its configured limit in a single request.
 
 The application may then:
 
@@ -286,13 +294,13 @@ The application may then:
 
 ## Context management strategies
 
-1. Sliding Window — Keep only the most recent messages that fit within the context limit. Older messages are dropped as new messages arrive.
+1. `Sliding Window `— Keep only the most recent messages that fit within the context limit. Older messages are dropped as new messages arrive.
 
-2. Conversation Summarization — Summarize older conversation messages into a compact summary. Send the summary plus recent messages to preserve important context.
+2. `Conversation Summarization` — Summarize older conversation messages into a compact summary. Send the summary plus recent messages to preserve important context.
 
-3. Conversation Buffer / Memory — Maintain conversation history across requests and selectively include it in future prompts. The history may be stored in application memory or a database.
+3. `Conversation Buffer / Memory` — Maintain conversation history across requests and selectively include it in future prompts. The history may be stored in application memory or a database.
 
-4. Structured State Management — Store important facts, preferences, task status, and decisions in structured fields rather than relying only on raw conversation history. Common in AI agents and multi-step workflows.
+4. `Structured State Management` — Store important facts, preferences, task status, and decisions in structured fields rather than relying only on raw conversation history. Common in AI agents and multi-step workflows.
 
 -----
 
@@ -339,7 +347,7 @@ Suppose `top_p = 0.80` or `80%`:
 
 The candidate group would be `blue` and `clear` in this example.
 
-The important point is that top-p requires the cumulative probability to reach or exceed 80%, not stay below 80%. Once threashold meets,stop there. And thats why group will be blue and clear.
+**The important point** is that top-p requires the cumulative probability to reach or exceed 80%, not stay below 80%. Once threashold meets, stop there. And thats why group will be blue and clear.
 
 ------
 

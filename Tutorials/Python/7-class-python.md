@@ -104,7 +104,7 @@ class User(BaseModel):
 
 user = User(name="Mohit", age="34")
 
-# Pydantic normally converts compatible values, such as `"34"` to `34`. This is called coercion. You can enable strict validation when conversion should not be allowed.
+# Pydantic normally converts compatible values, such as "34" to 34. This is called coercion. You can enable strict validation when conversion should not be allowed.
 
 print(user.name)
 print(user.age)
