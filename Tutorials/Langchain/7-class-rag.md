@@ -734,3 +734,219 @@ Total tokens processed = 3,850.
 
 -------------
 
+# Semantic Cache
+
+**Semantic Cache** is a caching technique used in LLM applications where we store previous questions and their responses, then `reuse a cached response` when a new question has a similar meaning rather than an exact text match.
+
+## **1. How does it work?**
+
+Suppose users ask these questions:
+
+- "What is LangChain?"
+- "Explain LangChain."
+- "Can you tell me about LangChain?"
+
+Although the wording is different, all three questions have similar meanings.
+
+```text
+        User Query: "Explain LangChain."
+                      │
+                      ▼
+            Generate Query Embedding
+                      │
+                      ▼
+              Search Semantic Cache
+     Find semantically similar cached questions
+                      │
+          ┌───────────┴───────────┐
+          ▼                       ▼
+      Cache Hit               Cache Miss
+          │                       │
+          ▼                       ▼
+ Return cached response      Call LLM
+    Skip LLM call            Generate and cache response
+```
+
+## **4. Popular tools**
+
+- Redis with vector search.
+- GPTCache.
+- LangChain semantic cache integrations.
+
+-------
+
+## Finding Answer from Cache
+
+Let's understand with an example.
+
+**1. First, store a question and its answer**
+
+Suppose a user asks:
+
+"What is LangChain?"
+
+The LLM generates an answer. We store three things in the semantic cache:
+
+| Question           | Embedding             | Answer                           |
+| ------------------ | --------------------- | -------------------------------- |
+| What is LangChain? | [0.21, 0.45, 0.12...] | LangChain is an LLM framework... |
+
+The question is converted into an embedding and stored along with its answer.
+
+**2. A new user asks a similar question**
+
+Now another user asks:
+
+"Explain LangChain."
+
+The semantic cache performs these steps:
+
+1. Converts the new question into an embedding using the same embedding model.
+2. Searches the stored question embeddings using vector similarity search.
+3. Calculates similarity between the new query vector and stored vectors.
+4. Checks whether the similarity score meets the configured `threshold`.
+5. If it matches, retrieves the associated cached answer.
+
+-----------
+
+# Role-Based Authorization (RBAC) in a RAG application
+
+`Role-Based Authorization (RBAC) in a RAG application` ensures that users can access only the documents and embeddings they are authorized to access.
+
+For example, in an organization:
+
+- HR can access HR documents.
+- Finance can access Finance documents.
+- Developers can access technical documents.
+
+Even if all documents are stored in the same vector database, users should retrieve only their permitted information.
+
+## How does it work?
+
+When documents are indexed, `we store their metadata along with embeddings`.
+
+Example:
+
+```json
+{
+    "text": "Employee salary details...",
+    "embedding": [0.21, 0.45, 0.12],
+    "metadata": {
+        "department": "HR",
+        "allowed_roles": ["HR", "Admin"]
+    }
+}
+```
+
+## Authorization workflow
+
+**1. User Login**
+
+**2. Get User Role**: Retrieve role from trusted identity provider / backend
+
+**3. Generate Query Embedding**
+
+**4. Apply Authorization Filter**: Filter by permitted role / department
+
+**5. Vector Similarity Search**: Search only authorized documents
+
+**6. Send Retrieved Context to LLM**: Generate the answer from permitted context
+
+## What if we use FAISS?
+
+**FAISS itself does not provide built-in RBAC or metadata-based authorization**. You need to add Manually.
+
+**Chroma supports authentication and authorization, including a built-in RBAC mechanism.**
+
+Let's create a simple example using LangChain + Chroma + PDF + role-based metadata filtering.
+
+```py
+# Load PDF
+loader = PyPDFLoader("hr_policy.pdf")
+documents = loader.load()
+
+# Add permission metadata to every page
+for doc in documents:
+    doc.metadata["department"] = "HR"
+    doc.metadata["allowed_roles"] = ["HR", "Admin"]
+
+# Create Chroma vector store
+vector_store = Chroma(
+    collection_name="company_documents",
+    embedding_function=embedding_model,
+    persist_directory="./chroma_db"
+)
+
+# Save documents and embeddings
+vector_store.add_documents(documents)
+
+print("PDF embeddings saved successfully!")
+```
+
+**Here, Chroma stores:**
+- PDF page content.
+- Generated embeddings.
+- Metadata (department and allowed roles).
+
+**Retrieve documents based on user role**
+
+```py
+def search_documents(query, user_role):
+
+    # Get only authorized documents
+    results = vector_store.similarity_search(
+        query,
+        k=3,
+        filter={
+            "allowed_roles": {
+                "$contains": user_role
+            }
+        }
+    )
+
+    return results
+
+
+# Example users
+user_role = "Developer"
+
+results = search_documents(
+    "What is the employee leave policy?",
+    user_role
+)
+
+for doc in results:
+    print(doc.page_content)
+```
+
+-----------
+
+# How Vector Stores returns chunks while saving only Embeddings
+
+This is an important concept to understand about vector databases.
+
+**Vector stores generally maintain both embeddings and their associated original text (or a reference to that text).** They don't normally convert numerical embeddings back into text.
+
+Let's understand how this works.
+
+## **1. What exactly is stored?**
+
+Suppose we have three document chunks.
+
+| ID | Embedding             | Original text      |
+| -- | --------------------- | ------------------ |
+| 1  | [0.21, 0.45, 0.12...] | What is LangChain? |
+| 2  | [0.32, 0.15, 0.78...] | What is Python?    |
+| 3  | [0.81, 0.22, 0.34...] | What is RAG?       |
+
+The vector store maintains a relationship between the embedding and its original document.
+
+Internally, LangChain maintains three important things:
+
+| Component   | Responsibility                                |
+| ----------- | --------------------------------------------- |
+| FAISS index | Stores vectors and performs similarity search |
+| Docstore    | Stores original Document objects              |
+| ID mapping  | Maps FAISS vector IDs to document IDs         |
+
+----

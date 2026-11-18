@@ -302,7 +302,6 @@ print(docs[5].page_content) #IndexError: list index out of range (means total pa
 - Use when dealing with large number of documents or you want stream processing (chunking, embedding) without using lots of memory.
 
 ```py
-
 loader = DirectoryLoader(
     path= "company_docs/",
     glob="**/*.pdf",
@@ -316,8 +315,6 @@ print(docs) # <generator object DirectoryLoader.lazy_load at 0x0000023FB3584D30>
 # use for loop on this docs object & this will print meta data once after load
 for doc in docs:
     print(doc.metadata)
-
-
 ```
 
 ### Here's the sequence:
@@ -641,7 +638,6 @@ documents = text_splitter.create_documents(
     metadatas=[{"video_id": "YOUR_VIDEO_ID"}]
 )
 ```
-
 --------
 
 # `CharacterTextSplitter` 

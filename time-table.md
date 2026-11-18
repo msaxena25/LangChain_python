@@ -444,16 +444,44 @@ travel to home day
 
 # 8 to 14 (limited study due to diwali)
 
-# 15-11
-7:50 - 8:40
-10:35 - 11:50
-1:50 2-10
-3:03 - 4:10
-11:10 - 12:00
+## **Daily Schedule — 15-11-2026**
 
-# 16 - 11
+| Time                 | Duration   |
+| -------------------- | ---------- |
+| 7:50 – 8:40 AM       | 50m        |
+| 10:35 – 11:50 AM     | 1h 15m     |
+| 1:50 – 2:10 PM       | 20m        |
+| 3:03 – 4:10 PM       | 1h 7m      |
+| 11:10 PM – 12:00 AM  | 50m        |
+| **Total Study Time** | **4h 22m** |
 
-7 - 8:45
-10:00 - 11:10
-12:30 - 
+Most of the time - friends meet up, Tau ji ghar, Gopal Cha Ghar etc..
 
+## **Daily Schedule — 16-11-2026**
+
+| Time                 | Duration   |
+| -------------------- | ---------- |
+| 7:00 – 8:45 AM       | 1h 45m     |
+| 10:00 – 11:10 AM     | 1h 10m     |
+| 12:30 – 2:30 PM      | 2h         |
+| 4:10 – 5:30 PM       | 1h 20m     |
+| 6:30 – 7:30 PM       | 1h         |
+| **Total Study Time** | **7h 15m** |
+
+
+## **Daily Schedule — 17-11-2026**
+
+### **Study Time (S)**
+
+| Time                 | Duration   |
+| -------------------- | ---------- |
+| 10:00 AM – 12:00 PM  | 2h         |
+| 12:40 – 2:15 PM      | 1h 35m     |
+| 3:00 – 5:30 PM       | 2h 30m     |
+| **Total Study Time** | **6h 05m** |
+
+# 18-11
+
+10:00 - 11:40
+12:10 - 2
+3 - 

@@ -24,7 +24,7 @@ o A full-fledged database system designed to store and query vectors where you c
 
 There are two common approaches:
 
-### **A. Brute-force search (Exact Search)**
+### A. Brute-force search (Exact Search)
 
 Imagine you have 10,000 stored vectors.
 
@@ -45,7 +45,7 @@ Disadvantage:
 
 - Can become slow with millions of vectors.
 
-### **B. Approximate Nearest Neighbor (ANN)**
+### B. Approximate Nearest Neighbor (ANN)
 
 Instead of comparing against every vector, the database creates an optimized search structure during indexing.
 
@@ -215,6 +215,16 @@ else:
     print('All documents already exist in the vector store')
 ```
 
+--------
+
+## Question -  Is there any use of temperature in Embedding?
+
+No. Temperature is generally not applicable to embedding models, whether you are generating embeddings for documents or user queries.
+
+Temperature is a parameter used with generative LLMs to control randomness in their responses.
+
+Embedding models work differently. They convert text into numerical vectors based on learned representations.
+
 -----------
 
 # Retriever
@@ -264,8 +274,7 @@ for i, doc in enumerate(docs, start=1):
     print("Content:", doc.page_content[:500])
 ```
 
-```py
-
+```
 TOPIC: "LangChain framework for developing applications powered by large language models"
 
 Answer: Given on diff topic 'Prompt engineering' and 'Lists of open-source artificial intelligence software' but something relative.
@@ -288,7 +297,7 @@ title Economic history of India
 --------------------------------
 ```
 
-**the important point is that WikipediaRetriever searches Wikipedia for pages related to your query; it does not guarantee that the returned page will be an exact answer to your question.**
+**The important point is that WikipediaRetriever searches Wikipedia for pages related to your query; it does not guarantee that the returned page will be an exact answer to your question.**
 
 ------
 
