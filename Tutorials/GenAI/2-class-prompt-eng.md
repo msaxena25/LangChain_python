@@ -140,11 +140,9 @@ Writing "ignore previous context" does not necessarily delete the previous conve
 
 ------
 
-## **6. Which practices help maintain coherence in long AI conversations?**
+## Which practices help maintain coherence in long AI conversations?
 
-Maintaining coherence means ensuring that an LLM understands the conversation context, remembers important information, and provides consistent responses across multiple interactions.
-
-### **2. How it works**
+`Maintaining coherence means` ensuring that an LLM understands the conversation context, remembers important information, and provides consistent responses across multiple interactions.
 
 As conversations become longer, we need to manage the context sent to the LLM.
 
@@ -160,7 +158,7 @@ Some useful practices:
 | Structured Context         | Organize context using headings, sections, or key-value pairs. |
 | Memory Management          | Store important information for future interactions.           |
 
-### **3. Practical example**
+### Practical example
 
 Suppose you are building a chatbot for an e-commerce application.
 
@@ -180,32 +178,11 @@ User Preferences:
 - Product: Running shoes
 - Budget: ₹3,000
 ```
+---------
 
-### **4. When to use it**
+##  What does Restating Keys mean in conversations, and why is it useful?
 
-- Customer support chatbots.
-- Long-running AI conversations.
-- AI agents.
-- Personal assistants.
-- Multi-step workflows.
-
-### **5. Limitations**
-
-- Summaries can lose important details.
-- Incorrect memory can produce incorrect answers.
-- Context management requires careful prioritization.
-
-**Remember:** Good context management helps maintain consistency across long conversations.
-
-## **7. What does Restating Keys mean in conversations, and why is it useful?**
-
-### **1. Meaning**
-
-Restating Keys means repeating important information, instructions, or constraints in a conversation to ensure the LLM continues to consider them while generating responses.
-
-It is especially useful in long conversations where important instructions may become less prominent.
-
-### **2. How it works**
+Restating Keys means `repeating important information, instructions, or constraints` in a conversation to ensure the LLM continues to consider them while generating responses.
 
 Suppose you initially provide this instruction:
 
@@ -227,29 +204,11 @@ Remember:
 
 You have restated the important instructions.
 
-### **3. When to use it**
+----------
 
-- Long conversations.
-- Multi-step code generation.
-- Maintaining output formats.
-- Enforcing coding standards.
-- Reusing important business rules.
+## Why can an LLM generate different outputs for the same input, even when the prompt and model remain unchanged?
 
-### **4. Limitations**
-
-- Repeating everything increases token consumption.
-- Repeated instructions can become contradictory if not maintained properly.
-- Restating instructions does not guarantee compliance.
-
-**Remember:** Restating Keys means reinforcing important information when it matters.
-
-## **8. Why can an LLM generate different outputs for the same input, even when the prompt and model remain unchanged?**
-
-### **1. Meaning**
-
-LLMs can generate different responses for identical inputs because text generation involves probabilistic token selection and can be influenced by several runtime factors.
-
-### **2. How it works**
+LLMs can generate different responses for identical inputs because `text generation involves probabilistic token selection` and can be influenced by several runtime factors.
 
 Let's understand your three hypotheses.
 
@@ -281,191 +240,28 @@ A provider might update its model implementation or serving infrastructure witho
 
 RAG retrieval, web search, APIs, and database queries can provide different context for each request.
 
-### **3. Practical example**
+-------------
 
-Suppose you send the same prompt three times:
+## What does Inference Time mean when an LLM processes a prompt?
 
-```
-Generate a test case for this function:
+`Inference Time` - Time required to process input and generate output.
 
-function add(a, b) {
-  return a + b;
-}
-```
+------
 
-Possible outputs:
-
-- Test case 1: `add(2, 3) = 5`
-- Test case 2: `add(10, 20) = 30`
-- Test case 3: `add(-2, 2) = 0`
-
-All three are valid test cases, but their outputs differ.
-
-### **4. When to use this understanding**
-
-- Automated test case generation.
-- Code generation.
-- AI-based report generation.
-- Production LLM applications.
-- Prompt evaluation and testing.
-
-### **5. How to improve consistency**
-
-- Use temperature = 0 where supported.
-- Use fixed prompts and structured output schemas.
-- Keep model versions unchanged.
-- Control external data and retrieval.
-- Validate outputs programmatically.
-
-**Remember:** Same prompt does not always guarantee identical output. Temperature is one factor, but not the only one.
-
-## **9. What does Inference Time mean when an LLM processes a prompt?**
-
-### **1. Meaning**
-
-Inference Time is the time during which a trained LLM processes an input and generates an output.
-
-In simple terms:
-
-**Training = Teaching the model.**
-
-**Inference = Using the trained model to generate responses.**
-
-### **2. How it works**
-
-When you send a prompt to an LLM, the following process happens:
-
-**1. User Prompt**
-
-Input text
-
-**2. Tokenization**
-
-Text converted into tokens
-
-**3. Model Processing**
-
-Neural network processes input tokens
-
-**4. Token Generation**
-
-Model generates output tokens
-
-**5. Final Response**
-
-Generated answer
-
-All these activities happen during inference.
-
-### **3. Important terminology**
-
-| Term                       | Meaning                                             |
-| -------------------------- | --------------------------------------------------- |
-| Training Time              | Time required to train the model.                   |
-| Inference Time             | Time required to process input and generate output. |
-| Time to First Token (TTFT) | Time taken to generate the first output token.      |
-| Tokens Per Second          | Number of output tokens generated per second.       |
-| Latency                    | Time taken to receive a response.                   |
-
-### **4. When to use this understanding**
-
-- Comparing LLM performance.
-- Optimizing chatbot response speed.
-- Choosing between cloud and local models.
-- Optimizing LangChain applications.
-- Reducing API response latency.
-
-### **5. Limitations / considerations**
-
-Inference time can increase due to:
-
-- Large input context.
-- Large output length.
-- Complex model architecture.
-- Hardware limitations.
-- High server load.
-
-**Remember:** Inference is the process of using a trained model to generate predictions or responses.
-
-## **10. What is the difference between Context and Constraints in Prompt Anatomy?**
-
-### **1. Meaning**
-
-Both Context and Constraints provide additional instructions to an LLM, but they serve different purposes.
+## What is the difference between Context and Constraints in Prompt Anatomy?
 
 - **Context:** Provides background information required to understand the task.
 - **Constraints:** Defines rules, boundaries, or restrictions that the output must follow.
 
-### **2. Practical example**
+`Context tells the LLM what it needs to know; constraints tell it what it must or must not do.`
 
-Suppose you want to generate a React component.
+-----
 
-```
-Role:
-You are a Senior React Developer.
+## How can we design a prompt to generate a consistent report with predefined headings, paragraphs, bullet points, and tables every time?
 
-Context:
-We are developing an e-commerce application
-using React and TypeScript.
-
-Task:
-Create a reusable product card component.
-
-Constraints:
-- Use functional components.
-- Use TypeScript.
-- Do not use external UI libraries.
-- Follow mobile-first responsive design.
-- Keep the component reusable.
-```
-
-Let's separate them:
-
-| Component     | Purpose                    | Example                         |
-| ------------- | -------------------------- | ------------------------------- |
-| Role          | Defines the perspective    | Senior React Developer          |
-| Context       | Provides background        | E-commerce application          |
-| Task          | Defines what to do         | Create product card             |
-| Constraints   | Defines limitations        | Use TypeScript, no UI libraries |
-| Output Format | Defines response structure | Code + explanation              |
-
-### **3. When to use it**
-
-- Code generation.
-- Technical documentation.
-- Generating reports.
-- Data extraction.
-- AI agents and RAG applications.
-
-### **4. Limitations**
-
-- Too many constraints can restrict useful responses.
-- Missing context can cause incorrect assumptions.
-- Conflicting constraints can produce unpredictable results.
-
-**Remember:** Context tells the LLM what it needs to know; constraints tell it what it must or must not do.
-
-## **11. How can we design a prompt to generate a consistent report with predefined headings, paragraphs, bullet points, and tables every time?**
-
-### **1. Meaning**
-
-We can use Structured Prompting with explicit output-format instructions to make the LLM generate responses in a consistent structure.
-
-The key is to define the expected format clearly instead of simply asking for a report.
-
-### **2. How it works**
-
-We define the report structure, formatting rules, and content requirements inside the prompt.
-
-### **3. Practical example**
-
-Suppose you want an LLM to generate a technical project report.
-
-You can write:
+We can use `Structured Prompting with explicit output-format` instructions to make the LLM generate responses in a consistent structure.
 
 **Sample prompt**
-
-Reusable
 
 ```
 You are a Technical Documentation Expert.
@@ -500,51 +296,133 @@ Follow these output rules strictly:
 Output only the report.
 ```
 
-&#x20;Copy prompt
-
-### **4. When to use it**
-
-- Technical reports.
-- API documentation.
-- Code review reports.
-- Test case generation.
-- Business analysis.
-- Automated reporting systems.
-
-### **5. How to improve consistency further**
+### How to improve consistency further
 
 For production applications, prompt instructions alone may not be sufficient.
 
 You can combine them with:
 
-- JSON Schema for enforcing data structure.
-- Pydantic for validating generated data.
-- Structured Output Parsers in LangChain.
-- Programmatic validation for mandatory fields.
+- `JSON Schema` for enforcing data structure.
+- `Pydantic` for validating generated data.
+- Structured Output `Parsers` in LangChain.
 
-For example, instead of relying only on the LLM to generate a table, you can ask it to return structured JSON and convert that JSON into a table using your application.
+-------
 
-**Remember:** Explicit output instructions improve consistency; schema validation provides stronger structural guarantees.
+## What are the main components of Prompt Anatomy?
 
-# **Quick Revision – Questions 6–11**
+Prompt Anatomy refers to the different elements that make a prompt clear and effective.
 
-| #  | Concept                | Key takeaway                                                                  |
-| -- | ---------------------- | ----------------------------------------------------------------------------- |
-| 6  | Conversation Coherence | Maintain relevant context across interactions.                                |
-| 7  | Restating Keys         | Repeat important instructions when needed.                                    |
-| 8  | Output Variability     | Same input can produce different outputs due to sampling and runtime factors. |
-| 9  | Inference Time         | Time during which a trained model processes input and generates output.       |
-| 10 | Context vs Constraints | Background information vs rules and restrictions.                             |
-| 11 | Structured Prompting   | Define explicit output structure and formatting rules.                        |
+| Component          | Purpose                                  |
+| ------------------ | ---------------------------------------- |
+| Role               | Defines who the LLM should act as.       |
+| Context            | Provides background information.         |
+| Task / Instruction | Defines what the LLM should do.          |
+| Constraints        | Defines rules and limitations.           |
+| Input Data         | Provides the actual data to process.     |
+| Output Format      | Defines the expected response structure. |
+| Examples           | Demonstrates the expected output.        |
 
-## **Important concepts to remember**
+---------
 
-There are three distinctions worth keeping clear:
+## What is the difference between Zero-Shot, One-Shot, and Few-Shot Prompting?
 
-1. **Context Pruning vs Context Reset:** Pruning removes selected information; resetting starts with a fresh or redefined context.
-2. **Iterative Prompting vs Restating Keys:** Iteration improves an output; restating reinforces important instructions.
-3. **Structured Prompting vs Structured Output:** Structured prompting uses instructions to guide formatting; structured output uses schemas or constrained generation to enforce a format.
+These techniques define how many examples we provide to an LLM before asking it to perform a task.
 
-These distinctions will be particularly useful when we move towards LangChain, RAG, and AI agents.
+| Technique | Meaning                     |
+| --------- | --------------------------- |
+| Zero-Shot | No examples provided.       |
+| One-Shot  | One example provided.       |
+| Few-Shot  | Multiple examples provided. |
 
-Next, we can move to Questions 12–17: Prompt Anatomy and Prompt Fundamentals.
+---------
+
+## What is Instruction-Based Prompting?
+
+`Instruction-Based Prompting` means giving clear and specific instructions to an LLM about what action it should perform.
+
+**Example:**
+
+```
+Analyze the following React code.
+
+1. Identify performance issues.
+2. Find unnecessary re-renders.
+3. Suggest optimization techniques.
+4. Provide corrected code.
+```
+-----
+
+## What is the difference between Positive and Negative Prompting?
+
+| Type               | Meaning                      | Example                                    |
+| ------------------ | ---------------------------- | ------------------------------------------ |
+| Positive Prompting | Tells the LLM what to do.    | Use TypeScript and functional components.  |
+| Negative Prompting | Tells the LLM what to avoid. | Do not use JavaScript or class components. |
+
+**Combined example:**
+
+```
+Generate a React component.
+
+Positive instructions:
+- Use TypeScript.
+- Use functional components.
+- Follow clean coding practices.
+
+Negative instructions:
+- Do not use class components.
+- Do not use external UI libraries.
+- Avoid unnecessary dependencies.
+```
+----
+
+## What is Delimiter-Based Prompting, and why do we use XML tags or special separators?
+
+`Delimiter-Based Prompting` uses special separators or tags to distinguish different sections of a prompt.
+
+It helps organize instructions, context, and input data clearly.
+
+**Example using XML tags:**
+
+```
+<role>
+You are a Senior React Developer.
+</role>
+
+<task>
+Review the provided code.
+</task>
+
+<constraints>
+Use TypeScript.
+Avoid unnecessary dependencies.
+</constraints>
+
+<code>
+
+</code>
+```
+
+Other commonly used delimiters:
+
+- Triple quotes (`"""`)
+- Triple backticks (\`\`\`)
+- XML tags (`<context>`, `<task>`)
+- Separators (`###`, `---`)
+
+**When to use:** Long prompts, RAG applications, code analysis, and structured instructions.
+
+-----
+
+## What is Structured Prompting, and how can we enforce a specific output format?
+
+Structured Prompting means defining a specific structure for the LLM's response, such as JSON, tables, headings, or bullet points.
+
+**Example:**
+
+```
+Analyze this product and return the result
+in the following JSON structure:
+```
+
+-------------

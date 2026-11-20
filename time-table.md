@@ -480,8 +480,18 @@ Most of the time - friends meet up, Tau ji ghar, Gopal Cha Ghar etc..
 | 3:00 – 5:30 PM       | 2h 30m     |
 | **Total Study Time** | **6h 05m** |
 
-# 18-11
+## **Daily Schedule — 18-11-2026**
 
-10:00 - 11:40
-12:10 - 2
-3 - 
+| Time                 | Duration   |
+| -------------------- | ---------- |
+| 10:00 – 11:40 AM     | 1h 40m     |
+| 12:10 – 2:00 PM      | 1h 50m     |
+| 3:00 – 5:30 PM       | 2h 30m     |
+| 5:50 – 7:30 PM       | 1h 40m     |
+| **Total Study Time** | **7h 40m** |
+
+
+# 19 -11
+
+8 - 9 
+10:50 -
